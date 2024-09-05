@@ -1,0 +1,82 @@
+package com.example.passwordExchanger.entity;
+
+
+import jakarta.persistence.*;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+@Entity
+@Table(name="users")
+public class User {
+
+    @Id
+    private int user_id;
+    @Column(name="user_username")
+    private String user_username;
+    @Column(name="user_email")
+    private String user_email;
+    @Column(name="user_password")
+    private byte[] user_password;
+    @Column(name="user_names")
+    private String user_names;
+    @Column(name="user_role")
+    private int user_role;
+
+    public User(){}
+
+    public User(int user_id, String user_username, String user_email, byte[] user_password, String user_names, int user_role) {
+        this.user_id = user_id;
+        this.user_username = user_username;
+        this.user_email = user_email;
+        this.user_password = user_password;
+        this.user_names = user_names;
+        this.user_role = user_role;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getUser_username() {
+        return user_username;
+    }
+
+    public void setUser_username(String user_username) {
+        this.user_username = user_username;
+    }
+
+    public String getUser_email() {
+        return user_email;
+    }
+
+    public void setUser_email(String user_email) {
+        this.user_email = user_email;
+    }
+
+    public byte[] getUser_password() {
+        return user_password;
+    }
+
+    public void setUser_password(byte[] user_password) {
+        this.user_password = user_password;
+    }
+
+    public String getUser_names() {
+        return user_names;
+    }
+
+    public void setUser_names(String user_names) {
+        this.user_names = user_names;
+    }
+
+    public int getUser_role() {
+        return user_role;
+    }
+
+    public void setUser_role(int user_role) {
+        this.user_role = user_role;
+    }
+}
