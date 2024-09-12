@@ -1,0 +1,81 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script  type="text/javascript" src="/js/sendpass.js"></script>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Books</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+
+
+    <meta charset="ISO-8859-1">
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</nav>
+<br>
+<br>
+<div class = "container">
+    <div class = "row">
+        <div class ="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+            <h1 class = "text-center">Send password</h1>
+            <div class = "card-body">
+                <form th:action="@{/sendpass}" th:object = "${password}" method="POST">
+                    <input class="form-control"
+                           type="text"
+                           th:value="${user_id}" id="user_id" name="user_id" />
+                    <div class ="form-group">
+
+                        <label><b>Email</b></label>
+                        <input
+                                type = "text"
+                                name = "password_desc"
+                                th:field = "*{password_desc}"
+                                class = "form-control"
+                                placeholder="Enter description"
+                        />
+                    </div>
+                    <div class ="form-group">
+                        <label><b>Password</b></label>
+                        <input
+                                type = "password"
+                                name = "pass"
+                                th:field = "*{pass}"
+                                class = "form-control"
+                                placeholder="Enter password"
+                        />
+                    </div>
+
+                    <select class="select-box"  id="state" name="state">
+                        <option value="Select State">Select Role</option>
+                        <option th:each="role : ${roleList}"
+                                th:value="${role.role_id}"
+                                th:text="${role.role_name}"></option>
+                    </select>
+                    <hr><br>
+                    <select class="select-box" id= "city" name = "city">
+                        <option value="Select User">Select City</option>
+                    </select>
+
+                            <br/>
+                            <br>
+
+            <div class = "text-center">
+                <button type="submit" class = "btn btn-outline-dark btn-lg">
+                    Submit
+                </button>
+            </div>
+                </form>
+</div>>
+        </div> </div> </div>
+</body>
+
+</html>
