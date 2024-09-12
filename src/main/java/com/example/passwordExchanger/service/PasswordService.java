@@ -15,4 +15,10 @@ public interface PasswordService {
 
     void deletePasswordById(int id);
 
+    List<Password> getPasswordsFromUserId(int id);
+
+    String getPassword(int id_pass, String key);
+
+    List<Password> getPasswordsFromUserIdTo(int id);
+
 }

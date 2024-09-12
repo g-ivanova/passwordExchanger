@@ -17,19 +17,19 @@ public class Password {
     @Column(name="password_to")
     private int password_to;
     @Column(name="password_validity")
-    private Date password_validity;
-    @Column(name="password")
-    private byte[] password;
+    private String password_validity;
+    @Column(name="pass")
+    private byte[] pass;
 
     public Password(){}
 
-    public Password(int password_id, String password_desc, int password_from, int password_to, Date password_validity, byte[] password) {
+    public Password(int password_id, String password_desc, int password_from, int password_to, String password_validity, byte[] password) {
         this.password_id = password_id;
         this.password_desc = password_desc;
         this.password_from = password_from;
         this.password_to = password_to;
         this.password_validity = password_validity;
-        this.password = password;
+        this.pass = password;
     }
 
     public int getPassword_id() {
@@ -64,19 +64,19 @@ public class Password {
         this.password_to = password_to;
     }
 
-    public Date getPassword_validity() {
+    public String getPassword_validity() {
         return password_validity;
     }
 
-    public void setPassword_validity(Date password_validity) {
+    public void setPassword_validity(String password_validity) {
         this.password_validity = password_validity;
     }
 
-    public byte[] getPassword() {
-        return password;
+    public byte[] getPass() {
+        return pass;
     }
 
-    public void setPassword(byte[] password) {
-        this.password = password;
+    public void setPass(byte[] password) {
+        this.pass = password;
     }
 }

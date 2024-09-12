@@ -1,46 +1,171 @@
 package com.example.passwordExchanger.controller;
 
-import com.example.passwordExchanger.entity.User;
-import com.example.passwordExchanger.service.UserService;
+import com.example.passwordExchanger.entity.*;
+import com.example.passwordExchanger.service.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 @Controller
 public class FunctionsController {
-
+    @Autowired
+    private MailService mailService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRolesService userRolesService;
+    @Autowired
+    private PasswordService passwordService;
+    @Autowired
+    private RoleService roleService;
 
-    public FunctionsController (UserService userService){
-        super();
-        this.userService=userService;
-    }
     @GetMapping(value="/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("user",new User());
         return "index";
     }
-
-    @PostMapping(value="index")
-    public String login(Model model, @ModelAttribute("username") String username, @ModelAttribute("pass") String pass){
-        User loggingUser=userService.getUserByUsername(username);
-        String password=userService.getPasswordByUsername(loggingUser.getUser_username(),"admin");
-        model.addAttribute("username",loggingUser.getUser_username());
-        if(pass.equals(password)){
-            return "redirect:/home";
+    @GetMapping(value="/index")
+    public String getIndex() {
+        return "index";
+    }
+    @PostMapping(value="/index")
+    public String login(Model model, User user, RedirectAttributes redirectAttributes,@ModelAttribute("user_password")String user_password){
+        User loggingUser=userService.getUserByUsername(user.getUser_username());
+        if(loggingUser==null){
+            return "index_error";
         }
+        else {
+            model.addAttribute("username",loggingUser.getUser_username());
+            model.addAttribute("user",loggingUser);
+            redirectAttributes.addAttribute("user_id",loggingUser.getUser_id());
+            String password=userService.getPasswordByUsername(loggingUser.getUser_username(),"admin");
+            if ((userService.getPasswordByUsername(user.getUser_username(),"admin")).equals(user_password)) {
+                return "redirect:/home";
+            }
+            return "index_error";
+        }
+    }
+    @GetMapping(value="/home")
+    public String home(Model model, @RequestParam(required = false) int user_id){
+        UsersAndPasswords pass=new UsersAndPasswords();
+        int id_pass;
+        String pass_desc;
+        int id_from;
+        String name_from;
+        int id_to;
+        String name_to;
+        String password;
+        String date_pass;
+        List<UsersAndPasswords> passwordsList= new ArrayList<UsersAndPasswords>();
+        List<UsersAndPasswords> sendPasswordsList= new ArrayList<UsersAndPasswords>();
+        List<Password> passwords=passwordService.getPasswordsFromUserId(user_id);
+        for(int i=0;i< passwords.size();i++) {
+            id_pass=passwords.get(i).getPassword_id();
+            pass_desc=passwords.get(i).getPassword_desc();
+            id_from=passwords.get(i).getPassword_from();
+            name_from=userService.getUserById(id_from).getUser_names();
+            password=passwordService.getPassword(id_pass,"admin");
+            date_pass=passwords.get(i).getPassword_validity();
+            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,name_from,password,date_pass);
+            passwordsList.add(pass);
+        }
+
+        List<Password> sendPasswords=passwordService.getPasswordsFromUserIdTo(user_id);
+        for(Password passs:sendPasswords) {
+            id_pass=passs.getPassword_id();
+            pass_desc=passs.getPassword_desc();
+            id_from=passs.getPassword_from();
+            name_from=userService.getUserById(id_from).getUser_names();
+            id_to=passs.getPassword_to();
+            name_to=userService.getUserById(id_to).getUser_names();
+            password=passwordService.getPassword(id_pass,"admin");
+            date_pass=passs.getPassword_validity();
+            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,id_to,name_to,name_from,password,date_pass);
+            sendPasswordsList.add(pass);
+        }
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("sendPasswordsList",sendPasswordsList);
+        model.addAttribute("passwordsList",passwordsList);
+        return "home";
+    }
+    @PostMapping(value="/home")
+    public String sendPassword(Model model,@RequestParam(required = false) int user_id,RedirectAttributes redirectAttributes){
+        Password password=new Password();
+        model.addAttribute("password",password);
+        List<User>userList=userService.getAllUsers();
+        model.addAttribute("userList",userList);
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        redirectAttributes.addAttribute("user_id",user_id);
+        return "redirect:/sendpass";
+    }
+    @GetMapping(value="/register")
+    public String registerForm(Model model){
+        User user=new User();
+        model.addAttribute("user",user);
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        return "register";
+    }
+    @PostMapping(value="/register")
+    public String saveUser(Model model,@ModelAttribute("user")User user,@RequestParam int role_id) throws Exception{
+        userService.saveUser(user);
+        userRolesService.saveRole(new UserRoles(role_id,user.getUser_id()));
         return "index";
     }
-
-    @GetMapping(value="home")
-    public void home(@RequestParam("username") String username){
-        System.out.println(username);
+    @RequestMapping(value = "/getCitiesForSelectedState", method = RequestMethod.GET)
+    @ResponseBody
+    @CrossOrigin
+    public String getCitiesForSelectedState(@RequestParam String countryId) {
+        String json = null;
+        JSONArray districtlist=new JSONArray();
+        List<UserRoles> userRoles=userRolesService.getUserRolesByRoleId(Integer.parseInt(countryId));
+        int user_id;
+        String username;
+        for(UserRoles userRole:userRoles){
+            user_id=userService.getUserById(userRole.getUser_id()).getUser_id();
+            username=userService.getUserById(userRole.getUser_id()).getUser_names();
+            JSONObject isontaluk=new JSONObject();
+            isontaluk.put("districtcode",String.valueOf(user_id).toString().trim());
+            isontaluk.put("districtname",String.valueOf(username).toString().trim());
+            districtlist.add(isontaluk);
+        }
+        return (districtlist.toString());
     }
+    @GetMapping(value="/sendpass")
+    public String sendPassForm(Model model,@RequestParam(required = false) int user_id){
+        Password password=new Password();
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("password",password);
+        return "sendpass";
+    }
+    @PostMapping(value="/sendpass")
+    public String sendPass(RedirectAttributes redirectAttributes,Model model, @ModelAttribute("password")Password password, @RequestParam(required = false) int city, @RequestParam(required = false) int user_id) throws Exception{
+        LocalDate currentDate = LocalDate.now();
+        String today = currentDate.toString();
+        password.setPassword_validity(today);
+      password.setPassword_from(user_id);
+        password.setPassword_to(city);
+        passwordService.savePassword(password);
+        model.addAttribute("user",userService.getUserById(user_id));
+        model.addAttribute("user_id",user_id);
+       redirectAttributes.addAttribute("user_id",user_id);
 
+        Mail mail = new Mail();
+        mail.setMailFrom("pass.exchanger.project@gmail.com");
+        mail.setMailTo(userService.getUserById(city).getUser_email());
+        mail.setMailSubject("Spring Boot - Email demo");
+        mail.setMailContent(" shared new password with you! Login to see it.");
+        mailService.sendEmail(mail);
 
-
+        return "redirect:/home";
+    }
 }

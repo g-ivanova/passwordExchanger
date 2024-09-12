@@ -41,4 +41,19 @@ public class PasswordServiceImpl implements PasswordService {
     public void deletePasswordById(int id) {
         passwordRepository.deleteById((long) id);
     }
+
+    @Override
+    public List<Password> getPasswordsFromUserId(int id) {
+      return passwordRepository.getPasswordFromUserId(id);
+    }
+
+    @Override
+    public String getPassword(int id_pass, String key) {
+        return passwordRepository.getPassword(id_pass, key);
+    }
+
+    @Override
+    public List<Password> getPasswordsFromUserIdTo(int id) {
+        return passwordRepository.getPasswordFromUserIdTo(id);
+    }
 }

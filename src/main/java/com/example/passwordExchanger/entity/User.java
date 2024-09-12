@@ -2,13 +2,13 @@ package com.example.passwordExchanger.entity;
 
 
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Entity
 @Table(name="users")
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
     @Column(name="user_username")
     private String user_username;
@@ -18,19 +18,17 @@ public class User {
     private byte[] user_password;
     @Column(name="user_names")
     private String user_names;
-    @Column(name="user_role")
-    private int user_role;
 
     public User(){}
 
-    public User(int user_id, String user_username, String user_email, byte[] user_password, String user_names, int user_role) {
+    public User(int user_id, String user_username, String user_email, byte[] user_password, String user_names) {
         this.user_id = user_id;
         this.user_username = user_username;
         this.user_email = user_email;
         this.user_password = user_password;
         this.user_names = user_names;
-        this.user_role = user_role;
     }
+
 
     public int getUser_id() {
         return user_id;
@@ -72,11 +70,4 @@ public class User {
         this.user_names = user_names;
     }
 
-    public int getUser_role() {
-        return user_role;
-    }
-
-    public void setUser_role(int user_role) {
-        this.user_role = user_role;
-    }
 }

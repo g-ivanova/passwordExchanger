@@ -22,6 +22,10 @@ public interface UserService {
 
     String getPasswordByUsername(String username, String key);
 
+    User getUserByUsernameOrEmail(String username, String email);
+
+    List<User> getUsersByRole(int role_id);
+
 
 
 }
