@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
@@ -62,6 +63,7 @@ public class FunctionsController {
         String name_to;
         String password;
         String date_pass;
+        String password_text;
         List<UsersAndPasswords> passwordsList= new ArrayList<UsersAndPasswords>();
         List<UsersAndPasswords> sendPasswordsList= new ArrayList<UsersAndPasswords>();
         List<Password> passwords=passwordService.getPasswordsFromUserId(user_id);
@@ -71,8 +73,9 @@ public class FunctionsController {
             id_from=passwords.get(i).getPassword_from();
             name_from=userService.getUserById(id_from).getUser_names();
             password=passwordService.getPassword(id_pass,"admin");
+            password_text=password.replaceAll(".","*");
             date_pass=passwords.get(i).getPassword_validity();
-            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,name_from,password,date_pass);
+            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,name_from,password,password_text,date_pass);
             passwordsList.add(pass);
         }
 
@@ -86,7 +89,9 @@ public class FunctionsController {
             name_to=userService.getUserById(id_to).getUser_names();
             password=passwordService.getPassword(id_pass,"admin");
             date_pass=passs.getPassword_validity();
-            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,id_to,name_to,name_from,password,date_pass);
+            password=passwordService.getPassword(id_pass,"admin");
+            password_text=password.replaceAll(".","*");
+            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,id_to,name_to,name_from,password,password_text,date_pass);
             sendPasswordsList.add(pass);
         }
         model.addAttribute("user_id",user_id);
@@ -114,29 +119,37 @@ public class FunctionsController {
         return "register";
     }
     @PostMapping(value="/register")
-    public String saveUser(Model model,@ModelAttribute("user")User user,@RequestParam int role_id) throws Exception{
+    public String saveUser(Model model,@ModelAttribute("user")User user,@RequestParam(required = false)  int role_id) throws Exception{
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        if(userService.getUserByUsernameOrEmail(user.getUser_username(),user.getUser_email())!=null){
+            return "register_existing";
+        }
+        if(user.getUser_username().isEmpty() || user.getUser_email().isEmpty() || user.getUser_password()==null || role_id==0){
+            return "register_error";
+        }
         userService.saveUser(user);
         userRolesService.saveRole(new UserRoles(role_id,user.getUser_id()));
         return "index";
     }
-    @RequestMapping(value = "/getCitiesForSelectedState", method = RequestMethod.GET)
+    @RequestMapping(value = "/getUsersFromRole", method = RequestMethod.GET)
     @ResponseBody
     @CrossOrigin
-    public String getCitiesForSelectedState(@RequestParam String countryId) {
+    public String getUsersFromRole(@RequestParam String roleId) {
         String json = null;
-        JSONArray districtlist=new JSONArray();
-        List<UserRoles> userRoles=userRolesService.getUserRolesByRoleId(Integer.parseInt(countryId));
+        JSONArray userlist=new JSONArray();
+        List<UserRoles> userRoles=userRolesService.getUserRolesByRoleId(Integer.parseInt(roleId));
         int user_id;
         String username;
         for(UserRoles userRole:userRoles){
             user_id=userService.getUserById(userRole.getUser_id()).getUser_id();
             username=userService.getUserById(userRole.getUser_id()).getUser_names();
-            JSONObject isontaluk=new JSONObject();
-            isontaluk.put("districtcode",String.valueOf(user_id).toString().trim());
-            isontaluk.put("districtname",String.valueOf(username).toString().trim());
-            districtlist.add(isontaluk);
+            JSONObject users=new JSONObject();
+            users.put("user_id",String.valueOf(user_id).toString().trim());
+            users.put("user_name",String.valueOf(username).toString().trim());
+            userlist.add(users);
         }
-        return (districtlist.toString());
+        return (userlist.toString());
     }
     @GetMapping(value="/sendpass")
     public String sendPassForm(Model model,@RequestParam(required = false) int user_id){
@@ -149,23 +162,34 @@ public class FunctionsController {
     }
     @PostMapping(value="/sendpass")
     public String sendPass(RedirectAttributes redirectAttributes,Model model, @ModelAttribute("password")Password password, @RequestParam(required = false) int city, @RequestParam(required = false) int user_id) throws Exception{
-        LocalDate currentDate = LocalDate.now();
-        String today = currentDate.toString();
-        password.setPassword_validity(today);
-      password.setPassword_from(user_id);
-        password.setPassword_to(city);
-        passwordService.savePassword(password);
-        model.addAttribute("user",userService.getUserById(user_id));
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
-       redirectAttributes.addAttribute("user_id",user_id);
+        System.out.println(password.getPassword_desc());
+        System.out.println(city);
+        System.out.println(password.getPass());
+        if(password.getPassword_desc().isEmpty() || city==0  || password.getPass()==null){
+            return "sendpass_error";
+        }
+        else {
+            LocalDate currentDate = LocalDate.now();
+            String today = currentDate.toString();
+            password.setPassword_validity(today);
+            password.setPassword_from(user_id);
+            password.setPassword_to(city);
+            passwordService.savePassword(password);
+            model.addAttribute("user", userService.getUserById(user_id));
+            model.addAttribute("user_id", user_id);
+            redirectAttributes.addAttribute("user_id", user_id);
 
-        Mail mail = new Mail();
-        mail.setMailFrom("pass.exchanger.project@gmail.com");
-        mail.setMailTo(userService.getUserById(city).getUser_email());
-        mail.setMailSubject("Spring Boot - Email demo");
-        mail.setMailContent(" shared new password with you! Login to see it.");
-        mailService.sendEmail(mail);
+            Mail mail = new Mail();
+            mail.setMailFrom("pass.exchanger.project@gmail.com");
+            mail.setMailTo(userService.getUserById(city).getUser_email());
+            mail.setMailSubject("Spring Boot - Email demo");
+            mail.setMailContent(" shared new password with you! Login to see it.");
+            mailService.sendEmail(mail);
 
-        return "redirect:/home";
+            return "redirect:/home";
+        }
     }
 }

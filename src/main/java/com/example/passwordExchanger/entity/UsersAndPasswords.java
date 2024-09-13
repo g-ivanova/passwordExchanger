@@ -18,14 +18,29 @@ public class UsersAndPasswords {
 
      String password;
 
+     String password_text;
+
      String password_date;
 
-    public UsersAndPasswords(int id_password, String password_desc, int password_from, String password_from_name, String password, String password_date) {
+    public UsersAndPasswords(int id_password, String password_desc, int password_from, int password_to, String password_to_name, String password_from_name, String password, String password_text, String password_date) {
+        this.id_password = id_password;
+        this.password_desc = password_desc;
+        this.password_from = password_from;
+        this.password_to = password_to;
+        this.password_to_name = password_to_name;
+        this.password_from_name = password_from_name;
+        this.password = password;
+        this.password_text = password_text;
+        this.password_date = password_date;
+    }
+
+    public UsersAndPasswords(int id_password, String password_desc, int password_from, String password_from_name, String password,String password_text, String password_date) {
         this.id_password = id_password;
         this.password_desc = password_desc;
         this.password_from = password_from;
         this.password_from_name = password_from_name;
         this.password = password;
+        this.password_text=password_text;
         this.password_date = password_date;
     }
 
@@ -108,4 +123,14 @@ public class UsersAndPasswords {
     public void setPassword_date(String password_date) {
         this.password_date = password_date;
     }
+
+
+    public String getPassword_text() {
+        return password_text;
+    }
+
+    public void setPassword_text(String password_text) {
+        this.password_text = password_text;
+    }
 }
+

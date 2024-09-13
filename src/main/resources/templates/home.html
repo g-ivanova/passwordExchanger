@@ -50,7 +50,30 @@
         <tr th:each = "password : ${passwordsList}">
             <td th:text = "${password.password_desc}" ></td>
             <td th:text = "${password.password_from_name}" ></td>
-            <td th:text = "${password.password}" ></td>
+            <td th:text = "${password.password_text}" ></td>
+            <td th:text = "${password.password}" type="hidden"></td>
+            <input class="form-control"
+                   type="hidden"
+                   th:value="${password.password}" id="password" name="password" />
+            <td>
+
+                <input class="btn btn-primary" type="button" value="Input" onclick="copyText()">
+                <script>
+                    function copyText() {
+
+                        /* Select text area by id*/
+                        let Text = document.getElementById("password");
+
+                        /* Select the text inside text area. */
+                        Text.select();
+
+                        /* Copy selected text into clipboard */
+                        navigator.clipboard.writeText(Text.value);
+
+
+                    }
+                </script>
+            </td>
         </tr>
         </tbody>
     </table>
