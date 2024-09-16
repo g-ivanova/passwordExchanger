@@ -161,22 +161,22 @@ public class FunctionsController {
         return "sendpass";
     }
     @PostMapping(value="/sendpass")
-    public String sendPass(RedirectAttributes redirectAttributes,Model model, @ModelAttribute("password")Password password, @RequestParam(required = false) int city, @RequestParam(required = false) int user_id) throws Exception{
+    public String sendPass(RedirectAttributes redirectAttributes,Model model, @ModelAttribute("password")Password password, @RequestParam(required = false) int user, @RequestParam(required = false) int user_id) throws Exception{
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
         System.out.println(password.getPassword_desc());
-        System.out.println(city);
+        System.out.println(user);
         System.out.println(password.getPass());
-        if(password.getPassword_desc().isEmpty() || city==0  || password.getPass()==null){
+        if(password.getPassword_desc().isEmpty() || user==0  || password.getPass()==null){
             return "sendpass_error";
         }
         else {
             LocalDate currentDate = LocalDate.now();
             String today = currentDate.toString();
-            password.setPassword_validity(today);
+          //  password.setPassword_validity(today);
             password.setPassword_from(user_id);
-            password.setPassword_to(city);
+            password.setPassword_to(user);
             passwordService.savePassword(password);
             model.addAttribute("user", userService.getUserById(user_id));
             model.addAttribute("user_id", user_id);
@@ -184,7 +184,7 @@ public class FunctionsController {
 
             Mail mail = new Mail();
             mail.setMailFrom("pass.exchanger.project@gmail.com");
-            mail.setMailTo(userService.getUserById(city).getUser_email());
+            mail.setMailTo(userService.getUserById(user).getUser_email());
             mail.setMailSubject("Spring Boot - Email demo");
             mail.setMailContent(" shared new password with you! Login to see it.");
             mailService.sendEmail(mail);
