@@ -165,9 +165,7 @@ public class FunctionsController {
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
-        System.out.println(password.getPassword_desc());
-        System.out.println(user);
-        System.out.println(password.getPass());
+        model.addAttribute("password",password);
         if(password.getPassword_desc().isEmpty() || user==0  || password.getPass()==null){
             return "sendpass_error";
         }

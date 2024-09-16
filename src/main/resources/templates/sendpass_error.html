@@ -55,8 +55,7 @@
                     />
                 </div>
                 <div class ="form-group">
-                    <label for="state" class="sr-only">Select group</label>
-                    <select class="form-control"  id="state" name="state">
+                    <select class="form-control"  id="role" name="role">
                         <option value="Select group">Select group</option>
                         <option th:each="role : ${roleList}"
                                 th:value="${role.role_id}"
@@ -65,8 +64,7 @@
                     </select>
                 </div>
                 <div class ="form-group">
-                    <label for="city" class="sr-only">Select user</label>
-                    <select class="form-control" id= "city" name = "city">
+                    <select class="form-control" id= "user" name = "user">
                         <option value="0">Select user</option>
                     </select>
                 </div>
