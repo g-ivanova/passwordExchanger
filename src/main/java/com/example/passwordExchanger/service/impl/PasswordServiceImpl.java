@@ -58,7 +58,12 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public void deletePass(Long id) {
+    public void deletePass(int id) {
         passwordRepository.deletePass(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        passwordRepository.deleteById(id);
     }
 }

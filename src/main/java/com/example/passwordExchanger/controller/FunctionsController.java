@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Controller
+@SessionAttributes("user")
 public class FunctionsController {
     @Autowired
     private MailService mailService;
@@ -38,18 +40,27 @@ public class FunctionsController {
         return "index";
     }
     @PostMapping(value="/index")
-    public String login(Model model, User user, RedirectAttributes redirectAttributes,@ModelAttribute("user_password")String user_password){
+    public String login(ModelMap map, Model model, User user, RedirectAttributes redirectAttributes, @ModelAttribute("user_password")String user_password){
+
         User loggingUser=userService.getUserByUsername(user.getUser_username());
         if(loggingUser==null){
             return "index_error";
         }
         else {
+            map.addAttribute("user",loggingUser);
             model.addAttribute("username",loggingUser.getUser_username());
             model.addAttribute("user",loggingUser);
             redirectAttributes.addAttribute("user_id",loggingUser.getUser_id());
             String password=userService.getPasswordByUsername(loggingUser.getUser_username(),"admin");
             if ((userService.getPasswordByUsername(user.getUser_username(),"admin")).equals(user_password)) {
-                return "redirect:/home";
+                if
+                (loggingUser.getUser_username().equals("admin")) {
+                    return "redirect:/sendpass";
+                }
+                else {
+                    return "redirect:/home";
+                }
+
             }
             return "index_error";
         }
@@ -96,6 +107,7 @@ public class FunctionsController {
             pass=new UsersAndPasswords(id_pass,pass_desc,id_from,id_to,name_to,name_from,password,password_text,date_pass);
             sendPasswordsList.add(pass);
         }
+        model.addAttribute("user",userService.getUserById(user_id));
         model.addAttribute("user_id",user_id);
         model.addAttribute("sendPasswordsList",sendPasswordsList);
         model.addAttribute("passwordsList",passwordsList);
@@ -193,11 +205,32 @@ public class FunctionsController {
         }
     }
 
+    @DeleteMapping (value="/home/{user_id}/{id}")
+    public String deletePasswordForm(RedirectAttributes redirectAttributes,Model model,@PathVariable Long id,@ModelAttribute("password")Password password,  @ModelAttribute("user")User user,@RequestParam(required = false) int user_id) {
+        passwordService.deletePasswordById(id);
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("password",password);
+        model.addAttribute("user", user);
+        redirectAttributes.addAttribute("user_id", user_id);
+        return "redirect:/home";
 
-
-    @PostMapping("/home/{id}")
-    public String deletePassword(@PathVariable long id) {
-            passwordService.deletePass(id);
-            return "home";
     }
+
+    @GetMapping(value="/home/{user_id}/{id}")
+    public String deletePassword(RedirectAttributes redirectAttributes,Model model,@PathVariable Long id,@ModelAttribute("password")Password password, @ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
+        passwordService.deletePasswordById(id);
+        System.out.println(user_id);
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("password",password);
+        model.addAttribute("user", user);
+        redirectAttributes.addAttribute("user_id", user_id);
+        return "redirect:/home";
+
+    }
+
+
 }

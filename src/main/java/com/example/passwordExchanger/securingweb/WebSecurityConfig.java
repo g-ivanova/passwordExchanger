@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -22,11 +24,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebSecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+
         http
+
+
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/index", "/home","/sendpass","/getUsersFromRole").permitAll()
+                        .requestMatchers("/index", "/home","/sendpass","/getUsersFromRole","/home/{user_id}/{id}").permitAll()
                         .requestMatchers("/register","/js/**","/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/error", "/dist/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE).permitAll()
                         .anyRequest().authenticated()
+
+
                 )
                 .formLogin((form) -> form
                         .loginPage("/")
@@ -35,12 +44,19 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .passwordParameter("user_password")
                 )
                 .logout((logout) -> logout.permitAll());
-
+        http
+            .csrf().disable();
         return http.build();
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedMethods("GET", "PUT", "POST", "DELETE",
+                "PATCH", "OPTIONS", "HEAD");
     }
 }

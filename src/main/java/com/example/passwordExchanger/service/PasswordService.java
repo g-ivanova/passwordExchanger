@@ -21,6 +21,10 @@ public interface PasswordService {
 
     List<Password> getPasswordsFromUserIdTo(int id);
 
-    void deletePass(Long id);
+    void deletePass(int id);
+
+    void deleteById(Long id);
+
+
 
 }

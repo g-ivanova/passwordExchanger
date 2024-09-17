@@ -4,6 +4,7 @@ import com.example.passwordExchanger.entity.Password;
 import com.example.passwordExchanger.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,10 +29,13 @@ public interface PasswordRepository extends JpaRepository<Password,Long> {
                     = "SELECT * FROM passwords p where p.password_from =?1")
     List<Password> getPasswordFromUserIdTo(int id);
 
+    @Transactional
     @Query(
             nativeQuery = true,
             value
                     = "DELETE FROM passwords p where p.password_id =?1")
-   void deletePass(Long id);
+   void deletePass(int id);
 
+    @Override
+    void deleteById(Long aLong);
 }
