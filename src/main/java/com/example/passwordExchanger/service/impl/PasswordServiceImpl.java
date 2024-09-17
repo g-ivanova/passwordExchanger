@@ -38,8 +38,8 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public void deletePasswordById(int id) {
-        passwordRepository.deleteById((long) id);
+    public void deletePasswordById(Long id) {
+        passwordRepository.deleteById(id);
     }
 
     @Override
@@ -55,5 +55,10 @@ public class PasswordServiceImpl implements PasswordService {
     @Override
     public List<Password> getPasswordsFromUserIdTo(int id) {
         return passwordRepository.getPasswordFromUserIdTo(id);
+    }
+
+    @Override
+    public void deletePass(Long id) {
+        passwordRepository.deletePass(id);
     }
 }

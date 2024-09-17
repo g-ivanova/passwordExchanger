@@ -11,6 +11,21 @@
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
+<script>
+    function CopyText(id){
+            let text = document.getElementById(id).innerHTML;
+
+            navigator.clipboard.writeText(text);
+        }
+     function SeeText(id){
+     let div = document.getElementById(id);
+            div.style.visibility = 'visible';
+        }
+</script>
+<style type="text/css">
+    .table td:nth-child(5) { display:hidden; }
+</style>
+
 <body>
 <style>
     .generator-header {
@@ -21,7 +36,7 @@
 <div class ="container">
 <form style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
 
-    <table class = "table table-striped" style="width:100%">
+    <table class = "table table-striped" style="width:100%" id="table">
         <thead>
         <tr>
             <th class="generator-header" colspan="5">Received Passwords</th>
@@ -29,7 +44,9 @@
         <tr>
             <th>Description</th>
             <th>From</th>
+            <th>Valid till</th>
             <th>Password</th>
+            <th>Action</th>
         </tr>
         </thead>
 
@@ -37,36 +54,35 @@
         <tbody>
         <tr th:each = "password : ${passwordsList}">
             <td th:text = "${password.password_desc}" ></td>
-            <td th:text = "${password.password_from_name}" ></td>
-            <td th:text = "${password.password_text}" ></td>
-            <td th:text = "${password.password}" type="hidden" id="password"></td>
+            <td th:text = "${password.password_from_name}"></td>
+            <td th:text = "${password.password_date}" ></td>
+            <td style="visibility:hidden;" th:text = "${password.password}" th:value="${password.password}" th:id="${password.id_password}" ></td>
             <td>
-
-                <input class="btn btn-primary" type="button" value="Input" onclick="copyText()">
-                <script>
-                    function copyText() {
-
-                        /* Select text area by id*/
-                        let Text = document.getElementById("password");
-
-                        /* Select the text inside text area. */
-                        Text.select();
-
-                        /* Copy selected text into clipboard */
-                        navigator.clipboard.writeText(Text.value);
-
-
-                    }
-                </script>
+                <button class="btn btn-info" type="button" th:attr="onclick=|CopyText('${password.id_password}')|">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-secondary" type="button" th:attr="onclick=|SeeText('${password.id_password}')|">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                    </svg>
+                </button>
+                <button class="btn btn-danger" type="button" th:href = "@{/home/{id}(id=${password.id_password})}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                    </svg>
+                </button>
             </td>
         </tr>
         </tbody>
     </table>
 </form>
 </div>
-<div class="container">
+<div class ="container">
     <form th:action="@{/home}" th:object = "${user}" method="POST" style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-    <table class = "table table-striped" style="width:110%">
+    <table class = "table table-striped" style="width:100%">
         <tbody>
         <thead>
         <tr>
@@ -75,7 +91,9 @@
         <tr>
             <th>Description</th>
             <th>To</th>
+            <th>Valid till</th>
             <th>Password</th>
+            <th>Action</th>
         </tr>
         </thead>
         <input class="form-control"
@@ -85,16 +103,26 @@
         <tr th:each = "sendpassword : ${sendPasswordsList}">
             <td th:text = "${sendpassword.password_desc}" ></td>
             <td th:text = "${sendpassword.password_to_name}" ></td>
-            <td th:text = "${sendpassword.password}" ></td>
+            <td th:text = "${sendpassword.password_date}" ></td>
+            <td style="visibility:hidden;" th:text = "${sendpassword.password}" th:value="${sendpassword.password}" th:id="${sendpassword.id_password}" ></td>
+
+            <td>
+                <button class="btn btn-secondary" type="button"th:attr="onclick=|SeeText('${sendpassword.id_password}')|">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                    </svg>
+                </button>
+                <button class="btn btn-danger" type="button" th:href = "@{/home/{id}(id=${sendpassword.id_password})}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                    </svg>
+                </button>
+            </td>
         </tr>
         </tbody>
     </table>
-
-        <div class = "text-center">
-            <button type="submit" class = "btn btn-outline-dark btn-lg">
-                Send Password
-            </button>
-        </div>
+            <input type="submit" class="btn btn-primary" value="Send new password">
     </form>
 </div>
 </body>

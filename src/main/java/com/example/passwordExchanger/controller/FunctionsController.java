@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -189,5 +191,13 @@ public class FunctionsController {
 
             return "redirect:/home";
         }
+    }
+
+
+
+    @PostMapping("/home/{id}")
+    public String deletePassword(@PathVariable long id) {
+            passwordService.deletePass(id);
+            return "home";
     }
 }

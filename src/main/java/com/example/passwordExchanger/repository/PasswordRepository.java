@@ -28,4 +28,10 @@ public interface PasswordRepository extends JpaRepository<Password,Long> {
                     = "SELECT * FROM passwords p where p.password_from =?1")
     List<Password> getPasswordFromUserIdTo(int id);
 
+    @Query(
+            nativeQuery = true,
+            value
+                    = "DELETE FROM passwords p where p.password_id =?1")
+   void deletePass(Long id);
+
 }
