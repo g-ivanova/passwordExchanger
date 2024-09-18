@@ -55,7 +55,7 @@ public class FunctionsController {
             if ((userService.getPasswordByUsername(user.getUser_username(),"admin")).equals(user_password)) {
                 if
                 (loggingUser.getUser_username().equals("admin")) {
-                    return "redirect:/sendpass";
+                    return "redirect:/admin";
                 }
                 else {
                     return "redirect:/home";
@@ -64,6 +64,54 @@ public class FunctionsController {
             }
             return "index_error";
         }
+    }
+    @GetMapping(value="/admin")
+    public String admin(Model model, @RequestParam(required = false) int user_id){
+        UsersAndPasswords pass=new UsersAndPasswords();
+        int id_pass;
+        String pass_desc;
+        int id_from;
+        String name_from;
+        int id_to;
+        String name_to;
+        String password;
+        String date_pass;
+        String password_text;
+        List<UsersAndPasswords> passwordsList= new ArrayList<UsersAndPasswords>();
+        List<UsersAndPasswords> sendPasswordsList= new ArrayList<UsersAndPasswords>();
+        List<Password> passwords=passwordService.getPasswordsFromUserId(user_id);
+        for(int i=0;i< passwords.size();i++) {
+            id_pass=passwords.get(i).getPassword_id();
+            pass_desc=passwords.get(i).getPassword_desc();
+            id_from=passwords.get(i).getPassword_from();
+            name_from=userService.getUserById(id_from).getUser_names();
+            password=passwordService.getPassword(id_pass,"admin");
+            password_text=password.replaceAll(".","*");
+            date_pass=passwords.get(i).getPassword_validity();
+            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,name_from,password,password_text,date_pass);
+            passwordsList.add(pass);
+        }
+
+        List<Password> sendPasswords=passwordService.getPasswordsFromUserIdTo(user_id);
+        for(Password passs:sendPasswords) {
+            id_pass=passs.getPassword_id();
+            pass_desc=passs.getPassword_desc();
+            id_from=passs.getPassword_from();
+            name_from=userService.getUserById(id_from).getUser_names();
+            id_to=passs.getPassword_to();
+            name_to=userService.getUserById(id_to).getUser_names();
+            password=passwordService.getPassword(id_pass,"admin");
+            date_pass=passs.getPassword_validity();
+            password=passwordService.getPassword(id_pass,"admin");
+            password_text=password.replaceAll(".","*");
+            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,id_to,name_to,name_from,password,password_text,date_pass);
+            sendPasswordsList.add(pass);
+        }
+        model.addAttribute("user",userService.getUserById(user_id));
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("sendPasswordsList",sendPasswordsList);
+        model.addAttribute("passwordsList",passwordsList);
+        return "home";
     }
     @GetMapping(value="/home")
     public String home(Model model, @RequestParam(required = false) int user_id){
@@ -198,7 +246,7 @@ public class FunctionsController {
             mail.setMailFrom("pass.exchanger.project@gmail.com");
             mail.setMailTo(userService.getUserById(user).getUser_email());
             mail.setMailSubject("Spring Boot - Email demo");
-            mail.setMailContent(" shared new password with you! Login to see it.");
+            mail.setMailContent(userService.getUserById(user_id).getUser_names()+" shared new password with you! Login to see it.");
             mailService.sendEmail(mail);
 
             return "redirect:/home";
@@ -231,6 +279,5 @@ public class FunctionsController {
         return "redirect:/home";
 
     }
-
 
 }
