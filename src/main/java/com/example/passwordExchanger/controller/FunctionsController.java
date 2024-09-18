@@ -111,7 +111,7 @@ public class FunctionsController {
         model.addAttribute("user_id",user_id);
         model.addAttribute("sendPasswordsList",sendPasswordsList);
         model.addAttribute("passwordsList",passwordsList);
-        return "home";
+        return "admin";
     }
     @GetMapping(value="/home")
     public String home(Model model, @RequestParam(required = false) int user_id){
