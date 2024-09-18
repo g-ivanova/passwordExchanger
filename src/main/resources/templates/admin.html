@@ -34,32 +34,19 @@
             </thead>
             <tbody>
             <tr th:each = "user : ${usersList}">
+                <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
                 <td th:text = "${user.user_names}" ></td>
                 <td th:text = "${user.user_username}"></td>
                 <td th:text = "${user.user_email}"></td>
+                <td th:text = "${user.user_roles}"></td>
+                <input class="form-control"
+                       type="hidden"
+                       th:value="${user_id}" id="user_id" name="user_id" />
                 <td>
-                    <button class="btn btn-info" type="button" th:attr="onclick=|EditText('${user.id_user}')|">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-secondary" type="button"th:attr="onclick=|SeeText('${sendpassword.id_password}')|" th:id="${sendpassword.id_password}+'eye'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-secondary" type="button" th:attr="onclick=|SeeText('${sendpassword.id_password}')|" th:id="${sendpassword.id_password}+'slashedEye'" style="display:none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
-                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
-                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
-                        </svg>
-                    </button>
-                    <a class ="btn btn-danger" th:href = "@{/home/{user_id}/{id}(user_id=${user_id},id=${sendpassword.id_password})}" >
+                    <a class ="btn btn-danger" th:href = "@{/admin/{user_id}/{id}(user_id=${user_id},id=${user.user_id})}" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                             <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                        </svg>
-                    </a>
+                        </svg></a>
                 </td>
             </tr>
             </tbody>
@@ -81,36 +68,22 @@
             </thead>
             <input class="form-control"
                    type="hidden"
-                   th:value="${user_id}" id="user_id" name="user_id" />
+                   th:value="${user_id}" id="user_id2" name="user_id" />
             <tbody>
             <tr th:each = "userroles : ${rolesList}">
+                <td style="display:none;" th:text = "${userroles.role_id}" th:value="${userroles.role_id}" th:id="${userroles.role_id}" ></td>
                 <td th:text = "${userroles.role_name}" ></td>
-                <td th:text = "${sendpassword.password_to_name}" ></td>
-                <td th:text = "${sendpassword.password_date}" ></td>
-                <td style="visibility:hidden;" th:text = "${sendpassword.password}" th:value="${sendpassword.password}" th:id="${sendpassword.id_password}" ></td>
+                <td th:text = "${userroles.users}" ></td>
                 <td>
-                    <button class="btn btn-secondary" type="button"th:attr="onclick=|SeeText('${sendpassword.id_password}')|" th:id="${sendpassword.eye">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
-                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-secondary" type="button"th:attr="onclick=|SeeText('${sendpassword.id_password}')|" th:id="${sendpassword.id_slashedEye" style="display:none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
-                            <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
-                            <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
-                        </svg>
-                    </button>
-                    <button class="btn btn-danger" type="button" th:href = "@{/home/{id}(id=${sendpassword.id_password})}">
+                    <a class ="btn btn-danger" th:href = "@{/admin/{role_id}/{id}(user_id=${user_id},id=${userroles.role_id})}" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                             <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                        </svg>
-                    </button>
+                        </svg></a>
                 </td>
             </tr>
             </tbody>
         </table>
-        <input type="submit" class="btn btn-primary" value="Send new password">
+        <input type="submit" class="btn btn-primary" value="Add new group">
     </form>
 </div>
 </body>

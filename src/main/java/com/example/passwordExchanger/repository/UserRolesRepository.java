@@ -14,4 +14,10 @@ public interface UserRolesRepository extends JpaRepository<UserRoles,Long> {
             value
                     = "SELECT * FROM user_roles ur where ur.role_id =?1")
     List<UserRoles> getUserRolesByRoleId(int role);
+
+    @Query(
+            nativeQuery = true,
+            value
+                    = "SELECT * FROM user_roles ur where ur.user_id =?1")
+    List<UserRoles> getUserRolesByUserId(int user_id);
 }

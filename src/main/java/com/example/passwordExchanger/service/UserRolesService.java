@@ -19,5 +19,7 @@ public interface UserRolesService {
     void deleteRoleById(int id);
 
     List<UserRoles> getUserRolesByRoleId(int role);
+    List<UserRoles> getUserRolesByUserId(int user_id);
+
 
 }

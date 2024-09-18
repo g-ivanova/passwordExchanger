@@ -15,7 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @SessionAttributes("user")
 public class FunctionsController {
@@ -67,50 +70,72 @@ public class FunctionsController {
     }
     @GetMapping(value="/admin")
     public String admin(Model model, @RequestParam(required = false) int user_id){
-        UsersAndPasswords pass=new UsersAndPasswords();
-        int id_pass;
-        String pass_desc;
-        int id_from;
-        String name_from;
-        int id_to;
-        String name_to;
-        String password;
-        String date_pass;
-        String password_text;
-        List<UsersAndPasswords> passwordsList= new ArrayList<UsersAndPasswords>();
-        List<UsersAndPasswords> sendPasswordsList= new ArrayList<UsersAndPasswords>();
-        List<Password> passwords=passwordService.getPasswordsFromUserId(user_id);
-        for(int i=0;i< passwords.size();i++) {
-            id_pass=passwords.get(i).getPassword_id();
-            pass_desc=passwords.get(i).getPassword_desc();
-            id_from=passwords.get(i).getPassword_from();
-            name_from=userService.getUserById(id_from).getUser_names();
-            password=passwordService.getPassword(id_pass,"admin");
-            password_text=password.replaceAll(".","*");
-            date_pass=passwords.get(i).getPassword_validity();
-            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,name_from,password,password_text,date_pass);
-            passwordsList.add(pass);
+        int id;
+        String user_names;
+        String user_username;
+        String user_email;
+        String user_roles = "";
+        String b;
+        List<UserRoles>roles=userRolesService.getAllRoles();
+        List<User> allUsers=userService.getAllUsers();
+        List<UsersAndRoles> usersList=new ArrayList<UsersAndRoles>();
+        List<RoleAndAllUsers>roleAndAllUsers=new ArrayList<RoleAndAllUsers>();
+
+        int role_id;
+        String role_name="";
+        String usersWithRole="";
+        for(int i=0;i<allUsers.size();i++) {
+            user_roles="";
+            b="";
+            id=allUsers.get(i).getUser_id();
+            user_names=allUsers.get(i).getUser_names();
+            user_username=allUsers.get(i).getUser_username();
+            user_email=allUsers.get(i).getUser_email();
+            roles=userRolesService.getUserRolesByUserId(id);
+            for(int j=0;j<roles.size();j++){
+                if(j<=0) {
+                    b = roleService.getRoleById(roles.get(j).getRole_id()).getRole_name();
+                    user_roles=user_roles+b;
+                }
+                if(j>0){
+                    b = roleService.getRoleById(roles.get(j).getRole_id()).getRole_name();
+                user_roles=user_roles+", "+b;}
+            }
+       
+            UsersAndRoles newUserAndRole=new UsersAndRoles(id,user_names,user_username,user_email,user_roles);
+            usersList.add(newUserAndRole);
+
         }
 
-        List<Password> sendPasswords=passwordService.getPasswordsFromUserIdTo(user_id);
-        for(Password passs:sendPasswords) {
-            id_pass=passs.getPassword_id();
-            pass_desc=passs.getPassword_desc();
-            id_from=passs.getPassword_from();
-            name_from=userService.getUserById(id_from).getUser_names();
-            id_to=passs.getPassword_to();
-            name_to=userService.getUserById(id_to).getUser_names();
-            password=passwordService.getPassword(id_pass,"admin");
-            date_pass=passs.getPassword_validity();
-            password=passwordService.getPassword(id_pass,"admin");
-            password_text=password.replaceAll(".","*");
-            pass=new UsersAndPasswords(id_pass,pass_desc,id_from,id_to,name_to,name_from,password,password_text,date_pass);
-            sendPasswordsList.add(pass);
+        int id_role;
+        String name_role;
+        String role_users;
+        String a;
+        List<Role>allRoles=roleService.getAllRoles();
+        for(int n=0;n<allRoles.size();n++){
+            role_users="";
+            a="";
+            id_role=allRoles.get(n).getRole_id();
+            name_role=allRoles.get(n).getRole_name();
+            List<UserRoles>allUsersWithThisRole=userRolesService.getUserRolesByRoleId(id_role);
+            for(int m=0;m<allUsersWithThisRole.size();m++){
+                if(m<=0){
+                    a=userService.getUserById(allUsersWithThisRole.get(m).getUser_id()).getUser_names();
+                    role_users= role_users+a;
+                }
+                if(m>0){
+                    a=userService.getUserById(allUsersWithThisRole.get(m).getUser_id()).getUser_names();
+                    role_users= role_users+", "+a;
+                }
+            }
+            RoleAndAllUsers newRoleAndAllUsers=new RoleAndAllUsers(id_role,name_role,role_users);
+            roleAndAllUsers.add(newRoleAndAllUsers);
         }
+
         model.addAttribute("user",userService.getUserById(user_id));
         model.addAttribute("user_id",user_id);
-        model.addAttribute("sendPasswordsList",sendPasswordsList);
-        model.addAttribute("passwordsList",passwordsList);
+        model.addAttribute("rolesList",roleAndAllUsers);
+        model.addAttribute("usersList",usersList);
         return "admin";
     }
     @GetMapping(value="/home")
