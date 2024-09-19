@@ -41,4 +41,9 @@ public class RoleImpl implements RoleService {
     public void deleteRoleById(int id) {
         roleRepository.deleteById((long) id);
     }
+
+    @Override
+    public List<Role> getRolesWithoutOne(int id) {
+       return roleRepository.getRolesWithoutOne(id);
+    }
 }

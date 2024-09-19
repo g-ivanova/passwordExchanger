@@ -9,74 +9,78 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>PASSEX Edit group</title>
+  <title>PASSEX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <link rel="shortcut icon" href="favicon.ico">
-
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/animate.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/animate.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <div class="container">
   <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <form th:action="@{/edit_user}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-        <h2>Edit user</h2>
-        <input class="form-control"
-               type="hidden"
-               th:value="${user_id}"
-               id="user_id"
-               name="user_id"/>
-        <div class="form-group">
-          <label for="name" class="sr-only">Names</label>
-          <input
-                  type = "text"
-                  name = "user_names"
-                  th:field = "*{user_names}"
-                  class = "form-control"
-                  placeholder="Names"
-                  id="name"
-          />
-        </div>
+    <form th:action="@{/admin/{user_id}/{role_id}}" th:object = "${user}"  method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+      <input class="form-control"
+             type="hidden"
+             th:value="${user_id}"
+             id="user_id"
+             name="user_id"/>
+      <input class="form-control"
+             type="hidden"
+             th:value="${role_id}"
+             id="role_id"
+             name="role_id"/>
+      <form style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+        <table class = "table table-striped" style="width:100%" id="table">
+          <thead>
+          <tr>
+            <th colspan="5">
+              <h2>Users from this group</h2>
+            </th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each = "user : ${userList}">
+
+            <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
+            <td th:text = "${user.user_names}" ></td>
+            <td th:text = "${user.user_email}"></td>
+            <td>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+
+
         <div class ="form-group">
-          <label for="password" class="sr-only">Password</label>
-          <input
-                  type = "password"
-                  name = "pass"
-                  th:field = "*{pass}"
-                  class = "form-control"
-                  placeholder="Enter password"
-                  id="password"
-          />
-        </div>
-        <div class ="form-group">
-          <label for="role" class="sr-only">Select group</label>
-          <select class="form-control"  id="role" name="role">
-            <option value="Select group">Select group</option>
-            <option th:each="role : ${roleList}"
-                    th:value="${role.role_id}"
-                    th:text="${role.role_name}">
+          <label for="user" class="sr-only">Select User</label>
+
+          <select class="form-control"  id="user" name="user">
+            <option value="Select group">Select User</option>
+            <option th:each="userNo : ${userListNo}"
+                    th:value="${userNo.user_id}"
+                    th:text="${userNo.user_email}">
             </option>
           </select>
         </div>
         <div class ="form-group">
-          <label for="user" class="sr-only">Select user</label>
-          <select class="form-control" id= "user" name = "user">
-            <option value="0">Select user</option>
-          </select>
-        </div>
-        <div class ="form-group">
-          <input type="submit" value="Send password" class="btn btn-primary">
+          <input type="submit" value="Add to group" class="btn btn-primary">
           <input type="button" value="Cancel" class="btn btn-cancel" onclick="window.history.back();">
         </div>
+
       </form>
-    </div>
+
   </div>
+
+</div>
 </div>
 </body>
 </html>

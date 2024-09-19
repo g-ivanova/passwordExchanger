@@ -21,5 +21,7 @@ public interface UserRolesService {
     List<UserRoles> getUserRolesByRoleId(int role);
     List<UserRoles> getUserRolesByUserId(int user_id);
 
+    List<UserRoles> getUserRolesByNoRoleId(int role);
+
 
 }

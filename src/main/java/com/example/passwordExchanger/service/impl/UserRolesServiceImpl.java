@@ -54,4 +54,9 @@ public class UserRolesServiceImpl implements UserRolesService {
     public List<UserRoles> getUserRolesByUserId(int user_id) {
         return userRolesRepository.getUserRolesByUserId(user_id);
     }
+
+    @Override
+    public List<UserRoles> getUserRolesByNoRoleId(int role) {
+        return userRolesRepository.getUserRolesByNoRoleId(role);
+    }
 }

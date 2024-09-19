@@ -8,6 +8,12 @@ public class UsersAndRoles {
     private String user_email;
     private String user_roles;
 
+    public UsersAndRoles(int user_id, String user_names, String user_username, String user_email) {
+        this.user_id = user_id;
+        this.user_names = user_names;
+        this.user_username = user_username;
+        this.user_email = user_email;
+    }
     public UsersAndRoles(int user_id, String user_names, String user_username, String user_email, String user_roles) {
         this.user_id = user_id;
         this.user_names = user_names;

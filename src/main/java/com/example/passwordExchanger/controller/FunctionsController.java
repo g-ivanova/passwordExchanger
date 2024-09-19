@@ -14,9 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.swing.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -245,6 +243,7 @@ public class FunctionsController {
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
         model.addAttribute("password",password);
+
         return "sendpass";
     }
     @PostMapping(value="/sendpass")
@@ -305,4 +304,54 @@ public class FunctionsController {
 
     }
 
-}
+    @GetMapping(value="/admin/{user_id}/{role_id}")
+    public String addUserToGroupForm(Model model,@PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id){
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("role_id",role_id);
+       // model.addAttribute("role",role);
+        List<UsersAndRoles> userlist=new ArrayList<UsersAndRoles>();
+        for(UserRoles userRole:userRolesService.getUserRolesByRoleId(role_id)){
+            userlist.add(new UsersAndRoles(userService.getUserById(userRole.getUser_id()).getUser_id(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_email()));
+        }
+        model.addAttribute("userList",userlist);
+
+        List<UsersAndRoles> userlistNo=new ArrayList<UsersAndRoles>();
+        for(UserRoles userRole:userRolesService.getUserRolesByNoRoleId(role_id)){
+            userlistNo.add(new UsersAndRoles(userService.getUserById(userRole.getUser_id()).getUser_id(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_names()+" "+userService.getUserById(userRole.getUser_id()).getUser_email()));
+        }
+        if(userlistNo.size()>userlist.size()) {
+            for (int m = 0; m < userlistNo.size(); m++) {
+                for (int k = 0; k < userlist.size(); k++) {
+                    if (userlistNo.get(m).getUser_id() == userlist.get(k).getUser_id()) {
+                        userlistNo.remove(m);
+                    }
+                }
+            }
+        }
+        if(userlistNo.size()<userlist.size()) {
+            for (int m = 0; m < userlist.size(); m++) {
+                for (int k = 0; k < userlistNo.size(); k++) {
+                    if (userlistNo.get(k).getUser_id() == userlist.get(m).getUser_id()) {
+                        userlistNo.remove(k);
+                    }
+                }
+            }
+        }
+
+        model.addAttribute("userListNo",userlistNo);
+
+        return "edit_group";
+    }
+    @PostMapping(value="/admin/{user_id}/{role_id}")
+    public String addUserToGroup(@RequestParam(required = false) int user,RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) int user_id, @RequestParam(required = false) int role_id) throws Exception{
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("role_id",role_id);
+        model.addAttribute("user_id",user_id);
+            model.addAttribute("user", userService.getUserById(user_id));
+            model.addAttribute("user_id", user_id);
+            redirectAttributes.addAttribute("user_id", user_id);
+            userRolesService.saveRole(new UserRoles(role_id,user));
+            return "redirect:/admin";
+        }
+    }

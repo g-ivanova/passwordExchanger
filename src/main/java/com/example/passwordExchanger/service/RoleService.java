@@ -15,4 +15,6 @@ public interface RoleService {
     Role updateRole(Role role);
 
     void deleteRoleById(int id);
+    List<Role> getRolesWithoutOne(int id);
+
 }

@@ -66,4 +66,6 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersByRole(int role_id) {
         return userRepository.getUsersByRole(role_id);
     }
+
+
 }
