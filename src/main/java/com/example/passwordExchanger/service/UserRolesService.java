@@ -22,6 +22,11 @@ public interface UserRolesService {
     List<UserRoles> getUserRolesByUserId(int user_id);
 
     List<UserRoles> getUserRolesByNoRoleId(int role);
+    void deleteUserRoleByUserIdAndRoleId(int user_id,int role_id);
+
+
+    void deleteUserRoleByRoleId(int role_id);
+
 
 
 }

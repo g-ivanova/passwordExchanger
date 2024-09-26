@@ -1,12 +1,21 @@
 package com.example.passwordExchanger.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.Data;
+import org.springframework.data.annotation.Immutable;
+
+
 public class UsersAndRoles {
+
 
     private int user_id;
     private String user_names;
     private String user_username;
     private String user_email;
     private String user_roles;
+
+    public UsersAndRoles(){}
 
     public UsersAndRoles(int user_id, String user_names, String user_username, String user_email) {
         this.user_id = user_id;

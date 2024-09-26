@@ -1,6 +1,7 @@
 package com.example.passwordExchanger.service;
 
 import com.example.passwordExchanger.entity.User;
+import com.example.passwordExchanger.entity.UsersAndRoles;
 
 import java.util.List;
 
@@ -25,6 +26,11 @@ public interface UserService {
     User getUserByUsernameOrEmail(String username, String email);
 
     List<User> getUsersByRole(int role_id);
+    List<User> getUsersThatareNotInThisRole(int role_id);
+
+    List<UsersAndRoles> getUsersAndRoles();
+
+
 
 
 

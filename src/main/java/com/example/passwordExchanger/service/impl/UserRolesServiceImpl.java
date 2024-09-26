@@ -59,4 +59,14 @@ public class UserRolesServiceImpl implements UserRolesService {
     public List<UserRoles> getUserRolesByNoRoleId(int role) {
         return userRolesRepository.getUserRolesByNoRoleId(role);
     }
+
+    @Override
+    public void deleteUserRoleByUserIdAndRoleId(int user_id, int role_id) {
+     userRolesRepository.deleteUserRoleByUserIdAndRoleId(user_id,role_id);
+    }
+
+    @Override
+    public void deleteUserRoleByRoleId(int role_id) {
+        userRolesRepository.deleteUserRoleByRoleId(role_id);
+    }
 }

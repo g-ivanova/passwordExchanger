@@ -17,6 +17,8 @@ public class UserRoles {
     private int user_id;
 
     public UserRoles(){}
+
+
     public UserRoles(int role_id, int user_id) {
         this.role_id = role_id;
         this.user_id = user_id;
