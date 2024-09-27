@@ -15,4 +15,10 @@ public interface RoleRepository extends JpaRepository<Role,Long> {
                     = "SELECT * FROM roles p where p.role_id !=?1")
     List<Role> getRolesWithoutOne(int id);
 
+    @Query(
+            nativeQuery = true,
+            value
+                    = "SELECT role_name FROM roles p where p.role_id =?1")
+    String getRoleFromId(int id);
+
 }

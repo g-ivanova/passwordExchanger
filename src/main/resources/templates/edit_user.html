@@ -17,21 +17,26 @@
 
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
 
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/animate.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/animate.css">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <div class="container">
   <div class="row">
     <div class="col-md-4 col-md-offset-4">
-      <form th:action="@{/edit_user}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+      <form th:action="@{/admin/editUser/{id}/{user_id}}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
         <h2>Edit user</h2>
         <input class="form-control"
                type="hidden"
                th:value="${user_id}"
                id="user_id"
                name="user_id"/>
+        <input class="form-control"
+               type="hidden"
+               th:value="${id}"
+               id="id"
+               name="id"/>
         <div class="form-group">
           <label for="name" class="sr-only">Names</label>
           <input
@@ -43,33 +48,61 @@
                   id="name"
           />
         </div>
-        <div class ="form-group">
-          <label for="password" class="sr-only">Password</label>
+        <div class="form-group">
+          <label for="name" class="sr-only">Names</label>
           <input
-                  type = "password"
-                  name = "pass"
-                  th:field = "*{pass}"
+                  type = "text"
+                  name = "user_email"
+                  th:field = "*{user_email}"
                   class = "form-control"
-                  placeholder="Enter password"
-                  id="password"
+                  placeholder="Email"
+                  id="email"
           />
         </div>
-        <div class ="form-group">
-          <label for="role" class="sr-only">Select group</label>
-          <select class="form-control"  id="role" name="role">
-            <option value="Select group">Select group</option>
-            <option th:each="role : ${roleList}"
-                    th:value="${role.role_id}"
-                    th:text="${role.role_name}">
-            </option>
-          </select>
+        <div class="form-group">
+          <label for="name" class="sr-only">Names</label>
+          <input
+                  type = "text"
+                  name = "user_username"
+                  th:field = "*{user_username}"
+                  class = "form-control"
+                  placeholder="Username"
+                  id="username"
+          />
         </div>
-        <div class ="form-group">
-          <label for="user" class="sr-only">Select user</label>
-          <select class="form-control" id= "user" name = "user">
-            <option value="0">Select user</option>
-          </select>
-        </div>
+
+        <table class = "table table-striped" style="width:100%" id="table">
+          <thead>
+          <tr>
+            <th colspan="5">
+              <h2>Users</h2>
+            </th>
+          </tr>
+          <tr>
+            <th>Name</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each = "role : ${roleList}">
+            <td style="display:none;" th:text = "${role.role_id}" th:value="${role.role_id}" th:id="${role.role_id}" ></td>
+            <td th:text = "${role.role_name}" ></td>
+            <td>
+              <input class="form-control"
+                     type="hidden"
+                     th:value="${id}"
+                     id="id2"
+                     name="id"/>
+              <a class ="btn btn-danger" th:href = "@{/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}(role_id=${role.role_id},id=${id},user_id=${user_id})}" >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                </svg>
+              </a>
+
+            </td>
+          </tr>
+          </tbody>
+        </table>
         <div class ="form-group">
           <input type="submit" value="Send password" class="btn btn-primary">
           <input type="button" value="Cancel" class="btn btn-cancel" onclick="window.history.back();">
