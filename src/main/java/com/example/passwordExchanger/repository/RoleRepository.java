@@ -21,4 +21,10 @@ public interface RoleRepository extends JpaRepository<Role,Long> {
                     = "SELECT role_name FROM roles p where p.role_id =?1")
     String getRoleFromId(int id);
 
+    @Query(
+            nativeQuery = true,
+            value
+                    = "Select roles.role_id,roles.role_name from roles left join user_roles on user_roles.role_id=roles.role_id  WHERE user_roles.role_id NOT IN (SELECT user_roles.role_id FROM user_roles where user_id=?1) group by roles.role_id;")
+    List<Role> getRoleWhereUserIsNot(int id);
+
 }

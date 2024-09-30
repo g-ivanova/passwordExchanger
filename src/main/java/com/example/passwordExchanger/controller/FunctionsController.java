@@ -275,28 +275,46 @@ public class FunctionsController {
     }
     @PostMapping(value="/admin/{user_id}/{role_id}")
     public String addUserToGroup(@RequestParam(required = false) int user,RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) int user_id, @RequestParam(required = false) int role_id) throws Exception{
-        List<Role> roleList=(List<Role>) roleService.getAllRoles();
-        model.addAttribute("roleList",roleList);
-        model.addAttribute("role_id",role_id);
-        model.addAttribute("user_id",user_id);
-            model.addAttribute("user", userService.getUserById(user_id));
-            model.addAttribute("user_id", user_id);
-            redirectAttributes.addAttribute("user_id", user_id);
             userRolesService.saveRole(new UserRoles(role_id,user));
-            return "redirect:/admin";
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("role_id",role_id);
+        // model.addAttribute("role",role);
+        List<UsersAndRoles> userlist=new ArrayList<UsersAndRoles>();
+        for(UserRoles userRole:userRolesService.getUserRolesByRoleId(role_id)){
+            userlist.add(new UsersAndRoles(userService.getUserById(userRole.getUser_id()).getUser_id(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_email()));
+        }
+        model.addAttribute("userList",userlist);
+
+        List<User> userlistNo=new ArrayList<User>();
+        userlistNo=userService.getUsersThatareNotInThisRole(role_id);
+
+        model.addAttribute("role_name",roleService.getRoleById(role_id).getRole_name());
+
+        model.addAttribute("userListNo",userlistNo);
+
+        return "edit_group";
         }
 
     @GetMapping(value="/admin/group/{user_id}/{id}")
     public String deleteUserFromGroup(RedirectAttributes redirectAttributes,Model model,@PathVariable int id, @PathVariable(required = false) int user_id) {
         userRolesService.deleteUserRoleByUserIdAndRoleId(user_id,id);
-        List<Role> roleList=(List<Role>) roleService.getAllRoles();
-        model.addAttribute("roleList",roleList);
-        model.addAttribute("role_id",id);
         model.addAttribute("user_id",user_id);
-        model.addAttribute("user", userService.getUserById(user_id));
-        model.addAttribute("user_id", user_id);
-        redirectAttributes.addAttribute("user_id", user_id);
-        return "redirect:/admin";
+        model.addAttribute("role_id",id);
+        // model.addAttribute("role",role);
+        List<UsersAndRoles> userlist=new ArrayList<UsersAndRoles>();
+        for(UserRoles userRole:userRolesService.getUserRolesByRoleId(id)){
+            userlist.add(new UsersAndRoles(userService.getUserById(userRole.getUser_id()).getUser_id(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_email()));
+        }
+        model.addAttribute("userList",userlist);
+
+        List<User> userlistNo=new ArrayList<User>();
+        userlistNo=userService.getUsersThatareNotInThisRole(id);
+
+        model.addAttribute("role_name",roleService.getRoleById(id).getRole_name());
+
+        model.addAttribute("userListNo",userlistNo);
+
+        return "edit_group";
 
     }
 
@@ -358,6 +376,8 @@ public class FunctionsController {
             role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             roleList.add(role);
         }
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
+        model.addAttribute("roleListNo",roleListNo);
         model.addAttribute("id",id);
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
@@ -367,33 +387,92 @@ public class FunctionsController {
         return "edit_user";
 
     }
+    @PostMapping(params = "add",value="/admin/editUser/{id}/{user_id}")
+    public String editUserFormAddGroup(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
+        UserRoles userrole=new UserRoles(role_id,id);
 
-    @PostMapping(value="/admin/editUser/{id}/{user_id}")
-    public String editUser(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id) {
-        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        userRolesService.saveRole(userrole);
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+        for(int i=0;i<userRoleList.size();i++){
+            role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
+            roleList.add(role);
+        }
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
+        model.addAttribute("roleListNo",roleListNo);
+        model.addAttribute("id",id);
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
-        model.addAttribute("user", userService.getUserById(user_id));
-        model.addAttribute("user_id", user_id);
+        model.addAttribute("user", userService.getUserById(id));
         redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", id);
+        return "edit_user";
+    }
+
+    @PostMapping(params = "save",value="/admin/editUser/{id}/{user_id}")
+    public String editUser(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id) {
         User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
         userService.saveUser(newUser);
-        return "redirect:/admin";
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+        for(int i=0;i<userRoleList.size();i++){
+            role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
+            roleList.add(role);
+        }
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
+        model.addAttribute("roleListNo",roleListNo);
+        model.addAttribute("id",id);
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(id));
+        redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", id);
+        return "edit_user";
     }
 
 
     @GetMapping(value="/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}")
     public String deleteGroupFromUser(RedirectAttributes redirectAttributes,Model model,@PathVariable int id, @PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id) {
         userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+        for(int i=0;i<userRoleList.size();i++){
+            role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
+            roleList.add(role);
+        }
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
+        model.addAttribute("roleListNo",roleListNo);
+        model.addAttribute("id",id);
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(id));
+        redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", id);
+        return "edit_user";
+
+    }
+    @PostMapping(params = "cancel",value="/admin/editUser/{id}/{user_id}")
+    public String cancelFromEditUser(RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) int user_id){
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
-        model.addAttribute("role_id",role_id);
-        model.addAttribute("user_id",id);
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("user_id", id);
-        redirectAttributes.addAttribute("user_id", id);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        model.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("user_id", user_id);
         return "redirect:/admin";
-
+    }
+    @PostMapping(params = "cancel",value="/admin/{user_id}/{role_id}")
+    public String cancelFromEditGroup(RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) int user_id){
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        model.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("user_id", user_id);
+        return "redirect:/admin";
     }
 
 

@@ -51,4 +51,9 @@ public class RoleImpl implements RoleService {
     public String getRoleFromId(int id) {
         return roleRepository.getRoleFromId(id);
     }
+
+    @Override
+    public List<Role> getRoleWhereUserIsNot(int id) {
+        return roleRepository.getRoleWhereUserIsNot(id);
+    }
 }

@@ -19,4 +19,6 @@ public interface RoleService {
 
     String getRoleFromId(int id);
 
+    List<Role> getRoleWhereUserIsNot(int id);
+
 }
