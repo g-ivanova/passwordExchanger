@@ -17,4 +17,6 @@ public interface RoleService {
     void deleteRoleById(int id);
     List<Role> getRolesWithoutOne(int id);
 
+    String getRoleFromId(int id);
+
 }

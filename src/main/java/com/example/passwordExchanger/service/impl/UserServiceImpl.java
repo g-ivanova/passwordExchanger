@@ -1,6 +1,7 @@
 package com.example.passwordExchanger.service.impl;
 
 import com.example.passwordExchanger.entity.User;
+import com.example.passwordExchanger.entity.UsersAndRoles;
 import com.example.passwordExchanger.repository.UserRepository;
 import com.example.passwordExchanger.service.UserService;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
+
 
     public UserServiceImpl(UserRepository userRepository){
         super();
@@ -67,5 +69,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.getUsersByRole(role_id);
     }
 
+    @Override
+    public List<User> getUsersThatareNotInThisRole(int role_id) {
+        return userRepository.getUsersThatareNotInThisRole(role_id);
+    }
 
+
+    @Override
+    public List<UsersAndRoles> getUsersAndRoles() {
+        return userRepository.getUsersAndRoles();
+    }
 }

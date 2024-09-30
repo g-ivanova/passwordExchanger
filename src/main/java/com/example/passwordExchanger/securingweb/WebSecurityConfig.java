@@ -30,7 +30,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
 
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/index", "/home","/sendpass","/getUsersFromRole","/home/{user_id}/{id}","/admin","/admin/{user_id}/{role_id}","/edit_group","/admin/**").permitAll()
+                        .requestMatchers("/index", "/home","/sendpass","/getUsersFromRole","/home/{user_id}/{id}","/admin","/admin/{user_id}/{role_id}","/edit_group","/admin/**","/admin/addNewGroup","add_new_role","/admin/addUserToGroup","/admin/deleteGroup/{user_id}/{id}","/admin/deleteUser/{id}/{user_id}","/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}").permitAll()
                         .requestMatchers("/register","/js/**","/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/error", "/dist/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE).permitAll()
                         .anyRequest().authenticated()

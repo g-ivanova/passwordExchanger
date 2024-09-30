@@ -1,9 +1,13 @@
 package com.example.passwordExchanger.entity;
 
+
 public class RoleAndAllUsers {
+
     private int role_id;
     private String role_name;
     private String users;
+
+    public RoleAndAllUsers(){}
 
     public RoleAndAllUsers(int role_id, String role_name, String users) {
         this.role_id = role_id;
