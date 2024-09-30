@@ -42,7 +42,7 @@
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Remove</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody>
@@ -67,7 +67,7 @@
           <label for="user" class="sr-only">Select User</label>
 
           <select class="form-control"  id="user" name="user">
-            <option value="Select group">Select User</option>
+            <option value="Select User">Select User</option>
             <option th:each="userNo : ${userListNo}"
                     th:value="${userNo.user_id}"
                     th:text="${userNo.user_email}">
