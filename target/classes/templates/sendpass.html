@@ -1,0 +1,82 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script  type="text/javascript" src="/js/sendpass.js"></script>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" xmlns:th="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PASSEX Send Password</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form th:action="@{/sendpass}" th:object = "${password}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+                <h2>Send password</h2>
+                <input class="form-control"
+                       type="hidden"
+                       th:value="${user_id}"
+                       id="user_id"
+                       name="user_id"/>
+                <div class="form-group">
+                    <label for="description" class="sr-only">Description</label>
+                    <input
+                            type = "text"
+                            name = "password_desc"
+                            th:field = "*{password_desc}"
+                            class = "form-control"
+                            placeholder="Description"
+                            id="description"
+                    />
+                </div>
+                <div class ="form-group">
+                    <label for="password" class="sr-only">Password</label>
+                    <input
+                            type = "password"
+                            name = "pass"
+                            th:field = "*{pass}"
+                            class = "form-control"
+                            placeholder="Enter password"
+                            id="password"
+                    />
+                </div>
+                <div class ="form-group">
+                    <label for="role" class="sr-only">Select group</label>
+                    <select class="form-control"  id="role" name="role">
+                        <option value="Select group">Select group</option>
+                        <option th:each="role : ${roleList}"
+                                th:value="${role.role_id}"
+                                th:text="${role.role_name}">
+                        </option>
+                    </select>
+                </div>
+                <div class ="form-group">
+                    <label for="user" class="sr-only">Select user</label>
+                    <select class="form-control" id= "user" name = "user">
+                        <option value="0">Select user</option>
+                    </select>
+                </div>
+                <div class ="form-group">
+                    <input type="submit" value="Send password" class="btn btn-primary">
+                    <input type="button" value="Cancel" class="btn btn-cancel" onclick="window.history.back();">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
