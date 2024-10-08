@@ -75,9 +75,9 @@ public class FunctionsController {
     }
     @GetMapping(value="/admin")
     public String admin(Model model, @RequestParam(required = false) int user_id){
-        List<UsersAndRoles> usersList=jdbcTemplate.query("Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ',') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id group by users.user_id,users.user_names,users.user_username,users.user_email",
+        List<UsersAndRoles> usersList=jdbcTemplate.query("Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ', ') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id group by users.user_id,users.user_names,users.user_username,users.user_email",
                 (rs,rowNum)->new UsersAndRoles(rs.getInt("user_id"),rs.getString("user_names"),rs.getString("user_username"),rs.getString("user_email"),rs.getString("user_roles")));
-        List<RoleAndAllUsers>roleAndAllUsers=jdbcTemplate.query("Select roles.role_id,roles.role_name, group_concat(users.user_names separator ',') as users from users right join user_roles on users.user_id=user_roles.user_id right join roles on roles.role_id=user_roles.role_id group by roles.role_id",
+        List<RoleAndAllUsers>roleAndAllUsers=jdbcTemplate.query("Select roles.role_id,roles.role_name, group_concat(users.user_names separator ', ') as users from users right join user_roles on users.user_id=user_roles.user_id right join roles on roles.role_id=user_roles.role_id group by roles.role_id",
                 (rs,rowNum)->new RoleAndAllUsers(rs.getInt("role_id"),rs.getString("role_name"),rs.getString("users")));
         model.addAttribute("user",userService.getUserById(user_id));
         model.addAttribute("user_id",user_id);
