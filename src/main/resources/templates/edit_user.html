@@ -100,19 +100,29 @@
             </tr>
            </tbody>
           </table>
-          <div class ="form-group">
-            <label for="role_id" class="sr-only">Select Group</label>
-            <select class="form-control"  id="role_id" name="role_id">
-              <option value="Select group">Select Group</option>
-              <option th:each="role : ${roleListNo}"
-                      th:value="${role.role_id}"
-                      th:text="${role.role_name}">
-              </option>
-
-            </select>
+          <div class ="form-group" id="select_group">
+            <table>
+              <tr>
+                <td style="width:90%">
+                  <select class="form-control"  id="role_id" name="role_id">
+                    <option value="Select group">Select Group</option>
+                    <option th:each="role : ${roleListNo}"
+                            th:value="${role.role_id}"
+                            th:text="${role.role_name}">
+                    </option>
+                  </select>
+                </td>
+                <td>
+                  <button type="submit" name="add" class="btn btn-success2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </table>
           </div>
           <div class ="form-group">
-            <input type="submit" value="Add to group" name="add" class="btn btn-primary">
             <input type="submit" name="save" value="Save changes" class="btn btn-primary">
             <input type="submit" value="Cancel" name="cancel" class="btn btn-cancel">
           </div>

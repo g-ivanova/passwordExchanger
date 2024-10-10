@@ -28,12 +28,24 @@ $(document).ready(function() {
             var names = $('#user_names').val();
             var namesReg = /^[a-zA-Z\s]*$/;
             if ( !namesReg.test( names ) ) {
-          document.getElementById("names_error").innerText = "Names are incorrect. Should contain only letters.";
+                document.getElementById("names_error").innerText = "Names are incorrect. Should contain only letters.";
             }
             else{
-             document.getElementById("names_error").innerText = "";
+                document.getElementById("names_error").innerText = "";
             }
           });
         });
+        var password = document.getElementById("user_password"),
+            confirm_password = document.getElementById("user_rep_password");
+            function validatePassword(){
+            if(password.value != confirm_password.value) {
+                confirm_password.setCustomValidity("Passwords Don't Match");
+              } else {
+                confirm_password.setCustomValidity('');
+              }
+            }
+            password.onchange = validatePassword;
+            confirm_password.onkeyup = validatePassword;
+
 
 });
