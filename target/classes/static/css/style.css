@@ -267,5 +267,41 @@ input, textarea {
     background-color:#5bc0de;
     border-color:#46b8da;
     }
-
-/*# sourceMappingURL=style.css.map */
+.dropbtn {
+    border: none;
+    margin: 15px 30px;
+    background:#6c757d;
+    color: #ffffff;
+    -webkit-box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+    -moz-box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+    -o-box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+    box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
+}
+.dropbtn:hover, .dropbtn:focus, .dropbtn:active {
+  color: #ffffff;
+  background: #5a6268 !important;
+  outline: none;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+  float: right;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right:0;
+  top: 100%;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown-content a:hover {background-color: #ddd;}
+.show {display:block;}
