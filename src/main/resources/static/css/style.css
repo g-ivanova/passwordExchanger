@@ -269,7 +269,7 @@ input, textarea {
     }
 .dropbtn {
     border: none;
-    margin: 15px 30px;
+    margin: 15px 30px 3px;
     background:#6c757d;
     color: #ffffff;
     -webkit-box-shadow: -2px 10px 20px -1px rgba(51, 204, 204, 0.4);
@@ -290,6 +290,7 @@ input, textarea {
 .dropdown-content {
   display: none;
   position: absolute;
+  margin: 0px 30px;
   right:0;
   top: 100%;
   background-color: #f1f1f1;
@@ -303,5 +304,9 @@ input, textarea {
   text-decoration: none;
   display: block;
 }
+/* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #ddd;}
-.show {display:block;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
