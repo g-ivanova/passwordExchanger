@@ -2,6 +2,7 @@ package com.example.passwordExchanger.service;
 
 import com.example.passwordExchanger.entity.User;
 import com.example.passwordExchanger.entity.UsersAndRoles;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -29,9 +30,6 @@ public interface UserService {
     List<User> getUsersThatareNotInThisRole(int role_id);
 
     List<UsersAndRoles> getUsersAndRoles();
-
-
-
-
+    List<User> findUsersBySearchText(@Param("searchText") String searchText);
 
 }

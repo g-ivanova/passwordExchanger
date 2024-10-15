@@ -79,4 +79,9 @@ public class UserServiceImpl implements UserService {
     public List<UsersAndRoles> getUsersAndRoles() {
         return userRepository.getUsersAndRoles();
     }
+
+    @Override
+    public List<User> findUsersBySearchText(String searchText) {
+        return userRepository.findUsersBySearchText(searchText);
+    }
 }

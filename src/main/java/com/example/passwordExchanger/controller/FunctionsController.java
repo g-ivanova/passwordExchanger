@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -293,8 +294,7 @@ public class FunctionsController {
         model.addAttribute("userListNo",userlistNo);
 
         return "edit_group";
-        }
-
+    }
     @GetMapping(value="/admin/group/{user_id}/{id}")
     public String deleteUserFromGroup(RedirectAttributes redirectAttributes,Model model,@PathVariable int id, @PathVariable(required = false) int user_id) {
         userRolesService.deleteUserRoleByUserIdAndRoleId(user_id,id);
@@ -315,9 +315,7 @@ public class FunctionsController {
         model.addAttribute("userListNo",userlistNo);
 
         return "edit_group";
-
     }
-
     @GetMapping(value="/admin/addNewGroup/{user_id}")
     public String addNewGroupForm(Model model,@PathVariable(required = false) int user_id){
         model.addAttribute("user_id",user_id);
@@ -335,8 +333,6 @@ public class FunctionsController {
         redirectAttributes.addAttribute("user_id", user_id);
         return "redirect:/admin";
     }
-
-
     @GetMapping(value="/admin/deleteGroup/{user_id}/{id}")
     public String deleteGroup(RedirectAttributes redirectAttributes,Model model,@PathVariable int id,@ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
 
@@ -349,9 +345,7 @@ public class FunctionsController {
 
         roleService.deleteRoleById(id);
         return "redirect:/admin";
-
     }
-
     @GetMapping(value="/admin/deleteUser/{id}/{user_id}")
     public String deleteUser(RedirectAttributes redirectAttributes,Model model,@PathVariable int id,@ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
 
@@ -364,9 +358,7 @@ public class FunctionsController {
 
        userService.deleteUserById(id);
         return "redirect:/admin";
-
     }
-
     @GetMapping(value="/admin/editUser/{id}/{user_id}")
     public String editUserForm(RedirectAttributes redirectAttributes,Model model,@PathVariable int id,@ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
@@ -385,7 +377,6 @@ public class FunctionsController {
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", id);
         return "edit_user";
-
     }
     @PostMapping(params = "add",value="/admin/editUser/{id}/{user_id}")
     public String editUserFormAddGroup(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
@@ -409,7 +400,6 @@ public class FunctionsController {
         redirectAttributes.addAttribute("id", id);
         return "edit_user";
     }
-
     @PostMapping(params = "save",value="/admin/editUser/{id}/{user_id}")
     public String editUser(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id) {
         User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
@@ -429,10 +419,11 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(id));
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", id);
-        return "edit_user";
+        redirectAttributes.addFlashAttribute("notification",
+                String.format("User successfully saved", newUser.getUser_names()));
+        redirectAttributes.addFlashAttribute("action", "save");
+        return "redirect:/admin/editUser/{id}/{user_id}";
     }
-
-
     @GetMapping(value="/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}")
     public String deleteGroupFromUser(RedirectAttributes redirectAttributes,Model model,@PathVariable int id, @PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id) {
         userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
@@ -474,6 +465,50 @@ public class FunctionsController {
         redirectAttributes.addAttribute("user_id", user_id);
         return "redirect:/admin";
     }
+    @PostMapping(value="/admin/searchUser")
+    public String findUser(Model model, @RequestParam(required = false) int user_id, @RequestParam(required = false) String searchText){
+        List<UsersAndRoles> usersList=jdbcTemplate.query("Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ',') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id where LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_names, '%')) or LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_username, '%')) or LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_email, '%')) group by users.user_id,users.user_names,users.user_username,users.user_email;",
+        (rs,rowNum)->new UsersAndRoles(rs.getInt("user_id"),rs.getString("user_names"),rs.getString("user_username"),rs.getString("user_email"),rs.getString("user_roles")));
 
-
+        List<RoleAndAllUsers>roleAndAllUsers=jdbcTemplate.query("Select roles.role_id,roles.role_name, group_concat(users.user_names separator ',') as users from users right join user_roles on users.user_id=user_roles.user_id right join roles on roles.role_id=user_roles.role_id group by roles.role_id",
+                (rs,rowNum)->new RoleAndAllUsers(rs.getInt("role_id"),rs.getString("role_name"),rs.getString("users")));
+        model.addAttribute("user",userService.getUserById(user_id));
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("rolesList",roleAndAllUsers);
+        model.addAttribute("usersList",usersList);
+        return "admin";
     }
+    @PostMapping(value="/admin/searchGroup")
+    public String findGroup(Model model, @RequestParam( required = false) int user_id, @RequestParam(required = false) String searchText){
+        List<UsersAndRoles> usersList=jdbcTemplate.query("Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ',') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id group by users.user_id,users.user_names,users.user_username,users.user_email",
+                (rs,rowNum)->new UsersAndRoles(rs.getInt("user_id"),rs.getString("user_names"),rs.getString("user_username"),rs.getString("user_email"),rs.getString("user_roles")));
+
+        List<RoleAndAllUsers>roleAndAllUsers=jdbcTemplate.query("Select roles.role_id,roles.role_name, group_concat(users.user_names separator ',') as users from users right join user_roles on users.user_id=user_roles.user_id right join roles on roles.role_id=user_roles.role_id where LOWER('"+searchText+"') LIKE LOWER(CONCAT('%',roles.role_name,'%')) group by roles.role_id",
+                (rs,rowNum)->new RoleAndAllUsers(rs.getInt("role_id"),rs.getString("role_name"),rs.getString("users")));
+        model.addAttribute("user",userService.getUserById(user_id));
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("rolesList",roleAndAllUsers);
+        model.addAttribute("usersList",usersList);
+        return "admin";
+    }
+
+    @GetMapping(value="/home/settings/{user_id}")
+    public String settings(RedirectAttributes redirectAttributes,Model model,@PathVariable(required = false) int user_id,@ModelAttribute("user")User user){
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+        for(int i=0;i<userRoleList.size();i++){
+            role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
+            roleList.add(role);
+        }
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(user_id);
+        model.addAttribute("roleListNo",roleListNo);
+        model.addAttribute("id",user_id);
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", user_id);
+        return "profile_settings";
+    }
+}

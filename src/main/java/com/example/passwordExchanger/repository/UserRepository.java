@@ -4,6 +4,7 @@ import com.example.passwordExchanger.entity.User;
 import com.example.passwordExchanger.entity.UsersAndRoles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -53,7 +54,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<UsersAndRoles> getUsersAndRoles();
 
 
-
-
-
+    @Query( nativeQuery = true,value
+            = "SELECT * FROM users u WHERE " +
+            "LOWER(u.user_names) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
+            "LOWER(u.user_username) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
+            "LOWER(u.user_email) LIKE LOWER(CONCAT ('%', :searchText, '%'))")
+    List<User> findUsersBySearchText(@Param("searchText") String searchText);
 }
