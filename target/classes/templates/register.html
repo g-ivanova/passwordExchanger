@@ -45,8 +45,8 @@
                             th:field = "*{user_names}"
                             class = "form-control"
                             placeholder="Name and Surname"
+                            required
                     />
-                    <p id="names_error"></p>
                 </div>
                 <div class ="form-group">
                     <label for="user_name" class="sr-only">Username</label>
@@ -57,6 +57,7 @@
                             class = "form-control"
                             id="user_name"
                             placeholder="Username"
+                            required
                     />
                 </div>
                 <div class ="form-group">
@@ -68,6 +69,7 @@
                             th:field = "*{user_email}"
                             class = "form-control"
                             placeholder="Email"
+                            required
                     />
                     <p id="email_error"></p>
                 </div>
@@ -80,6 +82,7 @@
                             th:field = "*{user_password}"
                             class = "form-control"
                             placeholder="Password"
+                            required
                     />
                     <p id="pass_error"></p>
                 </div>
@@ -91,8 +94,8 @@
                             name = "user_rep_password"
                             class = "form-control"
                             placeholder="Repeat Password"
+                            required
                     />
-                    <p id="pass_error"></p>
                 </div>
                 <div class="form-group">
                     <label for="${roleList}" class="sr-only"><b>Select role</b></label>

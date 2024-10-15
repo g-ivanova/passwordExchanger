@@ -493,7 +493,7 @@ public class FunctionsController {
     }
 
     @GetMapping(value="/home/settings/{user_id}")
-    public String settings(RedirectAttributes redirectAttributes,Model model,@PathVariable(required = false) int user_id,@ModelAttribute("user")User user){
+    public String settings(RedirectAttributes redirectAttributes,Model model,@PathVariable(required = false) int user_id){
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
@@ -510,5 +510,49 @@ public class FunctionsController {
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", user_id);
         return "profile_settings";
+    }
+
+    @PostMapping(params = "add",value="/home/settings/{user_id}")
+    public String saveUser(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
+        UserRoles userrole=new UserRoles(role_id,id);
+
+        userRolesService.saveRole(userrole);
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+        for(int i=0;i<userRoleList.size();i++){
+            role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
+            roleList.add(role);
+        }
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(user_id);
+        model.addAttribute("roleListNo",roleListNo);
+        model.addAttribute("id",user_id);
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", user_id);
+        return "profile_settings";
+    }
+    @GetMapping(value="/home/settings/{user_id}/{role_id}")
+    public String deleteGroupFromUserEdit(RedirectAttributes redirectAttributes,Model model, @PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id) {
+        userRolesService.deleteUserRoleByUserIdAndRoleId(user_id,role_id);
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+        for(int i=0;i<userRoleList.size();i++){
+            role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
+            roleList.add(role);
+        }
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(user_id);
+        model.addAttribute("roleListNo",roleListNo);
+        model.addAttribute("id",user_id);
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", user_id);
+        return "profile_settings";
+
     }
 }
