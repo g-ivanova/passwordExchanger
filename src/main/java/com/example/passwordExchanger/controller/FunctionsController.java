@@ -571,4 +571,20 @@ public class FunctionsController {
         passwordService.deletePasswordById(id);
     }
 
+    @PostMapping(params = "save",value="/home/settings/{user_id}")
+    public String editProfile(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false)String new_password,@RequestParam(required = false)String rep_new_password,@RequestParam(required = false)String current_password)  {
+        if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin"))) {
+            if (new_password != null && rep_new_password.equals(new_password)) {
+              userService.updatePassword(new_password,user_id);
+            }
+        }
+        userService.saveUser(user);
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+            model.addAttribute("user", userService.getUserById(user_id));
+            model.addAttribute("user_id", user_id);
+            redirectAttributes.addAttribute("user_id", user_id);
+            return "redirect:/home";
+    }
 }

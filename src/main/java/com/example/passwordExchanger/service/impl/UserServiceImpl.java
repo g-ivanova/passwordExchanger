@@ -84,4 +84,9 @@ public class UserServiceImpl implements UserService {
     public List<User> findUsersBySearchText(String searchText) {
         return userRepository.findUsersBySearchText(searchText);
     }
+
+    @Override
+    public void updatePassword(String password, int user_id) {
+        userRepository.updatePassword(password,user_id);
+    }
 }

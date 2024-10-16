@@ -57,7 +57,7 @@ $(document).ready(function() {
                           }
                         }
                         new_password.onchange = validatePassword;
-                        confirm_new_password.onkeyup = validatePassword;
+                        confirm_new_password.onchange = validatePassword;
 
 
 });

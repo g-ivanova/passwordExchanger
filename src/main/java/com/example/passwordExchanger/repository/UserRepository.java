@@ -3,8 +3,10 @@ package com.example.passwordExchanger.repository;
 import com.example.passwordExchanger.entity.User;
 import com.example.passwordExchanger.entity.UsersAndRoles;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -60,4 +62,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
             "LOWER(u.user_username) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
             "LOWER(u.user_email) LIKE LOWER(CONCAT ('%', :searchText, '%'))")
     List<User> findUsersBySearchText(@Param("searchText") String searchText);
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value
+                    = "update users set user_password=?1 where user_id=?2;")
+    void updatePassword(String password,int user_id);
+
 }

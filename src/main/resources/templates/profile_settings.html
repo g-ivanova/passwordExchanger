@@ -1,4 +1,4 @@
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
 <script  type="text/javascript" src="/js/sendpass.js"></script>
 <script  type="text/javascript" src="/js/register.js"></script>
 <!DOCTYPE html>
@@ -78,6 +78,7 @@
                 <label for="current_password" class="sr-only">Current password</label>
                 <input type = "password"
                        name = "current_password"
+
                        class = "form-control"
                        placeholder="Current password"
                        id="current_password"
@@ -87,7 +88,6 @@
                 <label for="new_password" class="sr-only">New password</label>
                 <input type = "password"
                        name = "new_password"
-                       th:field = "*{user_password}"
                        class = "form-control"
                        placeholder="New password"
                        id="new_password"
@@ -102,6 +102,9 @@
                        id="rep_new_password"
                 />
             </div>
+            <script>
+
+            </script>
             <table class = "table table-striped" style="width:100%" id="table">
                 <thead>
                 <tr>

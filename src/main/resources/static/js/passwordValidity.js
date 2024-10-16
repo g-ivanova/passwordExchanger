@@ -54,7 +54,6 @@ let div = document.getElementById(id);
         }
      },
      error: function () {
-
      },
   });
     }

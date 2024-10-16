@@ -32,4 +32,6 @@ public interface UserService {
     List<UsersAndRoles> getUsersAndRoles();
     List<User> findUsersBySearchText(@Param("searchText") String searchText);
 
+    void updatePassword(String password,int user_id);
+
 }
