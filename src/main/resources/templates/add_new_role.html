@@ -40,12 +40,42 @@
               />
             </div>
             <div class ="form-group">
-              <input type="submit" value="Create group" class="btn btn-primary">
+              <input type="button" class="btn btn-primary custom-button" value="Create group">
               <input type="button" value="Back" class="btn btn-cancel" onclick="window.history.back();">
+            </div>
+            <div id="customAlertBox" class="custom-alert">
+                <div class="custom-alert-content form-group">
+                  <span class="close">&times;</span>
+                  <p>Are you sure you want to create new group?</p>
+                  <input type="submit" value="Create group" class="btn btn-success2">
+                  <input type="button" value="Cancel" class="btn btn-danger2" id="cancel-alert">
+                </div>
             </div>
           </form>
         </div>
       </div>
-  </div>
+    </div>
+    <script>
+        let alertBox = document.getElementById("customAlertBox");
+        let custom_button = document.querySelector(".custom-button");
+        let close_img = document.querySelector(".close");
+        let body = document.querySelector("body");
+        let close_btn = document.getElementById("cancel-alert");
+        custom_button.addEventListener
+            ('click', function () {
+                alertBox.style.display = "block";
+            });
+
+        close_img.addEventListener
+            ('click', function () {
+                alertBox.style.display = "none";
+            });
+
+        close_btn.addEventListener
+            ('click', function () {
+                alertBox.style.display = "none";
+            });
+
+    </script>
   </body>
 </html>
