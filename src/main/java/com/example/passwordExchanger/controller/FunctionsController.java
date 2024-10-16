@@ -515,7 +515,6 @@ public class FunctionsController {
     @PostMapping(params = "add",value="/home/settings/{user_id}")
     public String saveUser(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
         UserRoles userrole=new UserRoles(role_id,id);
-
         userRolesService.saveRole(userrole);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
         List<Role>roleList=new ArrayList<Role>();
@@ -555,4 +554,11 @@ public class FunctionsController {
         return "profile_settings";
 
     }
+
+    @GetMapping(value="/resetpassword")
+    public String resetPassword(Model model){
+
+        return "reset_password";
+    }
+
 }
