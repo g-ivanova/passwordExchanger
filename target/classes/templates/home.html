@@ -1,4 +1,5 @@
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script  type="text/javascript" src="/js/passwordValidity.js"></script>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
@@ -14,12 +15,29 @@
 </head>
 <script>
     function CopyText(id){
-            let text = document.getElementById(id).innerHTML;
+    	$.ajax({
+      	type: "GET",
+        url : "http://localhost:8080/passwordValidity?id="+id,
+        contentType: "application/json",
+        success: function () {
+ let text = document.getElementById(id).innerHTML;
 
             navigator.clipboard.writeText(text);
+
+         },
+         error: function () {
+
+         },
+      });
+
         }
-     function SeeText(id){
-   let div = document.getElementById(id);
+         function SeeText(id){
+             	$.ajax({
+      	type: "GET",
+        url : "http://localhost:8080/passwordValidity?id="+id,
+        contentType: "application/json",
+        success: function () {
+let div = document.getElementById(id);
             let eye = document.getElementById(id+"eye");
             let slashedEye = document.getElementById(id+"slashedEye");
             if(div.style.visibility == 'hidden'){
@@ -31,7 +49,13 @@
                eye.style.display = 'initial';
                slashedEye.style.display = 'none';
             }
+         },
+         error: function () {
+
+         },
+      });
         }
+
 </script>
 <style>
     .table td:nth-child(5) { display:hidden; }

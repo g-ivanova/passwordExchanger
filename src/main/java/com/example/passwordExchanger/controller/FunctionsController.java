@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -559,6 +561,14 @@ public class FunctionsController {
     public String resetPassword(Model model){
 
         return "reset_password";
+    }
+
+
+    @RequestMapping(value = "/passwordValidity", method = RequestMethod.GET)
+    @ResponseBody
+    @CrossOrigin
+    public void passwordValidity(@RequestParam Long id) {
+        passwordService.deletePasswordById(id);
     }
 
 }
