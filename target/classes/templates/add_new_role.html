@@ -1,5 +1,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-<script  type="text/javascript" src="/js/sendpass.js"></script>
+<script  type="text/javascript" src="/static/js/sendpass.js"></script>
+<script  type="text/javascript" src="/static/js/confirmationPopUp.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -14,9 +15,10 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <link rel="shortcut icon" href="favicon.ico">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/animate.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/animate.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/confirmationPopUp.css">
   </head>
   <body>
     <div class="container">
@@ -55,27 +57,5 @@
         </div>
       </div>
     </div>
-    <script>
-        let alertBox = document.getElementById("customAlertBox");
-        let custom_button = document.querySelector(".custom-button");
-        let close_img = document.querySelector(".close");
-        let body = document.querySelector("body");
-        let close_btn = document.getElementById("cancel-alert");
-        custom_button.addEventListener
-            ('click', function () {
-                alertBox.style.display = "block";
-            });
-
-        close_img.addEventListener
-            ('click', function () {
-                alertBox.style.display = "none";
-            });
-
-        close_btn.addEventListener
-            ('click', function () {
-                alertBox.style.display = "none";
-            });
-
-    </script>
   </body>
 </html>
