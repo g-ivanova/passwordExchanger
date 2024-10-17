@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/animate.css">
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/confirmationPopUp.css">
 </head>
 <body>
   <div class="container">
@@ -123,11 +124,20 @@
             </table>
           </div>
           <div class ="form-group">
-            <input type="submit" name="save" value="Save changes" class="btn btn-primary">
+            <input type="button" value="Save changes" class="btn btn-primary custom-button">
             <input type="submit" value="Back" name="cancel" class="btn btn-cancel">
           </div>
+         <div id="customAlertBox" class="custom-alert">
+           <div class="custom-alert-content form-group">
+             <span class="close">&times;</span>
+             <p>Are you sure you want to save the changes?</p>
+             <input type="submit" name="save" value="Save changes" class="btn btn-success2">
+             <input type="button" value="Cancel" class="btn btn-danger2" id="cancel-alert">
+           </div>
+         </div>
         </form>
       </div>
   </div>
 </body>
 </html>
+<script  type="text/javascript" src="/js/confirmationPopUp.js"></script>

@@ -6,82 +6,84 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" xmlns:th="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>PASSEX Edit group</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-  <link rel="shortcut icon" href="favicon.ico">
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/animate.css">
-  <link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-<div class="container">
-  <div class="row">
-    <form th:action="@{/admin/{user_id}/{role_id}}" th:object = "${user}"  method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-      <input class="form-control"
-             type="hidden"
-             th:value="${role_id}"
-             id="role_id"
-             name="role_id"/>
-      <input class="form-control"
-             type="hidden"
-             th:value="${user_id}"
-             id="user_id"
-             name="user_id"/>
-        <table class = "table table-striped" style="width:100%" id="table">
-          <thead>
-          <tr>
-            <th colspan="5">
-              <h2>Users from this group</h2>
-            </th>
-          </tr>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each = "user : ${userList}">
-
-            <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
-            <td th:text = "${user.user_names}" ></td>
-            <td th:text = "${user.user_email}"></td>
-            <td>
-              <a class ="btn btn-danger" th:href = "@{/admin/group/{user_id}/{id}(user_id=${user.user_id},id=${role_id})}" >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                </svg></a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-
-
-        <div class ="form-group">
-          <label for="user" class="sr-only">Select User</label>
-
-          <select class="form-control"  id="user" name="user">
-            <option value="Select User">Select User</option>
-            <option th:each="userNo : ${userListNo}"
-                    th:value="${userNo.user_id}"
-                    th:text="${userNo.user_email}">
-            </option>
-          </select>
-        </div>
-          <input type="submit" value="Add to group" class="btn btn-primary">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PASSEX Edit group</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/confirmationPopUp.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <form th:action="@{/admin/{user_id}/{role_id}}" th:object = "${user}"  method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+          <input class="form-control"
+                 type="hidden"
+                 th:value="${role_id}"
+                 id="role_id"
+                 name="role_id"/>
+          <input class="form-control"
+                 type="hidden"
+                 th:value="${user_id}"
+                 id="user_id"
+                 name="user_id"/>
+          <table class = "table table-striped" style="width:100%" id="table">
+            <thead>
+              <tr>
+                <th colspan="5">
+                  <h2>Users from this group</h2>
+                </th>
+              </tr>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each = "user : ${userList}">
+                <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
+                <td th:text = "${user.user_names}" ></td>
+                <td th:text = "${user.user_email}"></td>
+                <td>
+                  <a class ="btn btn-danger" th:href = "@{/admin/group/{user_id}/{id}(user_id=${user.user_id},id=${role_id})}" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                      <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class ="form-group">
+            <label for="user" class="sr-only">Select User</label>
+            <select class="form-control"  id="user" name="user">
+              <option value="Select User">Select User</option>
+              <option th:each="userNo : ${userListNo}"
+                      th:value="${userNo.user_id}"
+                      th:text="${userNo.user_email}">
+              </option>
+            </select>
+          </div>
+          <input type="button" value="Add to group" class="btn btn-primary custom-button">
           <input type="submit" name="cancel" value="Back" class="btn btn-cancel">
-
-      </form>
-
-  </div>
-
-</div>
-</div>
-</body>
+          <div id="customAlertBox" class="custom-alert">
+            <div class="custom-alert-content form-group">
+              <span class="close">&times;</span>
+              <p>Are you sure you want to add the selected user to the group?</p>
+              <input type="submit" value="Add to group" class="btn btn-success2">
+              <input type="button" value="Cancel" class="btn btn-danger2" id="cancel-alert">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
+<script  type="text/javascript" src="/js/confirmationPopUp.js"></script>
