@@ -35,6 +35,9 @@ public class FunctionsController {
     private PasswordService passwordService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private CodeService codeService;
+
 
 
 
@@ -587,4 +590,37 @@ public class FunctionsController {
             redirectAttributes.addAttribute("user_id", user_id);
             return "redirect:/home";
     }
+
+    @PostMapping(params = "cancel",value="/home/settings/{user_id}")
+    public String cancelFromProfileSettings(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user, @RequestParam(required = false) int user_id){
+        List<Role> roleList=(List<Role>) roleService.getAllRoles();
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        model.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("user_id", user_id);
+        return "redirect:/home";
+    }
+
+
+    @RequestMapping(value = "/sendEmail", method = RequestMethod.GET)
+    @ResponseBody
+    @CrossOrigin
+    public String sendEmailForResetPassword(@RequestParam String email) throws Exception{
+        User user=userService.getUserByUsernameOrEmail(email,email);
+        if(user==null){
+          return "false";
+        }
+        else  {
+           codeService.insertCode(user.getUser_id());
+            Mail mail = new Mail();
+            mail.setMailFrom("pass.exchanger.project@gmail.com");
+            mail.setMailTo(user.getUser_email());
+            mail.setMailSubject("Spring Boot - Email demo");
+            mail.setMailContent("Your code for reseting your password is "+codeService.getCodeById(codeService.getLastID()).getCode());
+            mailService.sendEmail(mail);
+            return "true";
+        }
+    }
+
 }
