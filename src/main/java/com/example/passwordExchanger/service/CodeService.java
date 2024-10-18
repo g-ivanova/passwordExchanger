@@ -18,4 +18,6 @@ public interface CodeService {
     void deleteCodeById(Long id);
     void insertCode(int user_id);
     int getLastID();
+
+    Code getCodeByUserId(int user_id);
 }

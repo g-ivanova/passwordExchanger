@@ -49,4 +49,9 @@ public class CodeServiceImpl implements CodeService {
     public int getLastID() {
         return codeRepository.getLastID();
     }
+
+    @Override
+    public Code getCodeByUserId(int user_id) {
+        return codeRepository.getCodeByUserId(user_id);
+    }
 }

@@ -4,20 +4,25 @@ $(document).ready(function() {
     emailButton.onclick=function(){
         $.ajax({
       	    type: "GET",
-            url : "http://localhost:8080/sendEmail?email="+email.value,
+            url : "http://localhost:8080/home/resetPassword/sendEmail?email="+email.value,
             contentType: "application/json",
             dataType:"text",
             success: function (data) {
                 if(data=="true"){
-                    document.getElementById("email").disabled = true;
+                    document.getElementById("email").readOnly= true;
                     document.getElementById("emailButton").disabled = true;
                     alert("You have received code!")
-                }else{
+                }if(data=="false"){
                     alert("Incorrect email!")
+                }
+                if(data=="code"){
+                 document.getElementById("email").readOnly = true;
+                                    document.getElementById("emailButton").disabled = true;
+                 alert("You already have a validation code!")
                 }
             },
             error: function (data) {
-                alert("False!")
+                alert("Error!")
             },
         });
     }

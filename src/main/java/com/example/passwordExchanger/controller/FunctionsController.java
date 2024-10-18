@@ -213,7 +213,7 @@ public class FunctionsController {
         else {
             LocalDate currentDate = LocalDate.now();
             String today = currentDate.toString();
-          //  password.setPassword_validity(today);
+            //  password.setPassword_validity(today);
             password.setPassword_from(user_id);
             password.setPassword_to(user);
             passwordService.savePassword(password);
@@ -263,7 +263,7 @@ public class FunctionsController {
     public String addUserToGroupForm(Model model,@PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id){
         model.addAttribute("user_id",user_id);
         model.addAttribute("role_id",role_id);
-       // model.addAttribute("role",role);
+        // model.addAttribute("role",role);
         List<UsersAndRoles> userlist=new ArrayList<UsersAndRoles>();
         for(UserRoles userRole:userRolesService.getUserRolesByRoleId(role_id)){
             userlist.add(new UsersAndRoles(userService.getUserById(userRole.getUser_id()).getUser_id(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_names(),userService.getUserById(userRole.getUser_id()).getUser_email()));
@@ -271,17 +271,17 @@ public class FunctionsController {
         model.addAttribute("userList",userlist);
 
         List<User> userlistNo=new ArrayList<User>();
-       userlistNo=userService.getUsersThatareNotInThisRole(role_id);
+        userlistNo=userService.getUsersThatareNotInThisRole(role_id);
 
-       model.addAttribute("role_name",roleService.getRoleById(role_id).getRole_name());
+        model.addAttribute("role_name",roleService.getRoleById(role_id).getRole_name());
 
-       model.addAttribute("userListNo",userlistNo);
+        model.addAttribute("userListNo",userlistNo);
 
         return "edit_group";
     }
     @PostMapping(value="/admin/{user_id}/{role_id}")
     public String addUserToGroup(@RequestParam(required = false) int user,RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) int user_id, @RequestParam(required = false) int role_id) throws Exception{
-            userRolesService.saveRole(new UserRoles(role_id,user));
+        userRolesService.saveRole(new UserRoles(role_id,user));
         model.addAttribute("user_id",user_id);
         model.addAttribute("role_id",role_id);
         // model.addAttribute("role",role);
@@ -361,7 +361,7 @@ public class FunctionsController {
         model.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("user_id", user_id);
 
-       userService.deleteUserById(id);
+        userService.deleteUserById(id);
         return "redirect:/admin";
     }
     @GetMapping(value="/admin/editUser/{id}/{user_id}")
@@ -473,7 +473,7 @@ public class FunctionsController {
     @PostMapping(value="/admin/searchUser")
     public String findUser(Model model, @RequestParam(required = false) int user_id, @RequestParam(required = false) String searchText){
         List<UsersAndRoles> usersList=jdbcTemplate.query("Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ',') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id where LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_names, '%')) or LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_username, '%')) or LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_email, '%')) group by users.user_id,users.user_names,users.user_username,users.user_email;",
-        (rs,rowNum)->new UsersAndRoles(rs.getInt("user_id"),rs.getString("user_names"),rs.getString("user_username"),rs.getString("user_email"),rs.getString("user_roles")));
+                (rs,rowNum)->new UsersAndRoles(rs.getInt("user_id"),rs.getString("user_names"),rs.getString("user_username"),rs.getString("user_email"),rs.getString("user_roles")));
 
         List<RoleAndAllUsers>roleAndAllUsers=jdbcTemplate.query("Select roles.role_id,roles.role_name, group_concat(users.user_names separator ',') as users from users right join user_roles on users.user_id=user_roles.user_id right join roles on roles.role_id=user_roles.role_id group by roles.role_id",
                 (rs,rowNum)->new RoleAndAllUsers(rs.getInt("role_id"),rs.getString("role_name"),rs.getString("users")));
@@ -577,18 +577,18 @@ public class FunctionsController {
     @PostMapping(params = "save",value="/home/settings/{user_id}")
     public String editProfile(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false)String new_password,@RequestParam(required = false)String rep_new_password,@RequestParam(required = false)String current_password)  {
         if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin"))) {
-            if (new_password != null && rep_new_password.equals(new_password)) {
-              userService.updatePassword(new_password,user_id);
+            if (!new_password.isEmpty() && rep_new_password.equals(new_password)) {
+                userService.updatePassword(new_password,user_id);
             }
         }
         userService.saveUser(user);
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
-            model.addAttribute("user", userService.getUserById(user_id));
-            model.addAttribute("user_id", user_id);
-            redirectAttributes.addAttribute("user_id", user_id);
-            return "redirect:/home";
+        model.addAttribute("user", userService.getUserById(user_id));
+        model.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("user_id", user_id);
+        return "redirect:/home";
     }
 
     @PostMapping(params = "cancel",value="/home/settings/{user_id}")
@@ -603,24 +603,38 @@ public class FunctionsController {
     }
 
 
-    @RequestMapping(value = "/sendEmail", method = RequestMethod.GET)
+    @RequestMapping(value = "/home/resetPassword/sendEmail", method = RequestMethod.GET)
     @ResponseBody
     @CrossOrigin
     public String sendEmailForResetPassword(@RequestParam String email) throws Exception{
         User user=userService.getUserByUsernameOrEmail(email,email);
         if(user==null){
-          return "false";
+            return "false";
         }
+
         else  {
-           codeService.insertCode(user.getUser_id());
+            if(codeService.getCodeByUserId(user.getUser_id())!=null){
+                return "code";
+            }
+            codeService.insertCode(user.getUser_id());
             Mail mail = new Mail();
             mail.setMailFrom("pass.exchanger.project@gmail.com");
             mail.setMailTo(user.getUser_email());
             mail.setMailSubject("Spring Boot - Email demo");
             mail.setMailContent("Your code for reseting your password is "+codeService.getCodeById(codeService.getLastID()).getCode());
-            mailService.sendEmail(mail);
+            // mailService.sendEmail(mail);
             return "true";
         }
+    }
+
+    @PostMapping(params ="save",value="/home/resetPassword")
+    public String resetPassword(Model model,@RequestParam(required = false)  String email,@RequestParam(required = false)  String code,@RequestParam(required = false)  String new_password,@RequestParam(required = false)  String rep_new_password ) throws Exception{
+        User user=userService.getUserByUsernameOrEmail(email,email);
+        if(codeService.getCodeByUserId(user.getUser_id()).getCode().equals(code) && new_password.equals(rep_new_password)){
+            userService.updatePassword(new_password, user.getUser_id());
+            return "index";
+        }
+        return "index";
     }
 
 }
