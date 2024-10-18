@@ -32,4 +32,13 @@ $(document).ready(function() {
         }
     });
   });
+  $('#user_rep_password').on('blur', function() {
+    const password = $('#user_password').val();
+    const confirm_password = $(this).val();
+    if(password != confirm_password) {
+        $('#rep_pass_error').text('Passwords do not match!');
+    } else {
+        $('#rep_pass_error').text('');
+    }
+  });
 });

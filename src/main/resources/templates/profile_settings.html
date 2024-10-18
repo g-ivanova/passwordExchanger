@@ -1,6 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
-<script  type="text/javascript" src="/js/sendpass.js"></script>
-<script  type="text/javascript" src="/js/register.js"></script>
+<script  type="text/javascript" src="/js/profile_settings.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -29,7 +28,7 @@
                       class="fh5co-form animate-box"
                       data-animate-effect="fadeIn"
                 >
-                    <h2>Profile Settings</h2>
+                    <h2>Public Profile</h2>
                     <input class="form-control"
                            type="hidden"
                            th:value="${user_id}"
@@ -51,6 +50,7 @@
                                placeholder="Names"
                                id="name"
                         />
+                        <p id="names_error"></p>
                     </div>
                     <div class="form-group">
                         <label for="email" class="sr-only">Email</label>
@@ -61,6 +61,7 @@
                                placeholder="Email"
                                id="email"
                         />
+                        <p id="email_error"></p>
                     </div>
                     <div class="form-group">
                         <label for="username" class="sr-only">Username</label>
@@ -72,15 +73,16 @@
                                id="username"
                         />
                     </div>
+                    <h2>Change password</h2>
                     <div class="form-group">
                         <label for="current_password" class="sr-only">Current password</label>
                         <input type = "password"
                                name = "current_password"
-
                                class = "form-control"
                                placeholder="Current password"
                                id="current_password"
                         />
+                        <p id="current_pass_error"></p>
                     </div>
                     <div class="form-group">
                         <label for="new_password" class="sr-only">New password</label>
@@ -90,6 +92,7 @@
                                placeholder="New password"
                                id="new_password"
                         />
+                        <p id="pass_error"></p>
                     </div>
                     <div class="form-group">
                         <label for="rep_new_password" class="sr-only">Repeat new password</label>
@@ -99,6 +102,7 @@
                                placeholder="Repeat new password"
                                id="rep_new_password"
                         />
+                        <p id="rep_pass_error"></p>
                     </div>
                     <table class = "table table-striped" style="width:100%" id="table">
                         <thead>
