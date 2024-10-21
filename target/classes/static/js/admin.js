@@ -1,29 +1,72 @@
 $(document).ready(function() {
-    function showAlertBox(alertBoxId, userId) {
-        document.getElementById(alertBoxId).style.display = "block";
-        // Set the href for delete action dynamically
-        const deleteLink = document.querySelector(`#customAlertBox-user-${userId} .confirm-delete`);
-        deleteLink.href = `/admin/deleteUser/${userId}`; // Adjust the URL as necessary
-    }
 
-    function hideAlertBox(alertBoxId) {
-        document.getElementById(alertBoxId).style.display = "none";
-    }
 
-    $(document).on('click', '.custom-button-user', function (event) {
-        event.preventDefault();
-        const userId = $(this).data('user-id');
-        showAlertBox(`customAlertBox-user-${userId}`, userId);
-        console.log("Alert box opened for user ID:", userId);
+    function deleteUser(el){
+
+
+var user_id=document.getElementById("user_id").value;
+Swal.fire({
+  title: "Are you sure?",
+  text: "You won't be able to revert this!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, delete it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+      Swal.fire({
+      title: "Deleted!",
+      text: "The user has been deleted.",
+      icon: "success"
     });
+  $.ajax({
+       type: "GET",
+       url : "http://localhost:8080/admin/deleteUser/"+el+"/"+user_id,
+       contentType: "application/json",
+       success: function () {
+      window.location.reload();
 
-    $(document).on('click', '.close-user', function () {
-        hideAlertBox($(this).closest('.custom-alert-user').attr('id'));
-        console.log("Alert box closed");
-    });
+       },
+       error: function () {},
+   });
 
-    $(document).on('click', '[id^="cancel-alert-user-"]', function () {
-        hideAlertBox($(this).closest('.custom-alert-user').attr('id'));
-        console.log("Cancel clicked, alert box closed");
+  }
+});
+}
+
+
+function deleteGroup(el){
+
+
+var user_id=document.getElementById("user_id").value;
+Swal.fire({
+  title: "Are you sure?",
+  text: "You won't be able to revert this!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, delete it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+      Swal.fire({
+      title: "Deleted!",
+      text: "The group has been deleted.",
+      icon: "success"
     });
+  $.ajax({
+       type: "GET",
+       url : "http://localhost:8080/admin/deleteGroup/"+user_id+"/"+el,
+       contentType: "application/json",
+       success: function () {
+      window.location.reload();
+
+       },
+       error: function () {},
+   });
+
+  }
+});
+}
 });
