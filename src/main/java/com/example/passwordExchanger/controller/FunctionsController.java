@@ -352,7 +352,7 @@ public class FunctionsController {
         return "redirect:/admin";
     }
     @GetMapping(value="/admin/deleteUser/{id}/{user_id}")
-    public String deleteUser(RedirectAttributes redirectAttributes,Model model,@PathVariable int id,@ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
+    public String deleteUser(RedirectAttributes redirectAttributes,Model model,@PathVariable int id,@PathVariable(required = false) int user_id) {
 
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
@@ -576,11 +576,15 @@ public class FunctionsController {
 
     @PostMapping(params = "save",value="/home/settings/{user_id}")
     public String editProfile(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false)String new_password,@RequestParam(required = false)String rep_new_password,@RequestParam(required = false)String current_password)  {
+        System.out.println(current_password);
+        System.out.println(new_password);
+        System.out.println(rep_new_password);
         if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin"))) {
-            if (!new_password.isEmpty() && rep_new_password.equals(new_password)) {
+            if (!new_password.trim().isEmpty() && new_password!=null && rep_new_password.equals(new_password)) {
                 userService.updatePassword(new_password,user_id);
             }
         }
+
         userService.saveUser(user);
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
@@ -622,7 +626,7 @@ public class FunctionsController {
             mail.setMailTo(user.getUser_email());
             mail.setMailSubject("Spring Boot - Email demo");
             mail.setMailContent("Your code for reseting your password is "+codeService.getCodeById(codeService.getLastID()).getCode());
-            // mailService.sendEmail(mail);
+             mailService.sendEmail(mail);
             return "true";
         }
     }
