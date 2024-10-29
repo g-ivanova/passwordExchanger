@@ -1,5 +1,5 @@
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-<script  type="text/javascript" src="/js/confirmationPopUp.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -12,7 +12,7 @@
     <title>PASSEX Add new group</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="shortcut icon" href="favicon.ico">
+
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/animate.css">
@@ -20,10 +20,46 @@
     <link rel="stylesheet" href="/css/confirmationPopUp.css">
   </head>
   <body>
+  <script type="text/javascript">
+    function createRole(){
+     var user_id=document.getElementById("user_id").value;
+     var name=document.getElementById("name").value;
+   Swal.fire({
+   title: 'Do you want to save the changes?',
+   showCancelButton: true,
+   confirmButtonText: 'Yes',
+   denyButtonText: 'No',
+   customClass: {
+     actions: 'my-actions',
+     cancelButton: 'order-1 right-gap',
+     confirmButton: 'order-2',
+   },
+   }).then((result) => {
+       if (result.isConfirmed) {
+   Swal.fire('Saved!', '', 'success')
+       $.ajax({
+            type: "get",
+            url : "/admin/addNewGroup/"+user_id+"/"+name,
+            contentType: "application/json",
+            success: function (locationToRedirect) {
+        window.location = '/admin?user_id='+locationToRedirect;
+
+            },
+            error: function () {},
+        });
+       }
+        else if (result.isDenied) {
+     Swal.fire('Changes are not saved', '', 'info')
+   }
+     });
+     }
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <div class="container">
       <div class="row">
         <div class="col-md-4 col-md-offset-4">
-          <form th:action="@{/admin/addNewGroup/{user_id}}"  th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+          <form th:action="@{/admin/addNewGroup}"   method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
             <h2>Create new group</h2>
             <input class="form-control"
                    type="hidden"
@@ -41,16 +77,8 @@
               />
             </div>
             <div class ="form-group">
-              <input type="button" class="btn btn-primary custom-button" value="Create group">
+              <button type="button" class="btn btn-primary custom-button" th:attr="onclick=|createRole()|">Add</button>
               <input type="button" value="Back" class="btn btn-cancel" onclick="window.history.back();">
-            </div>
-            <div id="customAlertBox" class="custom-alert">
-                <div class="custom-alert-content form-group">
-                  <span class="close">&times;</span>
-                  <p>Are you sure you want to create new group?</p>
-                  <input type="submit" value="Create group" class="btn btn-success2">
-                  <input type="button" value="Cancel" class="btn btn-danger2" id="cancel-alert">
-                </div>
             </div>
           </form>
         </div>

@@ -321,13 +321,15 @@ public class FunctionsController {
 
         return "edit_group";
     }
-    @GetMapping(value="/admin/addNewGroup/{user_id}")
-    public String addNewGroupForm(Model model,@PathVariable(required = false) int user_id){
+    @PostMapping(value="/admin/addNewGroup/form")
+    public String addNewGroupForm(Model model,@RequestParam(required = false) int user_id){
         model.addAttribute("user_id",user_id);
         return "add_new_role";
     }
-    @PostMapping(value="/admin/addNewGroup/{user_id}")
-    public String saveGroup(Model model,RedirectAttributes redirectAttributes,@RequestParam(required = false) int user_id,@RequestParam(required = false)  String name) throws Exception{
+    @GetMapping(value="/admin/addNewGroup/{user_id}/{name}")
+    @ResponseBody
+    @CrossOrigin
+    public String saveGroup(Model model,RedirectAttributes redirectAttributes,@PathVariable(required = false) int user_id,@PathVariable(required = false)  String name) throws Exception{
         Role role=new Role(name);
         roleService.saveRole(role);
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
@@ -336,7 +338,7 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(user_id));
         model.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("user_id", user_id);
-        return "redirect:/admin";
+        return String.valueOf(user_id);
     }
     @GetMapping(value="/admin/deleteGroup/{user_id}/{id}")
     public String deleteGroup(RedirectAttributes redirectAttributes,Model model,@PathVariable int id,@ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
@@ -514,6 +516,7 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(user_id));
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", user_id);
+
         return "profile_settings";
     }
 
@@ -592,6 +595,9 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(user_id));
         model.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("user_id", user_id);
+        if(userService.getUserById(user_id).getUser_username().equals("admin")){
+            return "redirect:/admin";
+        }
         return "redirect:/home";
     }
 
@@ -603,6 +609,9 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(user_id));
         model.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("user_id", user_id);
+        if(userService.getUserById(user_id).getUser_username().equals("admin")){
+            return "redirect:/admin";
+        }
         return "redirect:/home";
     }
 
