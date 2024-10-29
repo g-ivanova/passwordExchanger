@@ -84,6 +84,12 @@ table {
   margin: 0 0 30px 0;
   color: #000000;
 }
+.fh5co-form input{
+  margin: 0 0 20px 0;
+}
+.fh5co-form .table{
+    margin-bottom:0px;
+}
 .fh5co-form .form-group {
   margin-bottom: 30px;
 }
@@ -141,7 +147,10 @@ table {
 .fh5co-form .form-control:focus, .fh5co-form .form-control:active {
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 }
-
+.table .btn-primary {
+    height:40px;
+    padding: 8px 20px;
+}
 .btn-primary {
   height: 50px;
   padding-right: 20px;
