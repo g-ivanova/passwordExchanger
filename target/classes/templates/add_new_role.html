@@ -22,37 +22,43 @@
   <body>
   <script type="text/javascript">
     function createRole(){
-     var user_id=document.getElementById("user_id").value;
-     var name=document.getElementById("name").value;
-   Swal.fire({
-   title: 'Do you want to save the changes?',
-   showCancelButton: true,
-   confirmButtonText: 'Yes',
-   denyButtonText: 'No',
-   customClass: {
-     actions: 'my-actions',
-     cancelButton: 'order-1 right-gap',
-     confirmButton: 'order-2',
-   },
-   }).then((result) => {
-       if (result.isConfirmed) {
-   Swal.fire('Saved!', '', 'success')
-       $.ajax({
+      var user_id=document.getElementById("user_id").value;
+      var name=document.getElementById("name").value;
+      Swal.fire({
+        title: 'Do you want to save the changes?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+        customClass: {
+          actions: 'my-actions',
+          cancelButton: 'order-1 right-gap btn swal-cancel',
+          confirmButton: 'order-2 btn swal-primary',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+                  title: "Saved!",
+                  text: "The group has been saved.",
+                  icon: "success",
+                  customClass: {
+                  confirmButton: 'btn swal-primary',
+                  }
+                });
+          $.ajax({
             type: "get",
             url : "/admin/addNewGroup/"+user_id+"/"+name,
             contentType: "application/json",
             success: function (locationToRedirect) {
-        window.location = '/admin?user_id='+locationToRedirect;
-
+              window.location = '/admin?user_id='+locationToRedirect;
             },
             error: function () {},
-        });
-       }
+          });
+        }
         else if (result.isDenied) {
-     Swal.fire('Changes are not saved', '', 'info')
-   }
-     });
-     }
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      });
+    }
   </script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
