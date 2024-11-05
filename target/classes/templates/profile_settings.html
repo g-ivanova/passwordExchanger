@@ -20,6 +20,34 @@
         <link rel="stylesheet" href="/css/profile_settings.css">
     </head>
     <body>
+    <script type="text/javascript">
+        function saveProfile(){
+         var user_id=document.getElementById("user_id").value;
+         var user=document.getElementById("user").value;
+var description=document.getElementById("description").value;
+var password=document.getElementById("password").value;
+       Swal.fire({
+       title: 'Do you want to save the changes?',
+       showCancelButton: true,
+       confirmButtonText: 'Yes',
+       denyButtonText: 'No',
+       customClass: {
+         actions: 'my-actions',
+         cancelButton: 'order-1 right-gap',
+         confirmButton: 'order-2',
+       },
+       }).then((result) => {
+           if (result.isConfirmed) {
+       Swal.fire('Saved!', '', 'success')
+     document.getElementById('formSendPass').submit();
+
+           }
+            else if (result.isDenied) {
+         Swal.fire('Changes are not saved', '', 'info')
+       }
+         });
+         }
+    </script>
         <div class="container">
             <div class="row col-md-6" style="margin-left:25%">
                 <form th:action="@{/home/settings/{user_id}}"

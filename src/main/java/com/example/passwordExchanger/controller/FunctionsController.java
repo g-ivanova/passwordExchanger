@@ -207,6 +207,8 @@ public class FunctionsController {
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
         model.addAttribute("password",password);
+        System.out.println(user);
+        System.out.println(user_id);
         if(password.getPassword_desc().isEmpty() || user==0  || password.getPass()==null){
             return "sendpass_error";
         }
@@ -426,8 +428,7 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(id));
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", id);
-        redirectAttributes.addFlashAttribute("notification",
-                String.format("User successfully saved", newUser.getUser_names()));
+        redirectAttributes.addFlashAttribute("notification",String.format("User successfully saved", newUser.getUser_names()));
         redirectAttributes.addFlashAttribute("action", "save");
         return "redirect:/admin/editUser/{id}/{user_id}";
     }

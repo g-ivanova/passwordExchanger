@@ -2,7 +2,7 @@ $(document).ready(function() {
     function CopyText(id){
         let text = document.getElementById(id).innerHTML;
         navigator.clipboard.writeText(text);
-    }
+  }
     function SeeText(id){
         let div = document.getElementById(id);
         let eye = document.getElementById(id+"eye");

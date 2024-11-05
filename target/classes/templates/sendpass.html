@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script  type="text/javascript" src="/js/sendpass.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -22,11 +23,38 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
+    <script type="text/javascript">
+        function sendPass(){
+         var user_id=document.getElementById("user_id").value;
+         var user=document.getElementById("user").value;
+var description=document.getElementById("description").value;
+var password=document.getElementById("password").value;
+       Swal.fire({
+       title: 'Do you want to send password?',
+       showCancelButton: true,
+       confirmButtonText: 'Yes',
+       denyButtonText: 'No',
+       customClass: {
+         actions: 'my-actions',
+         cancelButton: 'order-1 right-gap',
+         confirmButton: 'order-2',
+       },
+       }).then((result) => {
+           if (result.isConfirmed) {
+       Swal.fire('Saved!', '', 'success')
+     document.getElementById('formSendPass').submit();
+
+           }
+            else if (result.isDenied) {
+         Swal.fire('Changes are not saved', '', 'info')
+       }
+         });
+         }
+    </script>
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
-                    <form th:action="@{/sendpass}" th:object = "${password}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-                        <h2>Send password</h2>
+                    <form th:action="@{/sendpass}" th:object = "${password}" id="formSendPass" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">                        <h2>Send password</h2>
                         <input class="form-control"
                                type="hidden"
                                th:value="${user_id}"
@@ -71,7 +99,7 @@
                             </select>
                         </div>
                         <div class ="form-group">
-                            <input type="submit" value="Send password" class="btn btn-primary">
+                            <button type="button" value="Send password" class="btn btn-primary" th:attr="onclick=|sendPass()|">Send</button>
                             <input type="button" value="Back" class="btn btn-cancel" onclick="window.history.back();">
                         </div>
                     </form>
