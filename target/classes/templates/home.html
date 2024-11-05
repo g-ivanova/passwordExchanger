@@ -88,19 +88,32 @@
         </div>
         <div class ="container">
             <form  style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+                <table class = "table table-striped" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th style="width:30%">
+                            <h2>Received Passwords</h2>
+                        </th>
+                        <th style="width:50%">
+                            <input type="text"
+                                   id="filterReceivedPass"
+                                   placeholder="Search for password"
+                                   class="headerInput filter"
+                            />
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
                 <table class = "table table-striped" style="width:100%" id="table">
                     <thead>
                         <tr>
-                            <th colspan="5">
-                                <h2>Received Passwords</h2>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>Description</th>
+                            <th style="max-width:30%">Description</th>
                             <th>From</th>
-                            <th>Valid till</th>
+                            <th style="width:20%">Valid till</th>
                             <th>Password</th>
-                            <th>Action</th>
+                            <th style="width:16%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,6 +149,22 @@
                         </tr>
                     </tbody>
                 </table>
+                <script>
+                    function filterReceivedPass(event) {
+                        var input = document.getElementById("filterReceivedPass");
+                        var filter = input.value.toUpperCase();
+                        var table = document.getElementById("table");
+                        var tr = document.querySelector("#table tbody").rows;
+                        for (var i = 0; i < tr.length; i++) {
+                            if (tr[i].textContent.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                    document.querySelector('#filterReceivedPass').addEventListener('keyup', filterReceivedPass, false);
+                </script>
             </form>
         </div>
         <div class ="container">
@@ -145,20 +174,31 @@
                        th:value="${user_id}" id="user_id" name="user_id" />
                 <table class = "table table-striped" style="width:100%">
                     <thead>
+                    <tr>
+                        <th style="width:30%">
+                            <h2>Sent Passwords</h2>
+                        </th>
+                        <th style="width:50%">
+                            <input type="text"
+                                   id="filterSentPass"
+                                   placeholder="Search for password"
+                                   class="headerInput filter"
+                            />
+                        </th>
+                        <th style="text-align:right">
+                            <input type="submit" class="btn btn-primary" style="margin-bottom: 20px;" value="Send new password">
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+                <table class = "table table-striped" style="width:100%" id="sentPass">
+                    <thead>
                         <tr>
-                            <th colspan="3">
-                                <h2>Sent Passwords</h2>
-                            </th>
-                            <th colspan="2" style="text-align:right">
-                                <input type="submit" class="btn btn-primary" style="margin-bottom: 20px;" value="Send new password">
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>Description</th>
+                            <th style="max-width:30%">Description</th>
                             <th>To</th>
-                            <th>Valid till</th>
+                            <th style="width:20%">Valid till</th>
                             <th>Password</th>
-                            <th>Action</th>
+                            <th style="width:16%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -194,9 +234,23 @@
                         </tr>
                     </tbody>
                 </table>
+                <script>
+                    function filterSentPass(event) {
+                        var input = document.getElementById("filterSentPass");
+                        var filter = input.value.toUpperCase();
+                        var table = document.getElementById("sentPass");
+                        var tr = document.querySelector("#sentPass tbody").rows;
+                        for (var i = 0; i < tr.length; i++) {
+                            if (tr[i].textContent.toUpperCase().indexOf(filter) > -1) {
+                                tr[i].style.display = "";
+                            } else {
+                                tr[i].style.display = "none";
+                            }
+                        }
+                    }
+                    document.querySelector('#filterSentPass').addEventListener('keyup', filterSentPass, false);
+                </script>
             </form>
         </div>
-
-
     </body>
 </html>
