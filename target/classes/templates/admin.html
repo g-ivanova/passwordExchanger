@@ -30,16 +30,21 @@
                 text: "You won't be able to revert this!",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "ff0000",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
+                confirmButtonText: "Yes, delete it!",
+                customClass: {
+                    actions: 'my-actions',
+                    cancelButton: 'btn swal-cancel',
+                    confirmButton: 'btn swal-danger',
+                },
             }).then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire({
                             title: "Deleted!",
-                            confirmButtonColor: "ff0000",
                             text: "The user has been deleted.",
-                            icon: "success"
+                            icon: "success",
+                            customClass: {
+                                confirmButton: 'btn swal-primary',
+                            },
                                 });
                     $.ajax({
                         type: "GET",
@@ -63,14 +68,20 @@
               text: "You won't be able to revert this!",
               icon: "warning",
               showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
+              customClass: {
+                    actions: 'my-actions',
+                    cancelButton: 'btn swal-cancel',
+                    confirmButton: 'btn swal-danger',
+                },
               confirmButtonText: "Yes, delete it!"
             }).then((result) => {
               if (result.isConfirmed) {
                   Swal.fire({
                   title: "Deleted!",
                   text: "The group has been deleted.",
+                  customClass: {
+                                confirmButton: 'btn swal-primary',
+                            },
                   icon: "success"
                 });
               $.ajax({
