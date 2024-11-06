@@ -2,6 +2,7 @@ package com.example.passwordExchanger.repository;
 
 import com.example.passwordExchanger.entity.User;
 import com.example.passwordExchanger.entity.UsersAndRoles;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -62,12 +63,28 @@ public interface UserRepository extends JpaRepository<User,Long> {
             "LOWER(u.user_username) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
             "LOWER(u.user_email) LIKE LOWER(CONCAT ('%', :searchText, '%'))")
     List<User> findUsersBySearchText(@Param("searchText") String searchText);
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value
+                    = "update users set user_password=?1 where user_id=?2")
+    void updatePassword(String password,int user_id);
+
     @Modifying
     @Transactional
     @Query(
             nativeQuery = true,
             value
-                    = "update users set user_password=?1 where user_id=?2;")
-    void updatePassword(String password,int user_id);
+                    = "update users set user_email=?1 where user_id=?2;")
+    void updateEmail(String email,int user_id);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value
+                    = "update users set user_names=?1 where user_id=?2")
+    void updateNames(String names,int user_id);
 
 }

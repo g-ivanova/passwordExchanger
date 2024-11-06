@@ -410,9 +410,14 @@ public class FunctionsController {
         return "edit_user";
     }
     @PostMapping(params = "save",value="/admin/editUser/{id}/{user_id}")
-    public String editUser(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id) {
-        User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
-        userService.saveUser(newUser);
+    public String editUser(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam int id,@RequestParam String user_email,@RequestParam String user_names,@RequestParam String current_password,@RequestParam String new_password,@RequestParam String rep_new_password,@RequestParam(required = false) int user_id) {
+      //  User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
+        //userService.saveUser(newUser);
+        userService.updateEmail(user_email,user_id);
+        userService.updateNames(user_names,user_id);
+        if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(), "admin")) && !new_password.isEmpty() && new_password!=null && new_password!="" && new_password.equals(rep_new_password)){
+            userService.updatePassword(new_password,user_id);
+        }
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
@@ -428,7 +433,7 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(id));
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", id);
-        redirectAttributes.addFlashAttribute("notification",String.format("User successfully saved", newUser.getUser_names()));
+        redirectAttributes.addFlashAttribute("notification",String.format("User successfully saved", userService.getUserById(user_id).getUser_names()));
         redirectAttributes.addFlashAttribute("action", "save");
         return "redirect:/admin/editUser/{id}/{user_id}";
     }
@@ -514,7 +519,9 @@ public class FunctionsController {
         model.addAttribute("id",user_id);
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
-        model.addAttribute("user", userService.getUserById(user_id));
+        model.addAttribute("email",userService.getUserById(user_id).getUser_email());
+        model.addAttribute("names",userService.getUserById(user_id).getUser_names());
+        model.addAttribute("username", userService.getUserById(user_id).getUser_username());
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", user_id);
 
@@ -578,18 +585,17 @@ public class FunctionsController {
         passwordService.deletePasswordById(id);
     }
 
-    @PostMapping(params = "save",value="/home/settings/{user_id}")
-    public String editProfile(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false)String new_password,@RequestParam(required = false)String rep_new_password,@RequestParam(required = false)String current_password)  {
-        System.out.println(current_password);
-        System.out.println(new_password);
-        System.out.println(rep_new_password);
-        if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin"))) {
-            if (!new_password.trim().isEmpty() && new_password!=null && rep_new_password.equals(new_password)) {
-                userService.updatePassword(new_password,user_id);
+    @PostMapping(value="/home/settings/{user_id}")
+    public String editProfile(RedirectAttributes redirectAttributes,Model model,@RequestParam(required = false) int user_id,@RequestParam(required = false) String user_names,@RequestParam(required = false) String user_email,@RequestParam(required = false)String new_password,@RequestParam(required = false)String rep_new_password,@RequestParam(required = false)String current_password)  {
+        String pass=userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin");
+       if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin"))) {
+           if (!new_password.trim().isEmpty() && new_password!=null && new_password!="" && !new_password.equals("") && rep_new_password.equals(new_password)) {
+               pass=new_password;
             }
         }
 
-        userService.saveUser(user);
+        User newUser=new User(user_id,userService.getUserById(user_id).getUser_username(),user_email, pass.getBytes(),user_names);
+    userService.saveUser(newUser);
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
@@ -649,6 +655,16 @@ public class FunctionsController {
             return "index";
         }
         return "index";
+    }
+
+    @RequestMapping(value = "/validatePassword", method = RequestMethod.POST)
+    @ResponseBody
+    @CrossOrigin
+    public String validatePassword(@RequestBody Map json) throws Exception{
+     //   if(userService.getPasswordByUsername(userService.getUserById(Integer.parseInt(user_id)).getUser_username(),"admin").equals(password)){
+            return "correct";
+       // }
+       // return "incorrect";
     }
 
 }

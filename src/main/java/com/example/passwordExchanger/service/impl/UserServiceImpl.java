@@ -89,4 +89,14 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(String password, int user_id) {
         userRepository.updatePassword(password,user_id);
     }
+
+    @Override
+    public void updateEmail(String email, int user_id) {
+        userRepository.updateEmail(email, user_id);
+    }
+
+    @Override
+    public void updateNames(String names, int user_id) {
+        userRepository.updateNames(names, user_id);
+    }
 }

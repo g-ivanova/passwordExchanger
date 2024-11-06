@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script  type="text/javascript" src="/js/profile_settings.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -21,11 +22,96 @@
     </head>
     <body>
     <script type="text/javascript">
+        $(document).ready(function() {
+
+         let currentPassword = document.getElementById("current_password");
+
+
+   currentPassword.addEventListener("input", function(e) {
+   var user_id=document.getElementById("user_id").value;
+   var password=document.getElementById("current_password").value;
+   var data ={"password":password ,"user_id":user_id};
+
+      console.log(e.target.value.length);
+ console.log(user_id);
+  console.log(password);
+      if(e.target.value == ""){
+        document.getElementById("new_password").disabled = true;
+        document.getElementById("rep_new_password").disabled = true;
+      }else{
+              $.ajax({
+            type: "POST",
+            url : "http://localhost:8080/validatePassword",
+             contentType : 'application/json; charset=utf-8',
+            dataType:'text',
+            data: data,
+             processData: false,
+            success: function (data) {
+            if(data=="correct"){
+            alert("correct");}
+ if(data=="incorrect"){
+            alert("incorrect");}
+            },
+            error: function (data) {
+ alert("error");
+            },
+        });
+      }
+    });
+
+    $('#email').focusout(function(){
+      $('#email').filter(function(){
+        var email = $('#email').val();
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if ( !emailReg.test( email ) || email.length==0) {
+          document.getElementById("email_error").innerText = "Please provide correct email.";
+ document.getElementById("saveButton").disabled = true;
+        }else{
+          document.getElementById("email_error").innerText = "";
+           document.getElementById("saveButton").disabled =false;
+        }
+      });
+    });
+    $('#new_password').focusout(function(){
+      $('#new_password').filter(function(){
+          var pass = $('#new_password').val();
+          var passReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+          if ( !passReg.test( pass ) || !pass ) {
+              document.getElementById("pass_error").innerText = "Password should be between 6-16 characters. Should contain letters, numbers and special character.";
+               document.getElementById("saveButton").disabled = true;
+          }else{
+              document.getElementById("pass_error").innerText = "";
+               document.getElementById("saveButton").disabled =false;
+          }
+      });
+    });
+    $('#name').focusout(function(){
+      $('#name').filter(function(){
+          var names = $('#name').val();
+          var namesReg = /^[a-zA-Z\s]*$/;
+          if ( !namesReg.test( names ) || !names) {
+              document.getElementById("names_error").innerText = "Names are incorrect. Should contain only letters.";
+               document.getElementById("saveButton").disabled = true;
+          }else{
+              document.getElementById("names_error").innerText = "";
+               document.getElementById("saveButton").disabled =false;
+          }
+      });
+    });
+
+    $('#rep_new_password').on('blur', function() {
+      const password = $('#new_password').val();
+      const confirm_password = $(this).val();
+      if(password != confirm_password) {
+          $('#rep_pass_error').text('Passwords do not match!');
+           document.getElementById("saveButton").disabled = true;
+      } else {
+          $('#rep_pass_error').text('');
+           document.getElementById("saveButton").disabled =false;
+      }
+    });
+});
         function saveProfile(){
-         var user_id=document.getElementById("user_id").value;
-         var user=document.getElementById("user").value;
-var description=document.getElementById("description").value;
-var password=document.getElementById("password").value;
        Swal.fire({
        title: 'Do you want to save the changes?',
        showCancelButton: true,
@@ -39,7 +125,7 @@ var password=document.getElementById("password").value;
        }).then((result) => {
            if (result.isConfirmed) {
        Swal.fire('Saved!', '', 'success')
-     document.getElementById('formSendPass').submit();
+     document.getElementById('formSaveProfile').submit();
 
            }
             else if (result.isDenied) {
@@ -51,10 +137,11 @@ var password=document.getElementById("password").value;
         <div class="container">
             <div class="row col-md-6" style="margin-left:25%">
                 <form th:action="@{/home/settings/{user_id}}"
-                      th:object = "${user}"
+
                       method="POST"
                       class="fh5co-form animate-box"
                       data-animate-effect="fadeIn"
+                      id="formSaveProfile"
                 >
                     <h2>Public Profile</h2>
                     <input class="form-control"
@@ -63,20 +150,17 @@ var password=document.getElementById("password").value;
                            id="user_id"
                            name="user_id"
                     />
-                    <input class="form-control"
-                           type="hidden"
-                           th:value="${id}"
-                           id="id"
-                           name="id"
-                    />
+
                     <div class="form-group">
                         <label for="name" class="sr-only">Names</label>
                         <input type = "text"
                                name = "user_names"
-                               th:field = "*{user_names}"
+
+                               th:value="${names}"
                                class = "form-control"
                                placeholder="Names"
                                id="name"
+
                         />
                         <p id="names_error"></p>
                     </div>
@@ -84,7 +168,8 @@ var password=document.getElementById("password").value;
                         <label for="email" class="sr-only">Email</label>
                         <input type = "text"
                                name = "user_email"
-                               th:field = "*{user_email}"
+
+                               th:value="${email}"
                                class = "form-control"
                                placeholder="Email"
                                id="email"
@@ -95,10 +180,12 @@ var password=document.getElementById("password").value;
                         <label for="username" class="sr-only">Username</label>
                         <input type = "text"
                                name= "user_username"
-                               th:field = "*{user_username}"
+
+                               th:value = "${username}"
                                class = "form-control"
                                placeholder="Username"
                                id="username"
+                               disabled
                         />
                     </div>
                     <h2>Change password</h2>
@@ -187,7 +274,7 @@ var password=document.getElementById("password").value;
                         </table>
                     </div>
                     <div class ="form-group">
-                        <input type="submit" name="save" value="Save changes" class="btn btn-primary">
+                        <button type="button" id="saveButton" value="Save changes" class="btn btn-primary"th:attr="onclick=|saveProfile()|">Save</button>
                         <input type="submit" value="Back" name="cancel" class="btn btn-cancel">
                     </div>
                 </form>
