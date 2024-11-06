@@ -660,11 +660,13 @@ public class FunctionsController {
     @RequestMapping(value = "/validatePassword", method = RequestMethod.POST)
     @ResponseBody
     @CrossOrigin
-    public String validatePassword(@RequestBody Map json) throws Exception{
-     //   if(userService.getPasswordByUsername(userService.getUserById(Integer.parseInt(user_id)).getUser_username(),"admin").equals(password)){
+    public String validatePassword(UserIDAndPass userIDAndPass) throws Exception{
+        System.out.println(userIDAndPass.getUser_id());
+        System.out.println(userIDAndPass.getPassword());
+       if(userService.getPasswordByUsername(userService.getUserById(Integer.parseInt(userIDAndPass.getUser_id())).getUser_username(),"admin").equals(userIDAndPass.getPassword())){
             return "correct";
-       // }
-       // return "incorrect";
+        }
+        return "incorrect";
     }
 
 }
