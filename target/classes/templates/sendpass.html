@@ -30,23 +30,37 @@
 var description=document.getElementById("description").value;
 var password=document.getElementById("password").value;
        Swal.fire({
-       title: 'Do you want to send password?',
+       title: 'Do you want to send the password?',
        showCancelButton: true,
        confirmButtonText: 'Yes',
        denyButtonText: 'No',
        customClass: {
          actions: 'my-actions',
-         cancelButton: 'order-1 right-gap',
-         confirmButton: 'order-2',
+         cancelButton: 'order-1 right-gap btn swal-cancel',
+         confirmButton: 'order-2 btn swal-primary',
        },
        }).then((result) => {
            if (result.isConfirmed) {
-       Swal.fire('Saved!', '', 'success')
+       Swal.fire({
+                  title: "Success!",
+                  text: "The password has been sent.",
+                  customClass: {
+                                confirmButton: 'btn swal-primary',
+                            },
+                  icon: "success"
+                });
      document.getElementById('formSendPass').submit();
 
            }
             else if (result.isDenied) {
-         Swal.fire('Changes are not saved', '', 'info')
+              Swal.fire({
+                  title: "Password is not sent",
+                  text: "Password is not sent.",
+                  customClass: {
+                                confirmButton: 'btn swal-primary',
+                            },
+                  icon: "info"
+                });
        }
          });
          }
