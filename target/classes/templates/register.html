@@ -22,27 +22,17 @@
     <body>
     <script>
         function register(){
-               Swal.fire({
-               title: 'Do you want to register?',
-               showCancelButton: true,
-               confirmButtonText: 'Yes',
-               denyButtonText: 'No',
+           Swal.fire({
+               title: 'Success!',
+               text: "You were successfully registered!",
+               icon: "success",
+               confirmButtonText: 'OK',
                customClass: {
-                 actions: 'my-actions',
-                 cancelButton: 'order-1 right-gap',
-                 confirmButton: 'order-2',
-               },
-               }).then((result) => {
-                   if (result.isConfirmed) {
-               Swal.fire('Saved!', '', 'success')
-             document.getElementById('registerForm').submit();
-
-                   }
-                    else if (result.isDenied) {
-                 Swal.fire('Changes are not saved', '', 'info')
+                 confirmButton: 'btn swal-primary',
                }
-                 });
-                 }
+           })
+           document.getElementById('registerForm').submit();
+        }
     </script>
         <div class = "container">
             <div class = "row">
