@@ -77,6 +77,7 @@ public class FunctionsController {
 
             }
             return "index_error";
+
         }
     }
     @GetMapping(value="/admin")

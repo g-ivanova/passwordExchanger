@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+
   // Initially hide all error messages when the page loads
   $('.error-message').hide();
 
@@ -130,4 +132,6 @@ $(document).ready(function () {
 
   // Initial button state check
   toggleSubmitButton();
+
+
 });

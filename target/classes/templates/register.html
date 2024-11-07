@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script  type="text/javascript" src="/js/register.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -19,11 +20,35 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
+    <script>
+        function register(){
+               Swal.fire({
+               title: 'Do you want to register?',
+               showCancelButton: true,
+               confirmButtonText: 'Yes',
+               denyButtonText: 'No',
+               customClass: {
+                 actions: 'my-actions',
+                 cancelButton: 'order-1 right-gap',
+                 confirmButton: 'order-2',
+               },
+               }).then((result) => {
+                   if (result.isConfirmed) {
+               Swal.fire('Saved!', '', 'success')
+             document.getElementById('registerForm').submit();
+
+                   }
+                    else if (result.isDenied) {
+                 Swal.fire('Changes are not saved', '', 'info')
+               }
+                 });
+                 }
+    </script>
         <div class = "container">
             <div class = "row">
                 <div class="col-md-4 col-md-offset-4">
                     <!-- Start Sign In Form -->
-                    <form th:action="@{/register}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+                    <form th:action="@{/register}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn" id="registerForm">
                         <h2>Register</h2>
                         <div class ="form-group">
                             <label for="user_name" class="sr-only">>Name and Surname</label>
@@ -107,7 +132,7 @@
                             </p>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Sign Up" id="SignUp" class="btn btn-primary" disabled>
+                            <button type="button" value="Sign Up" id="SignUp" class="btn btn-primary" th:attr="onclick=|register()|" disabled>Sign in</button>
                         </div>
                     </form>
                 </div>
