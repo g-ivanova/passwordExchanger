@@ -29,14 +29,16 @@
       let div = document.getElementById(id);
       let eye = document.getElementById(id+"eye");
       let slashedEye = document.getElementById(id+"slashedEye");
-      if(div.style.visibility == 'hidden'){
-          div.style.visibility = 'visible';
-          eye.style.display = 'none';
-          slashedEye.style.display = 'initial';
+      if(div.innerHTML == "******"){
+            div.style.visibility = 'visible';
+                   div.innerHTML=document.getElementById (id+"sendpass").innerText;
+                  eye.style.display = 'none';
+                  slashedEye.style.display = 'initial';
       }else{
-          div.style.visibility = 'hidden';
-          eye.style.display = 'initial';
-          slashedEye.style.display = 'none';
+          div.style.visibility = 'visible';
+                  div.innerHTML="******";
+                  eye.style.display = 'initial';
+                  slashedEye.style.display = 'none';
       }
   }
   function CopyTextAndDelete(id){
@@ -59,16 +61,20 @@
           success: function () {
               let div = document.getElementById(id);
               let eye = document.getElementById(id+"eye");
+               let pass = document.getElementById(id+"pass");
               let slashedEye = document.getElementById(id+"slashedEye");
-              if(div.style.visibility == 'hidden'){
-                  div.style.visibility = 'visible';
+
+      if(div.innerHTML == "******"){
+            div.style.visibility = 'visible';
+                   div.innerHTML=document.getElementById (id+"pass").innerText;
                   eye.style.display = 'none';
                   slashedEye.style.display = 'initial';
-              }else{
-                  div.style.visibility = 'hidden';
+      }else{
+          div.style.visibility = 'visible';
+                  div.innerHTML="******";
                   eye.style.display = 'initial';
                   slashedEye.style.display = 'none';
-              }
+      }
           },
           error: function () {},
       });
@@ -121,7 +127,8 @@
                             <td th:text = "${password.password_desc}" ></td>
                             <td th:text = "${password.password_from_name}"></td>
                             <td th:text = "${password.password_date}" ></td>
-                            <td style="visibility:hidden;" th:text = "${password.password}" th:value="${password.password}" th:id="${password.id_password}" ></td>
+                            <td style="visibility:visible;" th:id="${password.id_password}" >******</td>
+                            <td style="display: none !important;" th:text = "${password.password}" th:value="${password.password}" th:id="${password.id_password}+'pass'" ></td>
                             <td>
                                 <button class="btn btn-info" type="button" th:attr="onclick=|CopyTextAndDelete('${password.id_password}')|" >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
@@ -206,7 +213,8 @@
                             <td th:text = "${sendpassword.password_desc}" ></td>
                             <td th:text = "${sendpassword.password_to_name}" ></td>
                             <td th:text = "${sendpassword.password_date}" ></td>
-                            <td style="visibility:hidden;" th:text = "${sendpassword.password}" th:value="${sendpassword.password}" th:id="${sendpassword.id_password}" ></td>
+                            <td style="visibility:visible;" th:id="${sendpassword.id_password}" >******</td>
+                            <td style="display: none !important;" th:text = "${sendpassword.password}" th:value="${sendpassword.password}" th:id="${sendpassword.id_password}+'sendpass'" ></td>
                             <td>
 
                                 <button class="btn btn-info" type="button"th:attr="onclick=|CopyText('${sendpassword.id_password}')|">                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">

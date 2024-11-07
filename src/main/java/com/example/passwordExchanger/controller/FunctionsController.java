@@ -666,8 +666,6 @@ public class FunctionsController {
     @ResponseBody
     @CrossOrigin
     public String validatePassword(UserIDAndPass userIDAndPass) throws Exception{
-        System.out.println(userIDAndPass.getUser_id());
-        System.out.println(userIDAndPass.getPassword());
        if(userService.getPasswordByUsername(userService.getUserById(Integer.parseInt(userIDAndPass.getUser_id())).getUser_username(),"admin").equals(userIDAndPass.getPassword())){
             return "correct";
         }
