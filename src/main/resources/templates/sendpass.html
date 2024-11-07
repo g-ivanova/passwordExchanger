@@ -83,6 +83,7 @@ var password=document.getElementById("password").value;
                                     class = "form-control"
                                     placeholder="Description"
                                     id="description"
+                                    required
                             />
                         </div>
                         <div class ="form-group">
@@ -94,11 +95,12 @@ var password=document.getElementById("password").value;
                                     class = "form-control"
                                     placeholder="Enter password"
                                     id="password"
+                                    required
                             />
                         </div>
                         <div class ="form-group">
                             <label for="role" class="sr-only">Select group</label>
-                            <select class="form-control"  id="role" name="role">
+                            <select class="form-control"  id="role" name="role" required>
                                 <option value="Select group">Select group</option>
                                 <option th:each="role : ${roleList}"
                                         th:value="${role.role_id}"
@@ -108,12 +110,12 @@ var password=document.getElementById("password").value;
                         </div>
                         <div class ="form-group">
                             <label for="user" class="sr-only">Select user</label>
-                            <select class="form-control" id= "user" name = "user">
+                            <select class="form-control" id= "user" name = "user" required>
                                 <option value="0">Select user</option>
                             </select>
                         </div>
                         <div class ="form-group">
-                            <button type="button" value="Send password" class="btn btn-primary" th:attr="onclick=|sendPass()|">Send</button>
+                            <button type="button" value="Send password" id="SendPass" class="btn btn-primary" th:attr="onclick=|sendPass()|" disabled>Send</button>
                             <input type="button" value="Back" class="btn btn-cancel" onclick="window.history.back();">
                         </div>
                     </form>
