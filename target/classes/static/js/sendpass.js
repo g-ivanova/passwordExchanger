@@ -30,5 +30,39 @@ $(document).ready(function() {
             },
         });
     });
+
+      // Function to enable or disable the SignUp button
+      function toggleSubmitButton() {
+        // Check if the form is valid by testing all the fields
+        if ($('#description').val() !== "" &&
+            $('#password').val() !== "" &&
+            $('[name="role"]').val() !== 'Select group' &&
+            $('[name="user"]').val() !== '0') {
+          $('#SendPass').prop('disabled', false); // Enable the button
+        } else {
+          $('#SignUp').prop('disabled', true); // Disable the button
+        }
+      }
+
+      // Focusout event listeners for inputs
+      $('#description').focusout(function () {
+        toggleSubmitButton();
+      });
+
+      $('#password').focusout(function () {
+        toggleSubmitButton();
+      });
+
+      // On change for select fields
+      $('[name="role"]').on('change', function () {
+        toggleSubmitButton();
+      });
+
+      $('[name="user"]').on('change', function () {
+        toggleSubmitButton();
+      });
+
+      // Initial button state check
+      toggleSubmitButton();
 });
 
