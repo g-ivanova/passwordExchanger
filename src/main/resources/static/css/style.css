@@ -427,3 +427,6 @@ input, textarea {
     font-weight:normal;
     width:80%;
 }
+.error-message{
+    display: none;
+}
