@@ -647,7 +647,7 @@ public class FunctionsController {
         }
     }
 
-    @PostMapping(params ="save",value="/home/resetPassword")
+    @PostMapping(value="/home/resetPassword")
     public String resetPassword(Model model,@RequestParam(required = false)  String email,@RequestParam(required = false)  String code,@RequestParam(required = false)  String new_password,@RequestParam(required = false)  String rep_new_password ) throws Exception{
         User user=userService.getUserByUsernameOrEmail(email,email);
         if(codeService.getCodeByUserId(user.getUser_id()).getCode().equals(code) && new_password.equals(rep_new_password)){
@@ -655,6 +655,11 @@ public class FunctionsController {
             return "index";
         }
         return "index";
+    }
+
+    @PostMapping(params ="cancel",value="/home/resetPassword")
+    public String cancelResetPassword() throws Exception{
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "/validatePassword", method = RequestMethod.POST)

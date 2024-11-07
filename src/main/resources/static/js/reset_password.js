@@ -11,18 +11,35 @@ $(document).ready(function() {
                 if(data=="true"){
                     document.getElementById("email").readOnly= true;
                     document.getElementById("emailButton").disabled = true;
-                    alert("You have received code!")
+                    Swal.fire({
+                      title: "Success!",
+                      text: "Your validation code was sent. Check your email.",
+                      icon: "success"
+                    });
+
                 }if(data=="false"){
-                    alert("Incorrect email!")
+                            Swal.fire({
+                                title: "Error!",
+                                text: "There is not user with this email.",
+                                icon: "error"
+                            });
                 }
                 if(data=="code"){
                  document.getElementById("email").readOnly = true;
                                     document.getElementById("emailButton").disabled = true;
-                 alert("You already have a validation code!")
+                 Swal.fire({
+                                       title: "Warning!",
+                                       text: "Your validation code was already sent. Check your email.",
+                                       icon: "warning"
+                                     });
                 }
             },
             error: function (data) {
-                alert("Error!")
+                        Swal.fire({
+                                                title: "Error!",
+                                                text: "There was an unexpected error.",
+                                                icon: "error"
+                                            });
             },
         });
     }
