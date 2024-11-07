@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script  type="text/javascript" src="/js/index.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -24,19 +25,22 @@
                     <form th:action="@{/index}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
                         <h2>Sign In</h2>
                         <div class="form-group">
+                            <h5>The entered username or password is incorrect.</h5>
+                        </div>
+                        <div class="form-group">
                             <label for="username" class="sr-only">Username</label>
-                            <input type="text"  class="form-control" th:field="*{user_username}" placeholder="Username" id="username"/>
+                            <input type="text"  class="form-control" th:field="*{user_username}" placeholder="Username" id="username" required/>
                         </div>
                         <div class="form-group">
                             <label for="password" class="sr-only">Password</label>
-                            <input type="password" class="form-control" th:field="*{user_password}" showPassword="true" id="password" placeholder="Password"/>
+                            <input type="password" class="form-control" th:field="*{user_password}" showPassword="true" id="password" placeholder="Password" required/>
                         </div>
                         <div class="form-group">
                             <p>Not registered? <a th:href = "@{/register}">Sign Up</a></p>
                             <p>Forgotten password? <a th:href="@{/resetpassword}">Reset it</a></p>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Sign In" class="btn btn-primary">
+                            <input type="submit" value="Sign In" class="btn btn-primary" id="SignIn" disabled>
                         </div>
                     </form>
                     <!-- END Sign In Form -->
