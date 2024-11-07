@@ -652,9 +652,9 @@ public class FunctionsController {
         User user=userService.getUserByUsernameOrEmail(email,email);
         if(codeService.getCodeByUserId(user.getUser_id()).getCode().equals(code) && new_password.equals(rep_new_password)){
             userService.updatePassword(new_password, user.getUser_id());
-            return "index";
+            return "redirect:/index";
         }
-        return "index";
+        return "redirect:/index";
     }
 
     @PostMapping(params ="cancel",value="/home/resetPassword")
@@ -672,6 +672,17 @@ public class FunctionsController {
             return "correct";
         }
         return "incorrect";
+    }
+
+
+    @RequestMapping(value = "/validateCode", method = RequestMethod.POST)
+    @ResponseBody
+    @CrossOrigin
+    public String validateCode(UserIDAndPass userIDAndPass) throws Exception{
+        if(userIDAndPass.getPassword().equals(codeService.getCodeByUserId(userService.getUserByEmail(userIDAndPass.getUser_id()).getUser_id()).getCode())){
+            return "correct";
+        }
+       return "incorrect";
     }
 
 }
