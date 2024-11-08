@@ -411,14 +411,14 @@ public class FunctionsController {
         return "edit_user";
     }
     @PostMapping(params = "save",value="/admin/editUser/{id}/{user_id}")
-    public String editUser(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam int id,@RequestParam String user_email,@RequestParam String user_names,@RequestParam String current_password,@RequestParam String new_password,@RequestParam String rep_new_password,@RequestParam(required = false) int user_id) {
-      //  User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
-        //userService.saveUser(newUser);
-        userService.updateEmail(user_email,user_id);
-        userService.updateNames(user_names,user_id);
-        if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(), "admin")) && !new_password.isEmpty() && new_password!=null && new_password!="" && new_password.equals(rep_new_password)){
-            userService.updatePassword(new_password,user_id);
-        }
+    public String editUser(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam int id,@RequestParam String user_email,@RequestParam String user_names,@RequestParam(required = false) int user_id) {
+       User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
+        userService.saveUser(newUser);
+      //  userService.updateEmail(user_email,user_id);
+       // userService.updateNames(user_names,user_id);
+       // if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(), "admin")) && !new_password.isEmpty() && new_password!=null && new_password!="" && new_password.equals(rep_new_password)){
+        //    userService.updatePassword(new_password,user_id);
+       // }
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
@@ -530,8 +530,8 @@ public class FunctionsController {
     }
 
     @PostMapping(params = "add",value="/home/settings/{user_id}")
-    public String saveUser(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
-        UserRoles userrole=new UserRoles(role_id,id);
+    public String saveUser(RedirectAttributes redirectAttributes,Model model,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
+        UserRoles userrole=new UserRoles(role_id,user_id);
         userRolesService.saveRole(userrole);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
         List<Role>roleList=new ArrayList<Role>();
