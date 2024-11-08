@@ -29,22 +29,18 @@
                         </div>
                         <div class="form-group">
                             <label for="username" class="sr-only">Username</label>
-                            <input type="text"  class="form-control" th:field="*{user_username}" placeholder="Username" id="username"/>
+                            <input type="text"  class="form-control" th:field="*{user_username}" placeholder="Username" id="username" required/>
                         </div>
                         <div class="form-group">
                             <label for="password" class="sr-only">Password</label>
-                            <input type="password" class="form-control" th:field="*{user_password}" showPassword="true" id="password" placeholder="Password"/>
+                            <input type="password" class="form-control" th:field="*{user_password}" showPassword="true" id="password" placeholder="Password" required/>
                         </div>
                         <div class="form-group">
-                            <p>Not registered?
-                                <a th:href = "@{/register}">Sign Up</a>
-                            </p>
-                            <p>Forgotten password?
-                                <a th:href="@{/resetpassword}">Reset it</a>
-                            </p>
+                            <p>Not registered? <a th:href = "@{/register}">Sign Up</a></p>
+                            <p>Forgotten password? <a th:href="@{/resetpassword}">Reset it</a></p>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Sign In" class="btn btn-primary">
+                            <input type="submit" value="Sign In" class="btn btn-primary" id="SignIn" disabled>
                         </div>
                     </form>
                     <!-- END Sign In Form -->
