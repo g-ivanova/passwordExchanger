@@ -1,4 +1,5 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script  type="text/javascript" src="/js/passwordValidity.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -79,6 +80,45 @@
           error: function () {},
       });
   }
+
+                function deletePassword(el){
+              var user_id=document.getElementById("user_id").value;
+              Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                customClass: {
+                    actions: 'my-actions',
+                    cancelButton: 'btn swal-cancel',
+                    confirmButton: 'btn swal-danger',
+                },
+            }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "The password has been deleted.",
+                            icon: "success",
+                            customClass: {
+                                confirmButton: 'btn swal-primary',
+                            },
+                                });
+                    $.ajax({
+                        type: "GET",
+                        url : "http://localhost:8080/home/"+user_id+"/"+el,
+                        contentType: "application/json",
+                        success: function () {
+                            window.location.reload();
+
+                                            },
+                        error: function () {},
+                            });
+
+                                            }
+                                });
+            }
+
     </script>
         <div class="dropdown">
             <button class="btn dropbtn">
@@ -147,11 +187,11 @@
                                         <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
                                     </svg>
                                 </button>
-                                <a class ="btn btn-danger" th:href = "@{/home/{user_id}/{id}(user_id=${user_id},id=${password.id_password})}" >
+                                <button type="button" class="btn btn-danger confirm-delete"  th:attr="onclick=|deletePassword('${password.id_password}')|">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                         <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
                                     </svg>
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -236,11 +276,10 @@
                                         <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
                                     </svg>
                                 </button>
-                                <a class ="btn btn-danger" th:href = "@{/home/{user_id}/{id}(user_id=${user_id},id=${sendpassword.id_password})}" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                <button type="button" class="btn btn-danger confirm-delete"  th:attr="onclick=|deletePassword('${sendpassword.id_password}')|">                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                         <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
                                     </svg>
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
