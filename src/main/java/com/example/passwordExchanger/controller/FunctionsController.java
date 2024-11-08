@@ -228,7 +228,7 @@ public class FunctionsController {
             mail.setMailFrom("pass.exchanger.project@gmail.com");
             mail.setMailTo(userService.getUserById(user).getUser_email());
             mail.setMailSubject("Spring Boot - Email demo");
-            mail.setMailContent(userService.getUserById(user_id).getUser_names()+" shared new password with you! Login to see it.");
+            mail.setMailContent(userService.getUserById(user_id).getUser_names()+" shared new password with you! The password will be available in the next 24 hours. Login to see it. ");
             mailService.sendEmail(mail);
 
             return "redirect:/home";
@@ -642,7 +642,7 @@ public class FunctionsController {
             mail.setMailFrom("pass.exchanger.project@gmail.com");
             mail.setMailTo(user.getUser_email());
             mail.setMailSubject("Spring Boot - Email demo");
-            mail.setMailContent("Your code for reseting your password is "+codeService.getCodeById(codeService.getLastID()).getCode()+". The password will be available in the next 24 hours.");
+            mail.setMailContent("Your code for reseting your password is "+codeService.getCodeById(codeService.getLastID()).getCode());
              mailService.sendEmail(mail);
             return "true";
         }
