@@ -210,29 +210,25 @@ public class FunctionsController {
         model.addAttribute("password",password);
         System.out.println(user);
         System.out.println(user_id);
-        if(password.getPassword_desc().isEmpty() || user==0  || password.getPass()==null){
-            return "sendpass_error";
-        }
-        else {
-            LocalDate currentDate = LocalDate.now();
-            String today = currentDate.toString();
-            //  password.setPassword_validity(today);
-            password.setPassword_from(user_id);
-            password.setPassword_to(user);
-            passwordService.savePassword(password);
-            model.addAttribute("user", userService.getUserById(user_id));
-            model.addAttribute("user_id", user_id);
-            redirectAttributes.addAttribute("user_id", user_id);
+        LocalDate currentDate = LocalDate.now();
+        String today = currentDate.toString();
+        //  password.setPassword_validity(today);
+        password.setPassword_from(user_id);
+        password.setPassword_to(user);
+        passwordService.savePassword(password);
+        model.addAttribute("user", userService.getUserById(user_id));
+        model.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("user_id", user_id);
 
-            Mail mail = new Mail();
-            mail.setMailFrom("pass.exchanger.project@gmail.com");
-            mail.setMailTo(userService.getUserById(user).getUser_email());
-            mail.setMailSubject("Spring Boot - Email demo");
-            mail.setMailContent(userService.getUserById(user_id).getUser_names()+" shared new password with you! The password will be available in the next 24 hours. Login to see it. ");
-            mailService.sendEmail(mail);
+        Mail mail = new Mail();
+        mail.setMailFrom("pass.exchanger.project@gmail.com");
+        mail.setMailTo(userService.getUserById(user).getUser_email());
+        mail.setMailSubject("Spring Boot - Email demo");
+        mail.setMailContent(userService.getUserById(user_id).getUser_names()+" shared new password with you! The password will be available in the next 24 hours. Login to see it. ");
+        mailService.sendEmail(mail);
 
-            return "redirect:/home";
-        }
+        return "redirect:/home";
+
     }
 
     @DeleteMapping (value="/home/{user_id}/{id}")
