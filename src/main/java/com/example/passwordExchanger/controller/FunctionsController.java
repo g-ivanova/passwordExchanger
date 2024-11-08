@@ -684,4 +684,16 @@ public class FunctionsController {
        return "incorrect";
     }
 
+    @RequestMapping(value = "/validateEmailAndUsername", method = RequestMethod.POST)
+    @ResponseBody
+    @CrossOrigin
+    public String validateEmailAndUsername(UserIDAndPass userIDAndPass) throws Exception{
+
+
+       if(userService.getUserByUsernameOrEmail(userIDAndPass.getUser_id(),userIDAndPass.getUser_id())!=null){
+           return "incorrect";
+        }
+            return "correct";
+    }
+
 }

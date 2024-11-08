@@ -7,6 +7,8 @@ $(document).ready(function () {
   // Variable to track the form's overall validity
   var isFormValid = true;
 
+
+
   // Validate email
   function isEmailValid() {
     var email = $('#user_email').val();
@@ -14,9 +16,28 @@ $(document).ready(function () {
     if (!emailReg.test(email) || email.length === 0) {
       $('#email_error').text("Please provide correct email.").show();
       isFormValid = false;
+           $('#SignUp').prop('disabled', true);
     } else {
-      $('#email_error').hide();
-      isFormValid = true;
+   var data ={user_id:email ,password:""};
+ $.ajax({
+            type: "POST",
+            url : "http://localhost:8080/validateEmailAndUsername",
+            data: data,
+            success: function (data) {
+            if(data=="correct"){
+                  $('#email_error').hide();
+
+               isFormValid = true;
+                    $('#SignUp').prop('disabled', false); }
+ if(data=="incorrect"){
+       $('#email_error').text("This email is already registered.").show();
+     $('#SignUp').prop('disabled', true);
+       isFormValid = false;
+            }},
+            error: function (data) {
+               isFormValid = false;
+            },
+        });
     }
   }
 
@@ -66,10 +87,30 @@ $(document).ready(function () {
       $('#username_error').text("Please enter username!").show();
       isFormValid = false;
     } else {
-      $('#username_error').hide();
-      isFormValid = true;
+    var data ={user_id:user_username ,password:""};
+     $.ajax({
+                type: "POST",
+                url : "http://localhost:8080/validateEmailAndUsername",
+                data: data,
+                success: function (data) {
+                if(data=="correct"){
+                   isFormValid = true;
+                        $('#SignUp').prop('disabled', false); }
+     if(data=="incorrect"){
+       $('#username_error').text("This username is already taken!").show();
+       isFormValid = false;
+            $('#SignUp').prop('disabled', true);
+     }
+
+                },
+                error: function (data) {
+     alert("error");
+                },
+            });
     }
-  }
+      $('#username_error').hide();
+    }
+
 
   // Check if select field is empty
   function isSelectEmpty() {
