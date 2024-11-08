@@ -545,6 +545,9 @@ public class FunctionsController {
         model.addAttribute("id",user_id);
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
+        model.addAttribute("email",userService.getUserById(user_id).getUser_email());
+        model.addAttribute("names",userService.getUserById(user_id).getUser_names());
+        model.addAttribute("username", userService.getUserById(user_id).getUser_username());
         model.addAttribute("user", userService.getUserById(user_id));
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", user_id);
@@ -565,6 +568,9 @@ public class FunctionsController {
         model.addAttribute("id",user_id);
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
+        model.addAttribute("email",userService.getUserById(user_id).getUser_email());
+        model.addAttribute("names",userService.getUserById(user_id).getUser_names());
+        model.addAttribute("username", userService.getUserById(user_id).getUser_username());
         model.addAttribute("user", userService.getUserById(user_id));
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", user_id);

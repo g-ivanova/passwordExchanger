@@ -85,6 +85,23 @@ function update(){
           document.getElementById("email_error").innerText = "Please provide correct email.";
  document.getElementById("saveButton").disabled = true;
         }else{
+         var data ={user_id:email ,password:""};
+         $.ajax({
+            type: "POST",
+            url : "http://localhost:8080/validateEmailAndUsername",
+            data: data,
+            success: function (data) {
+            if(data=="correct"){
+                          document.getElementById("email_error").innerText = "";
+ document.getElementById("saveButton").disabled = false; }
+ if(data=="incorrect"){
+        document.getElementById("email_error").innerText = "This email is already taken!";
+ document.getElementById("saveButton").disabled = true;
+            }},
+            error: function (data) {
+               document.getElementById("saveButton").disabled = true;
+            },
+        });
           document.getElementById("email_error").innerText = "";
            document.getElementById("saveButton").disabled =false;
         }

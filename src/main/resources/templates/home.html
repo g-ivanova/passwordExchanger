@@ -23,7 +23,7 @@
 <body>
 <script>
     function CopyText(id){
-      let text = document.getElementById(id).innerHTML;
+      let text = document.getElementById (id+"sendpass").innerText;
       navigator.clipboard.writeText(text);
 }
   function SeeText(id){
@@ -48,7 +48,7 @@
           url : "http://localhost:8080/passwordValidity?id="+id,
           contentType: "application/json",
           success: function () {
-              let text = document.getElementById(id).innerHTML;
+              let text = document.getElementById(id+"pass").innerHTML;
               navigator.clipboard.writeText(text);
           },
           error: function () {},
