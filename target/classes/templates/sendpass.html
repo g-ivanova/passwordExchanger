@@ -25,12 +25,14 @@
     <body>
     <script type="text/javascript">
         function sendPass(){
+        var sendTo = $("#user option:selected").text();
          var user_id=document.getElementById("user_id").value;
          var user=document.getElementById("user").value;
 var description=document.getElementById("description").value;
 var password=document.getElementById("password").value;
        Swal.fire({
        title: 'Do you want to send the password?',
+       text: 'The password will be available for 24 hours.',
        showCancelButton: true,
        confirmButtonText: 'Yes',
        denyButtonText: 'No',
@@ -43,7 +45,7 @@ var password=document.getElementById("password").value;
            if (result.isConfirmed) {
        Swal.fire({
                   title: "Success!",
-                  text: "The password has been sent.",
+                  text: "Password successfully sent to "+sendTo+".",
                   customClass: {
                                 confirmButton: 'btn swal-primary',
                             },
