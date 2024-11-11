@@ -20,7 +20,7 @@
 </head>
 <body>
   <script type="text/javascript">
-    $(document).ready(function() {
+
       function saveProfile(){
           Swal.fire({
               title: 'Do you want to save the changes?',
@@ -41,7 +41,7 @@
                           confirmButton: 'btn swal-primary',
                       },
                   });
-                  document.getElementById('formSaveProfile').submit();
+                  document.getElementById('formEditUser').submit();
               }
               else {
                   Swal.fire({
@@ -54,11 +54,11 @@
               }
           });
       }
-      }
+ 
   </script>
   <div class="container">
     <div class="row col-md-6" style="margin-left:25%">
-       <form th:action="@{/admin/editUser/{id}/{user_id}}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+       <form th:action="@{/admin/editUser/{id}/{user_id}}" th:object = "${user}" id='formEditUser' method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
          <h2>Edit user</h2>
          <input class="form-control"
                 type="hidden"
@@ -160,7 +160,7 @@
            </table>
          </div>
          <div class ="form-group">
-           <input type="button" value="Save changes" class="btn btn-primary" th:attr="onclick=|saveProfile()|">
+           <button type="submit" class="btn btn-primary" th:attr="onclick=|saveProfile()|">Save changes</button>
            <input type="submit" value="Back" name="cancel" class="btn btn-cancel">
          </div>
        </form>
