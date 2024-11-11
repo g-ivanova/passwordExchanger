@@ -223,8 +223,8 @@ public class FunctionsController {
         Mail mail = new Mail();
         mail.setMailFrom("pass.exchanger.project@gmail.com");
         mail.setMailTo(userService.getUserById(user).getUser_email());
-        mail.setMailSubject("Spring Boot - Email demo");
-        mail.setMailContent(userService.getUserById(user_id).getUser_names()+" shared new password with you! The password will be available in the next 24 hours. Login to see it. ");
+        mail.setMailSubject(userService.getUserById(user_id).getUser_names()+" shared new password with you!");
+        mail.setMailContent("Hello, "+userService.getUserById(user).getUser_names()+". "+userService.getUserById(user_id).getUser_names()+" has shared a new password with you! The password will be available for 24 hours or until you see or copy it. Login to your account to check it securely.");
         mailService.sendEmail(mail);
 
         return "redirect:/home";
