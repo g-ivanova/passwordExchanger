@@ -23,151 +23,157 @@
     <body>
     <script type="text/javascript">
         $(document).ready(function() {
-           document.getElementById("saveButton").disabled = true;
-                      document.getElementById("new_password").disabled = true;
-                                 document.getElementById("rep_new_password").disabled = true;
-         let currentPassword = document.getElementById("current_password");
-
-var pass=document.getElementById("current_password");
-pass.addEventListener('input', onInput);
-function onInput(){
-  var duration = 1000;
-  clearTimeout(pass._timer);
-  pass._timer = setTimeout(()=>{
-    update(this.value);
-  }, duration);
-}
-
-
-function update(){
-         let currentPassword = document.getElementById("current_password");
-
-   var user_id=document.getElementById("user_id").value;
-   var password=document.getElementById("current_password").value;
-   var data ={user_id:user_id ,password:password};
-
-      if(currentPassword.value == ""){
-        document.getElementById("new_password").disabled = true;
-        document.getElementById("rep_new_password").disabled = true;
-         document.getElementById("saveButton").disabled = false;
-
-        $('#current_pass_error').text('');}
-      else{
-              $.ajax({
-            type: "POST",
-            url : "http://localhost:8080/validatePassword",
-            data: data,
-            success: function (data) {
-            if(data=="correct"){
-               document.getElementById("new_password").disabled = false;
-        document.getElementById("rep_new_password").disabled = false;
-         $('#current_pass_error').text('');}
- if(data=="incorrect"){
+            document.getElementById("saveButton").disabled = true;
             document.getElementById("new_password").disabled = true;
-        document.getElementById("rep_new_password").disabled = true;
-        document.getElementById("pass_error").innerText = "";
-        document.getElementById("rep_pass_error").innerText = "";
-            $('#current_pass_error').text('Password is not correct!');}
-            },
-            error: function (data) {
- alert("error");
-            },
+            document.getElementById("rep_new_password").disabled = true;
+            let currentPassword = document.getElementById("current_password");
+            var pass=document.getElementById("current_password");
+            pass.addEventListener('input', onInput);
+            function onInput(){
+                var duration = 1000;
+                clearTimeout(pass._timer);
+                pass._timer = setTimeout(()=>{
+                    update(this.value);
+                }, duration);
+            }
+            function update(){
+                let currentPassword = document.getElementById("current_password");
+                var user_id=document.getElementById("user_id").value;
+                var password=document.getElementById("current_password").value;
+                var data ={user_id:user_id ,password:password};
+                if(currentPassword.value == ""){
+                    document.getElementById("new_password").disabled = true;
+                    document.getElementById("rep_new_password").disabled = true;
+                    document.getElementById("saveButton").disabled = false;
+                    $('#current_pass_error').text('');
+                }else{
+                    $.ajax({
+                        type: "POST",
+                        url : "http://localhost:8080/validatePassword",
+                        data: data,
+                        success: function (data) {
+                            if(data=="correct"){
+                                document.getElementById("new_password").disabled = false;
+                                document.getElementById("rep_new_password").disabled = false;
+                                $('#current_pass_error').text('');
+                            }
+                            if(data=="incorrect"){
+                                document.getElementById("new_password").disabled = true;
+                                document.getElementById("rep_new_password").disabled = true;
+                                document.getElementById("pass_error").innerText = "";
+                                document.getElementById("rep_pass_error").innerText = "";
+                                $('#current_pass_error').text('Password is not correct!');
+                            }
+                        },
+                        error: function (data) {
+                            alert("error");
+                        },
+                    });
+                }
+            }
+            $('#email').focusout(function(){
+                $('#email').filter(function(){
+                    var email = $('#email').val();
+                    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                    if ( !emailReg.test( email ) || email.length==0 || email=="") {
+                        document.getElementById("email_error").innerText = "Please provide correct email.";
+                        document.getElementById("saveButton").disabled = true;
+                    }else{
+                        var data ={user_id:email ,password:""};
+                        $.ajax({
+                            type: "POST",
+                            url : "http://localhost:8080/validateEmailAndUsername",
+                            data: data,
+                            success: function (data) {
+                                if(data=="correct"){
+                                    document.getElementById("email_error").innerText = "";
+                                    document.getElementById("saveButton").disabled = false;
+                                }
+                                if(data=="incorrect"){
+                                    document.getElementById("email_error").innerText = "This email is already taken!";
+                                    document.getElementById("saveButton").disabled = true;
+                                }
+                            },
+                            error: function (data) {
+                                document.getElementById("saveButton").disabled = true;
+                            },
+                        });
+                        document.getElementById("email_error").innerText = "";
+                        document.getElementById("saveButton").disabled =false;
+                    }
+                });
+            });
+            $('#new_password').focusout(function(){
+                $('#new_password').filter(function(){
+                    var pass = $('#new_password').val();
+                    var passReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+                    if (( !passReg.test( pass ) || !pass ||pass=="") && document.getElementById("saveButton").disabled == true ) {
+                        document.getElementById("pass_error").innerText = "Password should be between 6-16 characters. Should contain letters, numbers and special character.";
+                        document.getElementById("saveButton").disabled = true;
+                    }else{
+                        document.getElementById("pass_error").innerText = "";
+                        document.getElementById("saveButton").disabled =false;
+                    }
+                });
+            });
+            $('#name').focusout(function(){
+                $('#name').filter(function(){
+                    var names = $('#name').val();
+                    var namesReg = /^[a-zA-Z\s]*$/;
+                    if ( !namesReg.test( names ) || !names || names=="") {
+                        document.getElementById("names_error").innerText = "Names are incorrect. Should contain only letters.";
+                        document.getElementById("saveButton").disabled = true;
+                    }else{
+                        document.getElementById("names_error").innerText = "";
+                        document.getElementById("saveButton").disabled =false;
+                    }
+                });
+            });
+            $('#rep_new_password').on('blur', function() {
+                const password = $('#new_password').val();
+                const confirm_password = $(this).val();
+                if(password != confirm_password) {
+                    $('#rep_pass_error').text('Passwords do not match!');
+                    document.getElementById("saveButton").disabled = true;
+                } else {
+                    $('#rep_pass_error').text('');
+                    document.getElementById("saveButton").disabled =false;
+                }
+            });
         });
-      }
-    }
-
-    $('#email').focusout(function(){
-      $('#email').filter(function(){
-        var email = $('#email').val();
-
-        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-        if ( !emailReg.test( email ) || email.length==0 || email=="") {
-          document.getElementById("email_error").innerText = "Please provide correct email.";
- document.getElementById("saveButton").disabled = true;
-        }else{
-         var data ={user_id:email ,password:""};
-         $.ajax({
-            type: "POST",
-            url : "http://localhost:8080/validateEmailAndUsername",
-            data: data,
-            success: function (data) {
-            if(data=="correct"){
-                          document.getElementById("email_error").innerText = "";
- document.getElementById("saveButton").disabled = false; }
- if(data=="incorrect"){
-        document.getElementById("email_error").innerText = "This email is already taken!";
- document.getElementById("saveButton").disabled = true;
-            }},
-            error: function (data) {
-               document.getElementById("saveButton").disabled = true;
-            },
-        });
-          document.getElementById("email_error").innerText = "";
-           document.getElementById("saveButton").disabled =false;
-        }
-      });
-    });
-    $('#new_password').focusout(function(){
-      $('#new_password').filter(function(){
-          var pass = $('#new_password').val();
-          var passReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-          if (( !passReg.test( pass ) || !pass ||pass=="") && document.getElementById("saveButton").disabled == true ) {
-              document.getElementById("pass_error").innerText = "Password should be between 6-16 characters. Should contain letters, numbers and special character.";
-               document.getElementById("saveButton").disabled = true;
-          }else{
-              document.getElementById("pass_error").innerText = "";
-               document.getElementById("saveButton").disabled =false;
-          }
-      });
-    });
-    $('#name').focusout(function(){
-      $('#name').filter(function(){
-          var names = $('#name').val();
-          var namesReg = /^[a-zA-Z\s]*$/;
-          if ( !namesReg.test( names ) || !names || names=="") {
-              document.getElementById("names_error").innerText = "Names are incorrect. Should contain only letters.";
-               document.getElementById("saveButton").disabled = true;
-          }else{
-              document.getElementById("names_error").innerText = "";
-               document.getElementById("saveButton").disabled =false;
-          }
-      });
-    });
-
-    $('#rep_new_password').on('blur', function() {
-      const password = $('#new_password').val();
-      const confirm_password = $(this).val();
-      if(password != confirm_password) {
-          $('#rep_pass_error').text('Passwords do not match!');
-           document.getElementById("saveButton").disabled = true;
-      } else {
-          $('#rep_pass_error').text('');
-           document.getElementById("saveButton").disabled =false;
-      }
-    });
-});
         function saveProfile(){
-       Swal.fire({
-       title: 'Do you want to save the changes?',
-       showCancelButton: true,
-       confirmButtonText: 'Yes',
-       denyButtonText: 'No',
-       customClass: {
-         actions: 'my-actions',
-         cancelButton: 'order-1 right-gap',
-         confirmButton: 'order-2',
-       },
-       }).then((result) => {
-           if (result.isConfirmed) {
-       Swal.fire('Saved!', '', 'success')
-     document.getElementById('formSaveProfile').submit();
-
-           }
-            else if (result.isDenied) {
-         Swal.fire('Changes are not saved', '', 'info')
-       }
-         });
-         }
+            Swal.fire({
+                title: 'Do you want to save the changes?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                denyButtonText: 'No',
+                customClass: {
+                    actions: 'my-actions',
+                    cancelButton: 'order-1 right-gap btn swal-cancel',
+                    confirmButton: 'order-2 btn swal-primary',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Saved!',
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn swal-primary',
+                        },
+                    });
+                    document.getElementById('formSaveProfile').submit();
+                }
+                else {
+                    Swal.fire({
+                        title: 'Changes are not saved!',
+                        icon: 'info',
+                        customClass: {
+                            confirmButton: 'btn swal-primary',
+                        },
+                    });
+                }
+            });
+        }
     </script>
         <div class="container">
             <div class="row col-md-6" style="margin-left:25%">
