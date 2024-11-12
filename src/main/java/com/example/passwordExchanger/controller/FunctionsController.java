@@ -3,6 +3,7 @@ package com.example.passwordExchanger.controller;
 import com.example.passwordExchanger.entity.*;
 import com.example.passwordExchanger.service.*;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 @Controller
 @SessionAttributes("user")
 public class FunctionsController {
+
+
     @Autowired
     private MailService mailService;
     @Autowired
@@ -37,7 +40,8 @@ public class FunctionsController {
     private RoleService roleService;
     @Autowired
     private CodeService codeService;
-
+    @Autowired
+    private TempUserRolesService tempUserRolesService;
 
 
 
@@ -370,11 +374,14 @@ public class FunctionsController {
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
+        tempUserRolesService.deleteTempUserRoleByUserId(user.getUser_id());
         for(int i=0;i<userRoleList.size();i++){
             role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             roleList.add(role);
         }
+
         List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
+
         model.addAttribute("roleListNo",roleListNo);
         model.addAttribute("id",id);
         model.addAttribute("roleList",roleList);
@@ -385,18 +392,28 @@ public class FunctionsController {
         return "edit_user";
     }
     @PostMapping(params = "add",value="/admin/editUser/{id}/{user_id}")
-    public String editUserFormAddGroup(RedirectAttributes redirectAttributes,Model model,@RequestParam int id,@ModelAttribute("user")User user,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
+    public String editUserFormAddGroup(RedirectAttributes redirectAttributes, Model model, @RequestParam int id, @ModelAttribute("user")User user, @RequestParam(required = false) int user_id, @RequestParam(required = false) int role_id) {
         UserRoles userrole=new UserRoles(role_id,id);
-
-        userRolesService.saveRole(userrole);
+        TempUserRoles tempUserRole=new TempUserRoles(role_id,id);
+       // userRolesService.saveRole(userrole);
+        tempUserRolesService.saveRole(tempUserRole);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
         for(int i=0;i<userRoleList.size();i++){
+            System.out.println("userRoleList"+roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             roleList.add(role);
         }
+        for(int j=0;j<tempUserRolesService.getUserRolesByUserId(id).size();j++){
+            System.out.println("tempuserRole"+roleService.getRoleFromId(tempUserRolesService.getUserRolesByUserId(id).get(j).getRole_id()));
+            role=new Role(tempUserRolesService.getUserRolesByUserId(id).get(j).getRole_id(),roleService.getRoleFromId(tempUserRolesService.getUserRolesByUserId(id).get(j).getRole_id()));
+            roleList.add(role);
+
+        }
+
         List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
+
         model.addAttribute("roleListNo",roleListNo);
         model.addAttribute("id",id);
         model.addAttribute("roleList",roleList);
@@ -410,6 +427,11 @@ public class FunctionsController {
     public String editUser(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam int id,@RequestParam String user_email,@RequestParam String user_names,@RequestParam(required = false) int user_id) {
        User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
         userService.saveUser(newUser);
+        for(int j=0;j<tempUserRolesService.getUserRolesByUserId(newUser.getUser_id()).size();j++) {
+            userRolesService.saveRole(new UserRoles(tempUserRolesService.getUserRolesByUserId(newUser.getUser_id()).get(j).getRole_id(),newUser.getUser_id()));
+        }
+
+        // userRolesService.saveRole(userrole);
       //  userService.updateEmail(user_email,user_id);
        // userService.updateNames(user_names,user_id);
        // if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(), "admin")) && !new_password.isEmpty() && new_password!=null && new_password!="" && new_password.equals(rep_new_password)){
@@ -437,6 +459,7 @@ public class FunctionsController {
     @GetMapping(value="/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}")
     public String deleteGroupFromUser(RedirectAttributes redirectAttributes,Model model,@PathVariable int id, @PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id) {
         userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
+        tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(id,role_id);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
@@ -456,7 +479,8 @@ public class FunctionsController {
 
     }
     @PostMapping(params = "cancel",value="/admin/editUser/{id}/{user_id}")
-    public String cancelFromEditUser(RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) int user_id){
+    public String cancelFromEditUser(RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) int user_id,@RequestParam(required = false) int id){
+        tempUserRolesService.deleteTempUserRoleByUserId(id);
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
