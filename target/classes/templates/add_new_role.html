@@ -12,7 +12,6 @@
     <title>PASSEX Add new group</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/animate.css">
@@ -36,13 +35,13 @@
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
-                  title: "Saved!",
-                  text: "The group has been saved.",
-                  icon: "success",
-                  customClass: {
-                  confirmButton: 'btn swal-primary',
-                  }
-                });
+            title: "Saved!",
+            text: "The group has been saved.",
+            icon: "success",
+            customClass: {
+              confirmButton: 'btn swal-primary',
+            }
+          });
           $.ajax({
             type: "get",
             url : "/admin/addNewGroup/"+user_id+"/"+name,
@@ -57,10 +56,40 @@
           Swal.fire('Changes are not saved', '', 'info')
         }
       });
-    }
-  </script>
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     }
+    $(document).ready(function () {
+      // Initially hide the error message when the page loads
+      $('.error-message').hide();
+      // Variable to track the form's overall validity
+      var isFormValid = true;
 
+      // Validate name
+      function isNameValid() {
+        var name = $('#name').val();
+        var nameReg = /^[a-zA-Z\s]*$/;
+        if (!nameReg.test(name) || name.length === 0) {
+          $('#name_error').text("Name is incorrect. Should contain only letters.").show();
+          isFormValid = false;
+        } else {
+          $('#name_error').hide();
+          isFormValid = true;
+        }
+      }
+      function toggleSubmitButton() {
+      // Check if the form is valid by testing the field
+        if (isFormValid &&
+           $('#name').val() !== "") {
+          $('#AddGroup').prop('disabled', false); // Enable the button
+        } else {
+          $('#AddGroup').prop('disabled', true); // Disable the button
+        }
+      }
+      $('#name').focusout(function () {
+        isNameValid();
+        toggleSubmitButton();
+      });
+    });
+  </script>
     <div class="container">
       <div class="row">
         <div class="col-md-4 col-md-offset-4">
@@ -79,10 +108,13 @@
                       class = "form-control"
                       placeholder="Group name"
                       id="name"
+                      required
               />
+              <p id="name_error" class="error-message">
+              </p>
             </div>
             <div class ="form-group">
-              <button type="button" class="btn btn-primary" th:attr="onclick=|createRole()|">Add</button>
+              <button type="button" id="AddGroup" class="btn btn-primary" th:attr="onclick=|createRole()|" disabled>Add</button>
               <input type="button" value="Back" class="btn btn-cancel" onclick="window.history.back();">
             </div>
           </form>
