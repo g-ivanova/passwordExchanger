@@ -14,8 +14,20 @@ public interface TempUserRolesRepository extends JpaRepository<TempUserRoles,Lon
     @Query(
             nativeQuery = true,
             value
-                    = "SELECT * FROM temp_user_roles ur where ur.id_temp_user_id =?1")
+                    = "SELECT * FROM temp_user_roles ur where ur.id_temp_user_id=?1")
     List<TempUserRoles> getUserRolesByUserId(int user_id);
+
+    @Query(
+            nativeQuery = true,
+            value
+                    = "SELECT * FROM temp_user_roles ur where ur.id_temp_user_id=?1 and ur.action=?2")
+    List<TempUserRoles> getUserRolesByUserIdAndAction(int user_id,String action);
+
+    @Query(
+            nativeQuery = true,
+            value
+                    = "SELECT id_temp_user_roles FROM temp_user_roles ur where ur.id_temp_user_id =?1 and ur.id_temp_role_id=?2")
+    Integer getTempUserRolesByUserIdAndRoleId(int user_id,int role_id);
 
     @Modifying
     @Transactional
@@ -32,5 +44,14 @@ public interface TempUserRolesRepository extends JpaRepository<TempUserRoles,Lon
             value
                     = "DELETE FROM temp_user_roles ur where ur.id_temp_user_id =?1")
     void deleteTempUserRoleByUserId(int user_id);
+
+    @Modifying
+    @Transactional
+    @Query(
+            nativeQuery = true,
+            value
+                    = "update temp_user_roles set action='delete' where id_temp_user_roles=?1")
+    void updateAction(int temp_role_id);
+
 
 }

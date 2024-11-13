@@ -20,4 +20,8 @@ public interface TempUserRolesService {
     void deleteTempUserRoleByUserIdAndRoleId(int user_id,int role_id);
 
     void deleteTempUserRoleByUserId(int user_id);
+    List<TempUserRoles> getUserRolesByUserIdAndAction(int user_id,String action);
+    Integer getTempUserRolesByUserIdAndRoleId(int user_id,int role_id);
+
+    void updateAction(int temp_role_id);
 }

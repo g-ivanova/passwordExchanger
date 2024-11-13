@@ -54,4 +54,19 @@ public class TempUserRolesServiceImpl implements TempUserRolesService {
     public void deleteTempUserRoleByUserId(int user_id) {
         tempUserRolesRepository.deleteTempUserRoleByUserId(user_id);
     }
+
+    @Override
+    public List<TempUserRoles> getUserRolesByUserIdAndAction(int user_id, String action) {
+        return tempUserRolesRepository.getUserRolesByUserIdAndAction(user_id,action);
+    }
+
+    @Override
+    public Integer getTempUserRolesByUserIdAndRoleId(int user_id, int role_id) {
+        return tempUserRolesRepository.getTempUserRolesByUserIdAndRoleId(user_id,role_id);
+    }
+
+    @Override
+    public void updateAction(int temp_role_id) {
+        tempUserRolesRepository.updateAction(temp_role_id);
+    }
 }

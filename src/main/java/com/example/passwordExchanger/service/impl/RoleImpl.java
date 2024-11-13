@@ -56,4 +56,14 @@ public class RoleImpl implements RoleService {
     public List<Role> getRoleWhereUserIsNot(int id) {
         return roleRepository.getRoleWhereUserIsNot(id);
     }
+
+    @Override
+    public List<Role> getRolesAndTempRolesByUser(int user_id) {
+        return roleRepository.getRolesAndTempRolesByUser(user_id);
+    }
+
+    @Override
+    public List<Role> getRolesFromUserId(int user_id) {
+        return roleRepository.getRolesFromUserId(user_id);
+    }
 }

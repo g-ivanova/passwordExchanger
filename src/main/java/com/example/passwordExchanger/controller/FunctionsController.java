@@ -212,8 +212,7 @@ public class FunctionsController {
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
         model.addAttribute("password",password);
-        System.out.println(user);
-        System.out.println(user_id);
+
         LocalDate currentDate = LocalDate.now();
         String today = currentDate.toString();
         //  password.setPassword_validity(today);
@@ -251,7 +250,7 @@ public class FunctionsController {
     @GetMapping(value="/home/{user_id}/{id}")
     public String deletePassword(RedirectAttributes redirectAttributes,Model model,@PathVariable Long id,@ModelAttribute("password")Password password, @ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
         passwordService.deletePasswordById(id);
-        System.out.println(user_id);
+
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
@@ -374,17 +373,23 @@ public class FunctionsController {
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
-        tempUserRolesService.deleteTempUserRoleByUserId(user.getUser_id());
-        for(int i=0;i<userRoleList.size();i++){
+        TempUserRoles temp=new TempUserRoles();
+        tempUserRolesService.deleteTempUserRoleByUserId(id);
+      /*  for(int i=0;i<userRoleList.size();i++){
             role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             roleList.add(role);
+        }*/
+        roleList=roleService.getRolesAndTempRolesByUser(id);
+
+        for(int i=0;i<roleService.getRolesFromUserId(id).size();i++){
+            temp=new TempUserRoles(roleService.getRolesFromUserId(id).get(i).getRole_id(),id);
+            tempUserRolesService.saveRole(temp);
         }
-
         List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
-
         model.addAttribute("roleListNo",roleListNo);
         model.addAttribute("id",id);
         model.addAttribute("roleList",roleList);
+        model.addAttribute("clicked","false");
         model.addAttribute("user_id",user_id);
         model.addAttribute("user", userService.getUserById(id));
         redirectAttributes.addAttribute("user_id", user_id);
@@ -394,13 +399,13 @@ public class FunctionsController {
     @PostMapping(params = "add",value="/admin/editUser/{id}/{user_id}")
     public String editUserFormAddGroup(RedirectAttributes redirectAttributes, Model model, @RequestParam int id, @ModelAttribute("user")User user, @RequestParam(required = false) int user_id, @RequestParam(required = false) int role_id) {
         UserRoles userrole=new UserRoles(role_id,id);
-        TempUserRoles tempUserRole=new TempUserRoles(role_id,id);
-       // userRolesService.saveRole(userrole);
+        TempUserRoles tempUserRole=new TempUserRoles(role_id,id,"add");
+        // userRolesService.saveRole(userrole);
         tempUserRolesService.saveRole(tempUserRole);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
-        for(int i=0;i<userRoleList.size();i++){
+       /* for(int i=0;i<userRoleList.size();i++){
             System.out.println("userRoleList"+roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             roleList.add(role);
@@ -408,45 +413,67 @@ public class FunctionsController {
         for(int j=0;j<tempUserRolesService.getUserRolesByUserId(id).size();j++){
             System.out.println("tempuserRole"+roleService.getRoleFromId(tempUserRolesService.getUserRolesByUserId(id).get(j).getRole_id()));
             role=new Role(tempUserRolesService.getUserRolesByUserId(id).get(j).getRole_id(),roleService.getRoleFromId(tempUserRolesService.getUserRolesByUserId(id).get(j).getRole_id()));
-            roleList.add(role);
+            if(tempUserRolesService.getUserRolesByUserId(id).get(j).getAction()==null ||tempUserRolesService.getUserRolesByUserId(id).get(j).getAction()=="" ){
+            roleList.add(role);}
 
-        }
+        }*/
+        roleList=roleService.getRolesAndTempRolesByUser(id);
 
         List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
 
         model.addAttribute("roleListNo",roleListNo);
         model.addAttribute("id",id);
         model.addAttribute("roleList",roleList);
+        model.addAttribute("clicked","true");
         model.addAttribute("user_id",user_id);
         model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("user_email",userService.getUserById(id).getUser_email());
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", id);
         return "edit_user";
     }
-    @PostMapping(params = "save",value="/admin/editUser/{id}/{user_id}")
-    public String editUser(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam int id,@RequestParam String user_email,@RequestParam String user_names,@RequestParam(required = false) int user_id) {
-       User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
-        userService.saveUser(newUser);
-        for(int j=0;j<tempUserRolesService.getUserRolesByUserId(newUser.getUser_id()).size();j++) {
-            userRolesService.saveRole(new UserRoles(tempUserRolesService.getUserRolesByUserId(newUser.getUser_id()).get(j).getRole_id(),newUser.getUser_id()));
-        }
+    @PostMapping(value="/admin/editUser/{id}/{user_id}")
+    public String editUser(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam int id,@RequestParam(required = false) int user_id) {
+        //User newUser=new User(id,user.getUser_username(),user.getUser_email(),user.getUser_password(),user.getUser_names());
+     //   userService.saveUser(newUser);
 
+        List<TempUserRoles>tempUserRoles=tempUserRolesService.getUserRolesByUserId(id);
+        for(TempUserRoles temp:tempUserRoles) {
+            if (temp.getAction() != null) {
+                if (temp.getAction().equals("add")) {
+
+                    userRolesService.saveRole(new UserRoles(temp.getRole_id(), id));
+                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(id, temp.getRole_id());
+                } else {
+
+                    userRolesService.deleteUserRoleByUserIdAndRoleId(id, temp.getRole_id());
+                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(id, temp.getRole_id());
+                }
+            }
+        }
         // userRolesService.saveRole(userrole);
-      //  userService.updateEmail(user_email,user_id);
-       // userService.updateNames(user_names,user_id);
-       // if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(), "admin")) && !new_password.isEmpty() && new_password!=null && new_password!="" && new_password.equals(rep_new_password)){
+        //  userService.updateEmail(user_email,user_id);
+        // userService.updateNames(user_names,user_id);
+        // if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(), "admin")) && !new_password.isEmpty() && new_password!=null && new_password!="" && new_password.equals(rep_new_password)){
         //    userService.updatePassword(new_password,user_id);
-       // }
+        // }
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
-        for(int i=0;i<userRoleList.size();i++){
+       /* for(int i=0;i<userRoleList.size();i++){
             role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             roleList.add(role);
-        }
+        }*/
+    //    for(int n=0;n<tempUserRolesService.getUserRolesByUserIdAndAction(id,"delete").size();n++){
+      //      int role_id=tempUserRolesService.getUserRolesByUserIdAndAction(id,"delete").get(n).getRole_id();
+        //    System.out.println(tempUserRolesService.getUserRolesByUserIdAndAction(id,"delete").get(n).getId_user_roles());
+          //  tempUserRolesService.deleteRoleById(tempUserRolesService.getUserRolesByUserIdAndAction(id,"delete").get(n).getId_user_roles());
+           // userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
+        //}
+        roleList=roleService.getRolesAndTempRolesByUser(id);
         List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
         model.addAttribute("roleListNo",roleListNo);
-        model.addAttribute("id",id);
+       // model.addAttribute("id",id);
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
         model.addAttribute("user", userService.getUserById(id));
@@ -454,22 +481,48 @@ public class FunctionsController {
         redirectAttributes.addAttribute("id", id);
         redirectAttributes.addFlashAttribute("notification",String.format("User successfully saved", userService.getUserById(user_id).getUser_names()));
         redirectAttributes.addFlashAttribute("action", "save");
-        return "redirect:/admin/editUser/{id}/{user_id}";
+        return "redirect:/admin";
     }
     @GetMapping(value="/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}")
     public String deleteGroupFromUser(RedirectAttributes redirectAttributes,Model model,@PathVariable int id, @PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id) {
-        userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
-        tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(id,role_id);
+       // userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
+        //tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(id,role_id);
+        TempUserRoles toDelete=new TempUserRoles(role_id,id,"delete");
+        if(tempUserRolesService.getTempUserRolesByUserIdAndRoleId(id,role_id)==null ){
+            tempUserRolesService.saveRole(toDelete);
+        }
+        if(tempUserRolesService.getTempUserRolesByUserIdAndRoleId(id,role_id)!=null){
+            tempUserRolesService.updateAction(tempUserRolesService.getTempUserRolesByUserIdAndRoleId(id,role_id));
+        }
+
+       // userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
-        for(int i=0;i<userRoleList.size();i++){
+       /* for(int i=0;i<userRoleList.size();i++){
+
             role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
             roleList.add(role);
         }
+        for(int n=0;n<tempUserRolesService.getUserRolesByUserId(id).size();n++){
+            if(tempUserRolesService.getUserRolesByUserId(id).get(n).getAction()==null || tempUserRolesService.getUserRolesByUserId(id).get(n).getAction()==""){
+                role=new Role(tempUserRolesService.getUserRolesByUserId(id).get(n).getRole_id(),roleService.getRoleFromId((tempUserRolesService.getUserRolesByUserId(id).get(n).getRole_id())));
+
+                roleList.add(role);
+            }
+            if(tempUserRolesService.getUserRolesByUserId(id).get(n).getAction()=="delete"){
+                role=new Role(tempUserRolesService.getUserRolesByUserId(id).get(n).getRole_id(),roleService.getRoleFromId((tempUserRolesService.getUserRolesByUserId(id).get(n).getRole_id())));
+
+                roleList.remove(role);
+            }
+
+        }*/
+        roleList=roleService.getRolesAndTempRolesByUser(id);
         List<Role>roleListNo=roleService.getRoleWhereUserIsNot(id);
         model.addAttribute("roleListNo",roleListNo);
         model.addAttribute("id",id);
+        model.addAttribute("clicked","true");
+
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
         model.addAttribute("user", userService.getUserById(id));
@@ -615,14 +668,14 @@ public class FunctionsController {
     @PostMapping(value="/home/settings/{user_id}")
     public String editProfile(RedirectAttributes redirectAttributes,Model model,@RequestParam(required = false) int user_id,@RequestParam(required = false) String user_names,@RequestParam(required = false) String user_email,@RequestParam(required = false)String new_password,@RequestParam(required = false)String rep_new_password,@RequestParam(required = false)String current_password)  {
         String pass=userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin");
-       if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin"))) {
-           if (!new_password.trim().isEmpty() && new_password!=null && new_password!="" && !new_password.equals("") && rep_new_password.equals(new_password)) {
-               pass=new_password;
+        if(current_password.equals(userService.getPasswordByUsername(userService.getUserById(user_id).getUser_username(),"admin"))) {
+            if (!new_password.trim().isEmpty() && new_password!=null && new_password!="" && !new_password.equals("") && rep_new_password.equals(new_password)) {
+                pass=new_password;
             }
         }
 
         User newUser=new User(user_id,userService.getUserById(user_id).getUser_username(),user_email, pass.getBytes(),user_names);
-    userService.saveUser(newUser);
+        userService.saveUser(newUser);
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
@@ -669,7 +722,7 @@ public class FunctionsController {
             mail.setMailTo(user.getUser_email());
             mail.setMailSubject("Spring Boot - Email demo");
             mail.setMailContent("Your code for reseting your password is "+codeService.getCodeById(codeService.getLastID()).getCode());
-             mailService.sendEmail(mail);
+            mailService.sendEmail(mail);
             return "true";
         }
     }
@@ -693,7 +746,7 @@ public class FunctionsController {
     @ResponseBody
     @CrossOrigin
     public String validatePassword(UserIDAndPass userIDAndPass) throws Exception{
-       if(userService.getPasswordByUsername(userService.getUserById(Integer.parseInt(userIDAndPass.getUser_id())).getUser_username(),"admin").equals(userIDAndPass.getPassword())){
+        if(userService.getPasswordByUsername(userService.getUserById(Integer.parseInt(userIDAndPass.getUser_id())).getUser_username(),"admin").equals(userIDAndPass.getPassword())){
             return "correct";
         }
         return "incorrect";
@@ -707,7 +760,7 @@ public class FunctionsController {
         if(userIDAndPass.getPassword().equals(codeService.getCodeByUserId(userService.getUserByEmail(userIDAndPass.getUser_id()).getUser_id()).getCode())){
             return "correct";
         }
-       return "incorrect";
+        return "incorrect";
     }
 
     @RequestMapping(value = "/validateEmailAndUsername", method = RequestMethod.POST)
@@ -716,10 +769,10 @@ public class FunctionsController {
     public String validateEmailAndUsername(UserIDAndPass userIDAndPass) throws Exception{
 
 
-       if(userService.getUserByUsernameOrEmail(userIDAndPass.getUser_id(),userIDAndPass.getUser_id())!=null){
-           return "incorrect";
+        if(userService.getUserByUsernameOrEmail(userIDAndPass.getUser_id(),userIDAndPass.getUser_id())!=null){
+            return "incorrect";
         }
-            return "correct";
+        return "correct";
     }
 
 }
