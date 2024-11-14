@@ -66,4 +66,9 @@ public class RoleImpl implements RoleService {
     public List<Role> getRolesFromUserId(int user_id) {
         return roleRepository.getRolesFromUserId(user_id);
     }
+
+    @Override
+    public Role getRoleIdFromId(int id) {
+        return roleRepository.getRoleIdFromId(id);
+    }
 }

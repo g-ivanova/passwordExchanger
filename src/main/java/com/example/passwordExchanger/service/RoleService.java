@@ -24,6 +24,8 @@ public interface RoleService {
     List<Role> getRolesAndTempRolesByUser(int user_id);
     List<Role> getRolesFromUserId(int user_id);
 
+    Role getRoleIdFromId(int id);
+
 
 
 }

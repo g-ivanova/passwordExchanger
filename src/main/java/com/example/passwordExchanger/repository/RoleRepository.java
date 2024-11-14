@@ -33,6 +33,12 @@ public interface RoleRepository extends JpaRepository<Role,Long> {
     @Query(
             nativeQuery = true,
             value
+                    = "SELECT * FROM roles p where p.role_id =?1")
+    Role getRoleIdFromId(int id);
+
+    @Query(
+            nativeQuery = true,
+            value
                     = "Select roles.role_id,roles.role_name from roles \n" +
                     "left join user_roles on user_roles.role_id=roles.role_id \n" +
                     "left join temp_user_roles on user_roles.role_id=temp_user_roles.id_temp_role_id \n" +

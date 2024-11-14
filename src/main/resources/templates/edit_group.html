@@ -23,6 +23,7 @@
       function deleteUser(el,names){
         var user_id=document.getElementById("user_id").value;
         var role=document.getElementById("role_name").value;
+        var role_id=document.getElementById("role_id").value;
         Swal.fire({
           title: "Are you sure you want to remove user "+names+" from group "+role+"?",
           text: "You won't be able to revert this!",
@@ -46,7 +47,7 @@
             });
             $.ajax({
               type: "GET",
-              url : "http://localhost:8080/admin/group/"+user_id+"/"+el,
+              url : "http://localhost:8080/admin/"+role_id+"/"+user_id+"/"+el,
               contentType: "application/json",
               success: function () {
                 window.location.reload();

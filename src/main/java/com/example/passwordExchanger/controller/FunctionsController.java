@@ -302,8 +302,8 @@ public class FunctionsController {
 
         return "edit_group";
     }
-    @GetMapping(value="/admin/group/{user_id}/{id}")
-    public String deleteUserFromGroup(RedirectAttributes redirectAttributes,Model model,@PathVariable int id, @PathVariable(required = false) int user_id) {
+    @GetMapping(value="/admin/{role_id}/{user_id}/{id}")
+    public String deleteUserFromGroup(RedirectAttributes redirectAttributes,Model model,@PathVariable int role_id,@PathVariable int id, @PathVariable(required = false) int user_id) {
         userRolesService.deleteUserRoleByUserIdAndRoleId(user_id,id);
         model.addAttribute("user_id",user_id);
         model.addAttribute("role_id",id);
@@ -316,8 +316,9 @@ public class FunctionsController {
 
         List<User> userlistNo=new ArrayList<User>();
         userlistNo=userService.getUsersThatareNotInThisRole(id);
-
-        model.addAttribute("role_name",roleService.getRoleById(id).getRole_name());
+        System.out.println(id);
+        model.addAttribute("role_name",roleService.getRoleIdFromId(role_id).getRole_name());
+        userRolesService.deleteUserRoleByUserIdAndRoleId(id,role_id);
 
         model.addAttribute("userListNo",userlistNo);
 
