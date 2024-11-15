@@ -19,81 +19,98 @@
   </head>
   <body>
   <script type="text/javascript">
-    function createRole(){
-      var user_id=document.getElementById("user_id").value;
-      var name=document.getElementById("name").value;
-      Swal.fire({
-        title: 'Do you want to save the changes?',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        denyButtonText: 'No',
-        customClass: {
-          actions: 'my-actions',
-          cancelButton: 'order-1 right-gap btn swal-cancel',
-          confirmButton: 'order-2 btn swal-primary',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            title: "Saved!",
-            text: "The group has been saved.",
-            icon: "success",
-            customClass: {
-              confirmButton: 'btn swal-primary',
-            }
-          });
-          $.ajax({
-            type: "get",
-            url : "/admin/addNewGroup/"+user_id+"/"+name,
-            contentType: "application/json",
-            success: function (locationToRedirect) {
-              window.location = '/admin?user_id='+locationToRedirect;
-            },
-            error: function () {},
-          });
-        }
-        else if (result.isDenied) {
-          Swal.fire('Changes are not saved', '', 'info')
-        }
-      });
-     }
-    $(document).ready(function () {
-      // Initially hide the error message when the page loads
-      $('.error-message').hide();
-      // Variable to track the form's overall validity
-      var isFormValid = true;
+    var name=document.getElementById("name");
+  function onInput(){
+        console.log("onInput");
 
-      // Validate name
-      function isNameValid() {
-        var name = $('#name').val();
-        var nameReg = /^[a-zA-Z\s]*$/;
-        if (!nameReg.test(name) || name.length === 0) {
-          $('#name_error').text("Name is incorrect. Should contain only letters.").show();
-          isFormValid = false;
-        } else {
-          $('#name_error').hide();
-          isFormValid = true;
-        }
-      }
-      function toggleSubmitButton() {
-      // Check if the form is valid by testing the field
-        if (isFormValid &&
-           $('#name').val() !== "") {
-          $('#AddGroup').prop('disabled', false); // Enable the button
-        } else {
-          $('#AddGroup').prop('disabled', true); // Disable the button
-        }
-      }
-      $('#name').focusout(function () {
-        isNameValid();
-        toggleSubmitButton();
-      });
-    });
+        var duration = 1000;
+        clearTimeout(name._timer);
+        name._timer = setTimeout(()=>{
+            validateName(this.value);
+        }, duration);
+    }
+function validateName(){
+       var name=document.getElementById("name").value;
+                var nameReg = /^[a-zA-Z\s]*$/;
+if (!nameReg.test(name) || name.length === 0) {
+  $('#name_error').text("Name is incorrect. Should contain only letters.").show();
+}
+else{
+              var data ={user_id:"",password:name};
+              if(name.value==""){
+
+                document.getElementById("AddGroup").disabled = true;
+                        $('#name_error').text('Name can not be empty!').show();
+              }
+              else{
+
+$.ajax({
+    type: "POST",
+    url : "/validateGroupName",
+    data: data,
+    success: function (data) {
+                    if(data=="correct"){
+                        document.getElementById("AddGroup").disabled = false;
+
+                        $('#name_error').text('');
+                    }
+                    if(data=="incorrect"){
+                        document.getElementById("AddGroup").disabled = true;
+                        $('#name_error').text('Name is already taken!').show();
+
+                    }
+                },
+    error: function () {
+},
+  });
+}
+}
+}
+
+function createRole(){
+
+var name=document.getElementById("name").value;
+   var data ={user_id:"" ,password:name};
+Swal.fire({
+title: 'Do you want to save the changes?',
+showCancelButton: true,
+confirmButtonText: 'Yes',
+denyButtonText: 'No',
+customClass: {
+  actions: 'my-actions',
+  cancelButton: 'order-1 right-gap btn swal-cancel',
+  confirmButton: 'order-2 btn swal-primary',
+},
+}).then((result) => {
+if (result.isConfirmed) {
+  Swal.fire({
+    title: "Saved!",
+    text: "The group has been saved.",
+    icon: "success",
+    customClass: {
+      confirmButton: 'btn swal-primary',
+    }
+  });
+              document.getElementById('formAddGroup').submit();
+
+}
+else if (result.isDenied) {
+  Swal.fire('Changes are not saved', '', 'info')
+}
+});
+}
+$(document).ready(function () {
+                        document.getElementById("AddGroup").disabled = true;
+
+var name=document.getElementById("name");
+          name.addEventListener('input', onInput);
+$('.error-message').hide();
+});
   </script>
     <div class="container">
       <div class="row">
         <div class="col-md-4 col-md-offset-4">
-          <form th:action="@{/admin/addNewGroup}"   method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+          <form th:action="@{/admin/addNewGroup}"  id="formAddGroup" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
             <h2>Create new group</h2>
             <input class="form-control"
                    type="hidden"
