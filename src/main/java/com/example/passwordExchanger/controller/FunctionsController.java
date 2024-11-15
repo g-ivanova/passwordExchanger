@@ -329,10 +329,8 @@ public class FunctionsController {
         model.addAttribute("user_id",user_id);
         return "add_new_role";
     }
-    @GetMapping(value="/admin/addNewGroup/{user_id}/{name}")
-    @ResponseBody
-    @CrossOrigin
-    public String saveGroup(Model model,RedirectAttributes redirectAttributes,@PathVariable(required = false) int user_id,@PathVariable(required = false)  String name) throws Exception{
+    @PostMapping(value="/admin/addNewGroup")
+    public String saveGroup(Model model,RedirectAttributes redirectAttributes,@RequestParam(required = false) int user_id,@RequestParam(required = false)  String name) throws Exception{
         Role role=new Role(name);
         roleService.saveRole(role);
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
@@ -341,7 +339,7 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(user_id));
         model.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("user_id", user_id);
-        return String.valueOf(user_id);
+        return "redirect:/admin";
     }
     @GetMapping(value="/admin/deleteGroup/{user_id}/{id}")
     public String deleteGroup(RedirectAttributes redirectAttributes,Model model,@PathVariable int id,@ModelAttribute("user")User user,@PathVariable(required = false) int user_id) {
@@ -775,5 +773,20 @@ public class FunctionsController {
         }
         return "correct";
     }
+
+
+    @RequestMapping(value = "/validateGroupName", method = RequestMethod.POST)
+    @ResponseBody
+    @CrossOrigin
+    public String validateGroupName(UserIDAndPass userIDAndPass) throws Exception{
+
+        for(Role role:roleService.getAllRoles()){
+            if(role.getRole_name().equals(userIDAndPass.getPassword())){
+                return "incorrect";
+            }
+        }
+        return "correct";
+    }
+
 
 }

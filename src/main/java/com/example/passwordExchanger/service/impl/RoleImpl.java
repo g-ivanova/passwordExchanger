@@ -71,4 +71,9 @@ public class RoleImpl implements RoleService {
     public Role getRoleIdFromId(int id) {
         return roleRepository.getRoleIdFromId(id);
     }
+
+    @Override
+    public int getRoleFromName(String role_name) {
+        return roleRepository.getRoleFromName(role_name);
+    }
 }

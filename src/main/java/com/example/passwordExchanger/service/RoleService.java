@@ -26,6 +26,8 @@ public interface RoleService {
 
     Role getRoleIdFromId(int id);
 
+    int getRoleFromName(String role_name);
+
 
 
 }
