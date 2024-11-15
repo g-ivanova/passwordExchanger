@@ -768,8 +768,12 @@ public class FunctionsController {
     public String validateEmailAndUsername(UserIDAndPass userIDAndPass) throws Exception{
 
 
-        if(userService.getUserByUsernameOrEmail(userIDAndPass.getUser_id(),userIDAndPass.getUser_id())!=null){
+        if(userService.getUserByUsernameOrEmail(userIDAndPass.getPassword(),userIDAndPass.getPassword())!=null){
+            if((userService.getUserByUsernameOrEmail(userIDAndPass.getPassword(),userIDAndPass.getPassword()).getUser_id()!=Integer.parseInt(userIDAndPass.getUser_id()))){
             return "incorrect";
+        }
+
+
         }
         return "correct";
     }
