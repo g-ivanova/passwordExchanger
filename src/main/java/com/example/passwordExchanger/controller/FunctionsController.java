@@ -431,6 +431,15 @@ public class FunctionsController {
     @PostMapping(value="/admin/editUser/{id}/{user_id}")
     public String editUser(RedirectAttributes redirectAttributes,Model model,@ModelAttribute("user")User user,@RequestParam int id,@RequestParam(required = false) int user_id) {
         List<TempUserRoles>tempUserRoles=tempUserRolesService.getUserRolesByUserId(id);
+        if(tempUserRoles.size()>0){
+
+            Mail mail = new Mail();
+            mail.setMailFrom("pass.exchanger.project@gmail.com");
+            mail.setMailTo(userService.getUserById(id).getUser_email());
+            mail.setMailSubject("Your Group List Has Been Updated");
+            mail.setMailContent("The list with your groups was changed. Please check your profile settings for more information.");
+            mailService.sendEmail(mail);
+        }
         for(TempUserRoles temp:tempUserRoles) {
             if (temp.getAction() != null) {
                 if (temp.getAction().equals("add")) {
