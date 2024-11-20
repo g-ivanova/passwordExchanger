@@ -197,12 +197,15 @@ public class FunctionsController {
         List<UserRoles> userRoles=userRolesService.getUserRolesByRoleId(Integer.parseInt(roleId));
         int user_id;
         String username;
+        String email;
         for(UserRoles userRole:userRoles){
             user_id=userService.getUserById(userRole.getUser_id()).getUser_id();
             username=userService.getUserById(userRole.getUser_id()).getUser_names();
+            email=userService.getUserById(userRole.getUser_id()).getUser_email();
             JSONObject users=new JSONObject();
             users.put("user_id",String.valueOf(user_id).toString().trim());
             users.put("user_name",String.valueOf(username).toString().trim());
+            users.put("user_email",String.valueOf(email).toString().trim());
             userlist.add(users);
         }
         return (userlist.toString());
