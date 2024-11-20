@@ -60,17 +60,18 @@ public class FunctionsController {
     @PostMapping(value="/index")
     public String login(ModelMap map, Model model, User user, RedirectAttributes redirectAttributes, @ModelAttribute("user_password")String user_password){
 
-        User loggingUser=userService.getUserByUsername(user.getUser_username());
+        User loggingUser=userService.getUserByUsernameOrEmail(user.getUser_username(),user.getUser_username());
         if(loggingUser==null){
             return "index_error";
         }
+
         else {
             map.addAttribute("user",loggingUser);
             model.addAttribute("username",loggingUser.getUser_username());
             model.addAttribute("user",loggingUser);
             redirectAttributes.addAttribute("user_id",loggingUser.getUser_id());
             String password=userService.getPasswordByUsername(loggingUser.getUser_username(),"admin");
-            if ((userService.getPasswordByUsername(user.getUser_username(),"admin")).equals(user_password)) {
+            if ((userService.getPasswordByUsername(userService.getUserById(loggingUser.getUser_id()).getUser_username(),"admin")).equals(user_password)) {
                 if
                 (loggingUser.getUser_username().equals("admin")) {
                     return "redirect:/admin";
