@@ -347,7 +347,7 @@ function changeOnNames(){
           var dropdown=$('#dropdown').val();
 
 
-   if ((emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && password==="" && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && dropdown && password==="" && dropdown && (changeOnEmail() || changeOnNames()))) {
+   if ((emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && password==="" && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid  && password==="" && dropdown && (changeOnEmail() || changeOnNames()))) {
        $('#saveButton').prop('disabled', false);
    }
      if ((emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="") || (emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="" && dropdown)) {
@@ -356,7 +356,10 @@ function changeOnNames(){
      else if (emailValid && nameValid && currentPasswordValid==false && password!=="" && newPasswordValid==false && repNewPasswordValid==false) {
        $('#saveButton').prop('disabled', true);
    }
-   else if ((emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid && dropdown && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && dropdown && (changeOnEmail() || changeOnNames()))) {
+   else if ((emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && dropdown) || (emailValid && nameValid && dropdown && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && dropdown)) {
+       $('#saveButton').prop('disabled', false);
+   }
+      else if ((emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid && dropdown && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false &&  (changeOnEmail() || changeOnNames()))) {
        $('#saveButton').prop('disabled', false);
    }
      else if (emailValid && nameValid  && dropdown && currentPasswordValid==true && newPasswordValid==true && reppassword==="") {
