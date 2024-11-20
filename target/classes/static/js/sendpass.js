@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
    $("#role").change(function() {
         var rolevalue=$('#role').val();
         $('#user').find('option').remove();
@@ -21,7 +22,7 @@ $(document).ready(function() {
             success: function (data) {
                 let obj = $.parseJSON(data);
                 $.each(obj, function (key, value) {
-                $('<option>').val(value.user_id).text(value.user_name).appendTo(user);
+                $('<option>').val(value.user_id).text(value.user_name+" - "+value.user_email).appendTo(user);
                 //  $('#city').append('<option value="'  + value.districtcode + '">' + value.districtcode + '--' + value.districtname + '</option>');
                 });
             },

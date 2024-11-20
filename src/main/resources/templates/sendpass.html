@@ -24,6 +24,14 @@
     </head>
     <body>
         <script type="text/javascript">
+            function setDropdownValue ()
+{
+  var sendTo = $("#user option:selected").text();
+                var sendToNames=sendTo.substring(0, sendTo.indexOf(" - "));
+  x = document.getElementById("user");
+    x.options[x.selectedIndex].text = sendToNames;
+
+}
             function sendPass(){
                 var sendTo = $("#user option:selected").text();
                 var sendToNames=sendTo.substring(0, sendTo.indexOf(" - "));
@@ -33,7 +41,7 @@
                 var password=document.getElementById("password").value;
                 Swal.fire({
                     title: 'Do you want to send the password?',
-                    text: "The password will be available for 24 hours or until "+sendToNames+" sees or copies it.",
+                    text: "The password will be available for 24 hours or until "+sendTo+" sees or copies it.",
                     showCancelButton: true,
                     confirmButtonText: 'Yes',
                     denyButtonText: 'No',
@@ -46,7 +54,7 @@
                     if (result.isConfirmed) {
                         Swal.fire({
                             title: "Success!",
-                            text: "Password successfully sent to "+sendToNames+".",
+                            text: "Password successfully sent to "+sendTo+".",
                             customClass: {
                                 confirmButton: 'btn swal-primary',
                             },
@@ -112,7 +120,7 @@
                         </div>
                         <div class ="form-group">
                             <label for="user" class="sr-only">Select user</label>
-                            <select class="form-control" id= "user" name = "user" required>
+                            <select class="form-control" id= "user" name = "user" onchange="setDropdownValue(this)" required>
                                 <option value="0">Select user</option>
                             </select>
                         </div>

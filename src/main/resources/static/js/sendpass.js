@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
    $("#role").change(function() {
         var rolevalue=$('#role').val();
         $('#user').find('option').remove();
