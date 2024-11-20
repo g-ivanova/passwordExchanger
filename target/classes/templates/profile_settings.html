@@ -85,11 +85,31 @@ toggleSubmitButton();
 
 }
 
+function changeOnEmail(){
+   var user_email_before = $('#user_email_before').val();
+   var user_email = $('#email').val();
 
+   if(user_email_before===user_email){
+   return false;
+   }
+   return true;
+
+}
+function changeOnNames(){
+   var user_names_before = $('#user_names_before').val();
+   var user_names = $('#name').val();
+
+   if(user_names_before===user_names){
+   return false;
+   }
+   return true;
+
+}
  function validateName() {
 
    var names = $('#name').val();
    var namesReg = /^[a-zA-Z\s]*$/;
+
  if (!namesReg.test(names) || names.length === 0) {
          $('#names_error').text("Names are incorrect. Should contain only letters.").show();
           isFormValid = false;
@@ -101,12 +121,16 @@ toggleSubmitButton();
                         toggleSubmitButton();
        $('#names_error').hide();
                           }
+
+
  }
 
   function validateEmail() {
    var email = $('#email').val();
                      var user_id = $('#user_id').val();
    var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+
+
   if (!emailReg.test(email) || email.length === 0) {
            $('#email_error').text("Please provide correct email.").show();
             emailValid=false;
@@ -322,55 +346,32 @@ toggleSubmitButton();
  var newpassword = $('#new_password').val();
           var dropdown=$('#dropdown').val();
 
- console.log("emailValid"+emailValid);
-        console.log("nameValid"+nameValid);
-               console.log("dropdown"+dropdown);
-                      console.log("currentPasswordValid"+currentPasswordValid);
-                             console.log("newPasswordValid"+newPasswordValid);
-                                    console.log("repNewPasswordValid"+repNewPasswordValid);
-                                           console.log("password"+password);
 
-   if ((emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && password==="" ) || (emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && dropdown && password==="" && dropdown)) {
-   console.log("1");
+   if ((emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && password==="" && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && dropdown && password==="" && dropdown && (changeOnEmail() || changeOnNames()))) {
        $('#saveButton').prop('disabled', false);
    }
      if ((emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="") || (emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="" && dropdown)) {
-       console.log("2");
-
        $('#saveButton').prop('disabled', false);
    }
      else if (emailValid && nameValid && currentPasswordValid==false && password!=="" && newPasswordValid==false && repNewPasswordValid==false) {
-       console.log("3");
-
        $('#saveButton').prop('disabled', true);
    }
-   else if ((emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false) || (emailValid && nameValid && dropdown && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && dropdown)) {
-     console.log("4");
-
+   else if ((emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid && dropdown && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && dropdown && (changeOnEmail() || changeOnNames()))) {
        $('#saveButton').prop('disabled', false);
    }
      else if (emailValid && nameValid  && dropdown && currentPasswordValid==true && newPasswordValid==true && reppassword==="") {
-       console.log("5");
-
        $('#saveButton').prop('disabled', true);
    }
-       else if ((emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="")|| (emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="" && dropdown)) {
-         console.log("6");
-
+       else if ((emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="" && (changeOnEmail() || changeOnNames()))|| (emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="" && dropdown && (changeOnEmail() || changeOnNames()))) {
        $('#saveButton').prop('disabled', false);
    }
        else if (emailValid && nameValid && dropdown && password!=="" && reppassword==="" && newpassword==="") {
-         console.log("7");
-
        $('#saveButton').prop('disabled', true);
    }
    else {
-     console.log("8");
-
        $('#saveButton').prop('disabled', true);
    }
  }
-
          });
     </script>
         <div class="container">
@@ -395,6 +396,18 @@ toggleSubmitButton();
                            th:value="*{dropdown}"
                            id="dropdown"
                            name="dropdown"
+                    />
+                    <input class="form-control"
+                           type="hidden"
+                           th:value="${names}"
+                           id="user_names_before"
+                           name="user_names_before"
+                    />
+                    <input class="form-control"
+                           type="hidden"
+                           th:value="${email}"
+                           id="user_email_before"
+                           name="user_email_before"
                     />
                     <div class="form-group">
                         <label for="name" class="sr-only">Names</label>
