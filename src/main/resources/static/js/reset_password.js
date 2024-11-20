@@ -1,4 +1,39 @@
+
 $(document).ready(function() {
+const button = document.querySelector("#emailButton");
+const buttonExpirationDataKey = 'button-disabled-expiration';
+
+
+var i=0;
+let startButtonStateCheck = () => {
+  button.dataset.interval = setInterval(updateButtonState, 1000);
+}
+
+
+let updateButtonState = () => {
+  let expirationDate = new Date(button.dataset.enabledAt);
+  if (expirationDate < new Date()) {
+                        document.getElementById("email_error").innerText = "";
+
+    button.disabled = false;
+    clearInterval(button.dataset.interval);
+  } else {
+                  document.getElementById("email_error").innerText = "You clicked too many times. You have to wait 15 minutes to try to send another email.";
+
+    button.disabled = true;
+  }
+}
+let buttonDisableExpiration = localStorage.getItem(buttonExpirationDataKey);
+if (!buttonDisableExpiration) {
+  // no button state in localStorage, enable button
+  button.disabled = false;
+} else {
+  // button state held in localStorage, check every 1s for expiration to enable the button again
+  button.dataset.enabledAt = buttonDisableExpiration;
+  updateButtonState();
+  startButtonStateCheck();
+}
+
     var isFormValid = true;
     function toggleSubmitButton() {
         // Check if the form is valid by testing all the fields
@@ -16,6 +51,20 @@ $(document).ready(function() {
     var emailButton = document.getElementById("emailButton");
     var email = document.getElementById("email");
     emailButton.onclick=function(){
+        i++;
+              console.log("i="+i);
+    if(i===3){
+      var d1 = new Date();
+      var after = new Date ( d1 );
+      after.setMinutes ( d1.getMinutes() + 1 );
+      localStorage.setItem(buttonExpirationDataKey, after);
+        button.dataset.enabledAt = after;
+          startButtonStateCheck();
+
+          i=0;
+      }
+      else{
+
         $.ajax({
       	    type: "GET",
             url : "http://localhost:8080/home/resetPassword/sendEmail?email="+email.value,
@@ -23,8 +72,8 @@ $(document).ready(function() {
             dataType:"text",
             success: function (data) {
                 if(data=="true"){
-                    document.getElementById("email").readOnly= true;
-                    document.getElementById("emailButton").disabled = true;
+                   // document.getElementById("email").readOnly= true;
+                  //  document.getElementById("emailButton").disabled = true;
                     document.getElementById("code").disabled = false;
                     Swal.fire({
                         title: "Success!",
@@ -44,8 +93,8 @@ $(document).ready(function() {
                         }
                     });
                 }if(data=="code"){
-                    document.getElementById("email").readOnly = true;
-                    document.getElementById("emailButton").disabled = true;
+                  //  document.getElementById("email").readOnly = true;
+                   // document.getElementById("emailButton").disabled = true;
                     document.getElementById("code").disabled = false;
                     Swal.fire({
                         title: "Warning!",
@@ -68,6 +117,7 @@ $(document).ready(function() {
                 });
             },
         });
+        }
         toggleSubmitButton();
     }
     $('#new_password').focusout(function(){

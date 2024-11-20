@@ -61,13 +61,14 @@ public class FunctionsController {
     public String login(ModelMap map, Model model, User user, RedirectAttributes redirectAttributes, @ModelAttribute("user_password")String user_password){
 
         User loggingUser=userService.getUserByUsernameOrEmail(user.getUser_username(),user.getUser_username());
+
         if(loggingUser==null){
             return "index_error";
         }
 
         else {
             map.addAttribute("user",loggingUser);
-            model.addAttribute("username",loggingUser.getUser_username());
+            model.addAttribute("username",user.getUser_username());
             model.addAttribute("user",loggingUser);
             redirectAttributes.addAttribute("user_id",loggingUser.getUser_id());
             String password=userService.getPasswordByUsername(loggingUser.getUser_username(),"admin");
@@ -77,10 +78,12 @@ public class FunctionsController {
                     return "redirect:/admin";
                 }
                 else {
+                    loggingUser.setUser_username(user.getUser_username());
                     return "redirect:/home";
                 }
 
             }
+            loggingUser.setUser_username(user.getUser_username());
             return "index_error";
 
         }
