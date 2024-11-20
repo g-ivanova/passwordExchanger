@@ -22,339 +22,356 @@
     </head>
     <body>
     <script type="text/javascript">
+        var emailValid=true;
+ var nameValid=true;
+ var currentPasswordValid=false;
+ var newPasswordValid=false;
+ var repNewPasswordValid=false;
+  var isAnyValueChanged = true;
+  var dropdown=$('#dropdown').val();
+
+ function saveProfile() {
+   Swal.fire({
+       title: 'Do you want to save the changes?',
+       showCancelButton: true,
+       confirmButtonText: 'Yes',
+       denyButtonText: 'No',
+       customClass: {
+           actions: 'my-actions',
+           cancelButton: 'order-1 right-gap btn swal-cancel',
+           confirmButton: 'order-2 btn swal-primary',
+       },
+   }).then((result) => {
+       if (result.isConfirmed) {
+           Swal.fire({
+               title: 'Saved!',
+               icon: 'success',
+               customClass: {
+                   confirmButton: 'btn swal-primary',
+               },
+           });
+           $('#formSaveProfile').submit();
+       } else {
+           Swal.fire({
+               title: 'Changes are not saved!',
+               icon: 'info',
+               customClass: {
+                   confirmButton: 'btn swal-primary',
+               },
+           });
+       }
+   });
+ }
 
 
 
+ $(document).ready(function () {
+ var emailValid=true;
+ var nameValid=true;
+ var currentPasswordValid=false;
+ var newPasswordValid=false;
+ var repNewPasswordValid=false;
+  var isAnyValueChanged = true;
+  var dropdown=$('#dropdown').val();
+         $('#saveButton').prop('disabled', true);
+getDropdown();
+function getDropdown(){
+  var dropdown=$('#dropdown').val();
 
-$(document).ready(function () {
-var emailValid=true;
-var nameValid=true;
-var currentPasswordValid=true;
-var newPasswordValid=true;
-var repNewPasswordValid=true;
- var isAnyValueChanged = true;
-
-
-
-
-function validateName() {
-
-  var names = $('#name').val();
-  var namesReg = /^[a-zA-Z\s]*$/;
-if (!namesReg.test(names) || names.length === 0) {
-console.log("incorrect name");
-
-
-        $('#names_error').text("Names are incorrect. Should contain only letters.").show();
-         isFormValid = false;
-                      nameValid=false;
-                      toggleSubmitButton();
-      }
-      else{
-                    console.log("correct name");
-                       nameValid=true;
-                       toggleSubmitButton();
-
-
-
-
-      $('#names_error').hide();
-                         }
-
-}
-
- function validateEmail() {
-  var email = $('#email').val();
-                    var user_id = $('#user_id').val();
-  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
- if (!emailReg.test(email) || email.length === 0) {
-          $('#email_error').text("Please provide correct email.").show();
-           emailValid=false;
+if(dropdown){
 toggleSubmitButton();
-      } else {
-          var data ={user_id:user_id ,password:email};
-          $.ajax({
-              type: "POST",
-              url : "http://localhost:8080/validateEmailAndUsername",
-              data: data,
-              success: function (data) {
-                  if(data=="correct"){
-
-                      $('#email_error').hide();
-
-                                                 emailValid=true;
-
-                                                  toggleSubmitButton();
-                                                }
-
-                  if(data=="incorrect"){
-                      $('#email_error').text("This email is already taken!").show();
-                      emailValid=false;
-                      toggleSubmitButton();
-                  }
-              },
-              error: function (data) {
-                  emailValid=false;
-                  toggleSubmitButton();
-                 Swal.fire({
-                     title: 'Error!',
-                     text: 'An error occurred while validating the email.',
-                     icon: 'error'
-                 });
-              },
-          });
-      }
-  }
-var name=document.getElementById("name");
-name.addEventListener('input', onInputName);
-var email=document.getElementById("email");
-email.addEventListener('input', onInputEmail);
-
-var name=document.getElementById("name");
-var email=document.getElementById("email");
-function onInputName(){
-var duration = 1000;
-clearTimeout(name._timer);
-name._timer = setTimeout(()=>{
-validateName(this.value);
-}, duration);
-}
-function onInputEmail(){
-var duration = 1000;
-clearTimeout(name._timer);
-name._timer = setTimeout(()=>{
-validateEmail(this.value);
-}, duration);
-
 
 }
-// Initially hide the error messages when the page loads
-$('.error-message').hide();
-
-// Variable to track the form's overall validity
-
-// Initially disable the new_password and rep_new_password fields
-$("#new_password").prop("disabled", true);
-$("#rep_new_password").prop("disabled", true);
-
-
-// Validate current password
-var currentPassword = $("#current_password");
-currentPassword.on('input', onInput);
-
-function onInput() {
-  var duration = 1000;
-  clearTimeout(currentPassword._timer);
-  currentPassword._timer = setTimeout(() => {
-      update(currentPassword.val());
-  }, duration);
 
 }
-            function isAnythingChanged(){
-                var password = $("#current_password").val();
-                var email = $('#email').val();
-                var names = $('#name').val();
-                if (password === ""  && email === oldEmail && names === oldName) {
-                    isAnyValueChanged = false;
-                    isFormValid = false;
-                }
-                else {
-                    isAnyValueChanged = true;
-                }
-            }
-function update() {
-  var user_id = $("#user_id").val();
-  var password = $("#current_password").val();
-  var data = { user_id: user_id, password: password };
-  if (isAnyValueChanged) {
-      if (password === "") {
-          $("#new_password").prop("disabled", true);
-          $("#rep_new_password").prop("disabled", true);
-          $('#current_pass_error').text('');
-          toggleSubmitButton();
-      } else {
-          $.ajax({
-              type: "POST",
-              url: "http://localhost:8080/validatePassword",
-              data: data,
-              success: function(data) {
-                  if (data === "correct") {
-                      $("#new_password").prop("disabled", false);
-                      $("#rep_new_password").prop("disabled", false);
-                      $('#current_pass_error').text('');
-                      currentPasswordValid=true;
-                      toggleSubmitButton();
-                  }
-                  if (data === "incorrect") {
-                      $("#new_password").prop("disabled", true);
-                      $("#rep_new_password").prop("disabled", true);
-                      $('#current_pass_error').text('Password is not correct!');
-                      $('#pass_error').text('');
-                      $('#rep_pass_error').text('');
-                     currentPasswordValid=false;
-                     toggleSubmitButton();
-                  }
-              },
-              error: function() {
-              currentPasswordValid=false;
-              toggleSubmitButton();
+
+
+ function validateName() {
+
+   var names = $('#name').val();
+   var namesReg = /^[a-zA-Z\s]*$/;
+ if (!namesReg.test(names) || names.length === 0) {
+         $('#names_error').text("Names are incorrect. Should contain only letters.").show();
+          isFormValid = false;
+                       nameValid=false;
+                       toggleSubmitButton();
+       }
+       else{
+                        nameValid=true;
+                        toggleSubmitButton();
+       $('#names_error').hide();
+                          }
+ }
+
+  function validateEmail() {
+   var email = $('#email').val();
+                     var user_id = $('#user_id').val();
+   var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  if (!emailReg.test(email) || email.length === 0) {
+           $('#email_error').text("Please provide correct email.").show();
+            emailValid=false;
+ toggleSubmitButton();
+       } else {
+           var data ={user_id:user_id ,password:email};
+           $.ajax({
+               type: "POST",
+               url : "http://localhost:8080/validateEmailAndUsername",
+               data: data,
+               success: function (data) {
+                   if(data=="correct"){
+
+                       $('#email_error').hide();
+
+                                                  emailValid=true;
+
+                                                   toggleSubmitButton();
+                                                 }
+
+                   if(data=="incorrect"){
+                       $('#email_error').text("This email is already taken!").show();
+                       emailValid=false;
+                       toggleSubmitButton();
+                   }
+               },
+               error: function (data) {
+                   emailValid=false;
+                   toggleSubmitButton();
                   Swal.fire({
                       title: 'Error!',
-                      text: 'An error occurred while validating the password.',
+                      text: 'An error occurred while validating the email.',
                       icon: 'error'
                   });
-              },
-          });
-      }
-  } else {
-      currentPasswordValid=false;
-      $('#current_pass_error').text('');
-      $('#pass_error').text('');
-      $('#rep_pass_error').text('');
-      toggleSubmitButton();
-  }
-}
-var newPassword = $("#new_password");
-newPassword.on('input', newPasswordOnInput);
+               },
+           });
+       }
+   }
+ var name=document.getElementById("name");
+ name.addEventListener('input', onInputName);
+ var email=document.getElementById("email");
+ email.addEventListener('input', onInputEmail);
 
-function newPasswordOnInput() {
-  var duration = 1000;
-  clearTimeout(newPassword._timer);
-  newPassword._timer = setTimeout(() => {
-      isPasswordValid(newPassword.val());
-  }, duration);
+ var name=document.getElementById("name");
+ var email=document.getElementById("email");
+ function onInputName(){
+ var duration = 1000;
+ clearTimeout(name._timer);
+ name._timer = setTimeout(()=>{
+ validateName(this.value);
+ }, duration);
+ }
+ function onInputEmail(){
+ var duration = 1000;
+ clearTimeout(name._timer);
+ name._timer = setTimeout(()=>{
+ validateEmail(this.value);
+ }, duration);
 
-}
-var repNewPassword = $("#rep_new_password");
-repNewPassword.on('input', repNewPasswordOnInput);
-function repNewPasswordOnInput() {
-  var duration = 1000;
-  clearTimeout(repNewPassword._timer);
-  repNewPassword._timer = setTimeout(() => {
-      doPasswordsMatch(repNewPassword.val());
-  }, duration);
 
-}
-// Validate new password
-function isPasswordValid() {
-  var pass = $('#new_password').val();
-  var oldPass = $('#current_password').val();
-  var passReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-  if (pass !== oldPass){
-      if ((!passReg.test(pass) || !pass)) {
-           $("#pass_error").text("Password should be between 6-16 characters. Should contain letters, numbers, and special character.").show();
-           newPasswordValid=false;
+ }
+ // Initially hide the error messages when the page loads
+ $('.error-message').hide();
+
+ // Variable to track the form's overall validity
+
+ // Initially disable the new_password and rep_new_password fields
+ $("#new_password").prop("disabled", true);
+ $("#rep_new_password").prop("disabled", true);
+
+
+ // Validate current password
+ var currentPassword = $("#current_password");
+ currentPassword.on('input', onInput);
+
+ function onInput() {
+   var duration = 1000;
+   clearTimeout(currentPassword._timer);
+   currentPassword._timer = setTimeout(() => {
+       update(currentPassword.val());
+   }, duration);
+
+ }
+             function isAnythingChanged(){
+                 var password = $("#current_password").val();
+                 var email = $('#email').val();
+                 var names = $('#name').val();
+                 if (password === ""  && email === oldEmail && names === oldName) {
+                     isAnyValueChanged = false;
+                     isFormValid = false;
+                 }
+                 else {
+                     isAnyValueChanged = true;
+                 }
+             }
+ function update() {
+   var user_id = $("#user_id").val();
+   var password = $("#current_password").val();
+   var data = { user_id: user_id, password: password };
+   if (isAnyValueChanged) {
+       if (password === "") {
+           $("#new_password").prop("disabled", true);
+           $("#rep_new_password").prop("disabled", true);
+           $('#current_pass_error').text('');
            toggleSubmitButton();
-      } else {
-          $("#pass_error").text("");
-                     newPasswordValid=true;
-                     toggleSubmitButton();
+       } else {
+           $.ajax({
+               type: "POST",
+               url: "http://localhost:8080/validatePassword",
+               data: data,
+               success: function(data) {
+                   if (data === "correct") {
+                       $("#new_password").prop("disabled", false);
+                       $("#rep_new_password").prop("disabled", false);
+                       $('#current_pass_error').text('');
+                       currentPasswordValid=true;
+                       toggleSubmitButton();
+                   }
+                   if (data === "incorrect") {
+                       $("#new_password").prop("disabled", true);
+                       $("#rep_new_password").prop("disabled", true);
+                       $('#current_pass_error').text('Password is not correct!');
+                       $('#pass_error').text('');
+                       $('#rep_pass_error').text('');
+                      currentPasswordValid=false;
+                      toggleSubmitButton();
+                   }
+               },
+               error: function() {
+               currentPasswordValid=false;
+               toggleSubmitButton();
+                   Swal.fire({
+                       title: 'Error!',
+                       text: 'An error occurred while validating the password.',
+                       icon: 'error'
+                   });
+               },
+           });
+       }
+   } else {
+       currentPasswordValid=false;
+       $('#current_pass_error').text('');
+       $('#pass_error').text('');
+       $('#rep_pass_error').text('');
+       toggleSubmitButton();
+   }
+ }
+ var newPassword = $("#new_password");
+ newPassword.on('input', newPasswordOnInput);
 
-      }
-  } else {
-      $("#pass_error").text("New password can't be the same as current password").show();
-                 newPasswordValid=false;
-                 toggleSubmitButton();
+ function newPasswordOnInput() {
+   var duration = 1000;
+   clearTimeout(newPassword._timer);
+   newPassword._timer = setTimeout(() => {
+       isPasswordValid(newPassword.val());
+   }, duration);
 
-  }
-}
+ }
+ var repNewPassword = $("#rep_new_password");
+ repNewPassword.on('input', repNewPasswordOnInput);
+ function repNewPasswordOnInput() {
+   var duration = 1000;
+   clearTimeout(repNewPassword._timer);
+   repNewPassword._timer = setTimeout(() => {
+       doPasswordsMatch(repNewPassword.val());
+   }, duration);
 
-// Validate password match
-function doPasswordsMatch() {
-  const password = $('#new_password').val();
-  const confirm_password = $('#rep_new_password').val();
-  if (password !== confirm_password) {
-    $('#rep_pass_error').text('Passwords do not match!').show();
-    repNewPasswordValid=false;
-    toggleSubmitButton();
-  } else {
-    $('#rep_pass_error').hide();
-    repNewPasswordValid=true;
-    toggleSubmitButton();
+ }
+ // Validate new password
+ function isPasswordValid() {
+   var pass = $('#new_password').val();
+   var oldPass = $('#current_password').val();
+   var passReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+   if (pass !== oldPass){
+       if ((!passReg.test(pass) || !pass)) {
+            $("#pass_error").text("Password should be between 6-16 characters. Should contain letters, numbers, and special character.").show();
+            newPasswordValid=false;
+            toggleSubmitButton();
+       } else {
+           $("#pass_error").text("");
+                      newPasswordValid=true;
+                      toggleSubmitButton();
 
-  }
-}
+       }
+   } else {
+       $("#pass_error").text("New password can't be the same as current password").show();
+                  newPasswordValid=false;
+                  toggleSubmitButton();
+
+   }
+ }
+
+ // Validate password match
+ function doPasswordsMatch() {
+   const password = $('#new_password').val();
+   const confirm_password = $('#rep_new_password').val();
+   if (password !== confirm_password) {
+     $('#rep_pass_error').text('Passwords do not match!').show();
+     repNewPasswordValid=false;
+     toggleSubmitButton();
+   } else {
+     $('#rep_pass_error').hide();
+     repNewPasswordValid=true;
+     toggleSubmitButton();
+
+   }
+ }
 
 
-function toggleSubmitButton() {
-var password = $('#current_password').val();
-var reppassword = $('#rep_new_password').val();
-var newpassword = $('#new_password').val();
+ function toggleSubmitButton() {
+ var password = $('#current_password').val();
+ var reppassword = $('#rep_new_password').val();
+ var newpassword = $('#new_password').val();
+          var dropdown=$('#dropdown').val();
 
-  // Check if the form is valid by testing the validity
-  console.log("toggle");
-  console.log("password"+password);
-  if (emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password==="") {
-    console.log("toggle unlock");
-      $('#saveButton').prop('disabled', false); // Enable the button
-  }
-    if (emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="") {
-    console.log("toggle unlock");
-      $('#saveButton').prop('disabled', false); // Enable the button
-  }
-    else if (emailValid && nameValid && currentPasswordValid==false && password!=="" && newPasswordValid==false && repNewPasswordValid==false) {
-     console.log("toggle lock pass not empty");
-      $('#saveButton').prop('disabled', true); // Enable the button
-  }
-  else if (emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false) {
-     console.log("toggle unlock pass empty");
+ console.log("emailValid"+emailValid);
+        console.log("nameValid"+nameValid);
+               console.log("dropdown"+dropdown);
+                      console.log("currentPasswordValid"+currentPasswordValid);
+                             console.log("newPasswordValid"+newPasswordValid);
+                                    console.log("repNewPasswordValid"+repNewPasswordValid);
+                                           console.log("password"+password);
 
-      $('#saveButton').prop('disabled', false); // Enable the button
-  }
-    else if (emailValid && nameValid && currentPasswordValid==true && newPasswordValid==true && reppassword==="") {
-     console.log("toggle unlock pass empty");
+   if ((emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && password==="" ) || (emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && dropdown && password==="" && dropdown)) {
+   console.log("1");
+       $('#saveButton').prop('disabled', false);
+   }
+     if ((emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="") || (emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="" && dropdown)) {
+       console.log("2");
 
-      $('#saveButton').prop('disabled', true); // Enable the button
-  }
-      else if (emailValid && nameValid && password==="" && reppassword==="" && newpassword==="") {
-     console.log("toggle unlock pass empty");
+       $('#saveButton').prop('disabled', false);
+   }
+     else if (emailValid && nameValid && currentPasswordValid==false && password!=="" && newPasswordValid==false && repNewPasswordValid==false) {
+       console.log("3");
 
-      $('#saveButton').prop('disabled', false); // Enable the button
-  }
-      else if (emailValid && nameValid && password!=="" && reppassword==="" && newpassword==="") {
-     console.log("toggle unlock pass empty");
+       $('#saveButton').prop('disabled', true);
+   }
+   else if ((emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false) || (emailValid && nameValid && dropdown && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && dropdown)) {
+     console.log("4");
 
-      $('#saveButton').prop('disabled', true); // Enable the button
-  }
-  else {
-    console.log("toggle lock|");
-      $('#saveButton').prop('disabled', true); // Disable the button
-  }
-}
+       $('#saveButton').prop('disabled', false);
+   }
+     else if (emailValid && nameValid  && dropdown && currentPasswordValid==true && newPasswordValid==true && reppassword==="") {
+       console.log("5");
 
-function saveProfile() {
-  Swal.fire({
-      title: 'Do you want to save the changes?',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      denyButtonText: 'No',
-      customClass: {
-          actions: 'my-actions',
-          cancelButton: 'order-1 right-gap btn swal-cancel',
-          confirmButton: 'order-2 btn swal-primary',
-      },
-  }).then((result) => {
-      if (result.isConfirmed) {
-          Swal.fire({
-              title: 'Saved!',
-              icon: 'success',
-              customClass: {
-                  confirmButton: 'btn swal-primary',
-              },
-          });
-          $('#formSaveProfile').submit();
-      } else {
-          Swal.fire({
-              title: 'Changes are not saved!',
-              icon: 'info',
-              customClass: {
-                  confirmButton: 'btn swal-primary',
-              },
-          });
-      }
-  });
-}
-        });
+       $('#saveButton').prop('disabled', true);
+   }
+       else if ((emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="")|| (emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="" && dropdown)) {
+         console.log("6");
+
+       $('#saveButton').prop('disabled', false);
+   }
+       else if (emailValid && nameValid && dropdown && password!=="" && reppassword==="" && newpassword==="") {
+         console.log("7");
+
+       $('#saveButton').prop('disabled', true);
+   }
+   else {
+     console.log("8");
+
+       $('#saveButton').prop('disabled', true);
+   }
+ }
+
+         });
     </script>
         <div class="container">
             <div class="row col-md-6" style="margin-left:25%">
@@ -373,6 +390,12 @@ function saveProfile() {
                            name="user_id"
                     />
 
+                    <input class="form-control"
+                           type="hidden"
+                           th:value="*{dropdown}"
+                           id="dropdown"
+                           name="dropdown"
+                    />
                     <div class="form-group">
                         <label for="name" class="sr-only">Names</label>
                         <input type = "text"

@@ -580,13 +580,35 @@ public class FunctionsController {
 
     @GetMapping(value="/home/settings/{user_id}")
     public String settings(RedirectAttributes redirectAttributes,Model model,@PathVariable(required = false) int user_id){
-        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+        List<TempUserRoles>tempUserRoles=tempUserRolesService.getUserRolesByUserId(user_id);
+        TempUserRoles temp=new TempUserRoles();
+ /*       for(TempUserRoles tempp:tempUserRoles) {
+            if (tempp.getAction() != null) {
+                if (tempp.getAction().equals("add")) {
+
+                    userRolesService.saveRole(new UserRoles(tempp.getRole_id(), user_id));
+                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(user_id, tempp.getRole_id());
+                } else {
+
+                    userRolesService.deleteUserRoleByUserIdAndRoleId(user_id, tempp.getRole_id());
+                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(user_id, tempp.getRole_id());
+                }
+            }
+        }*/
         List<Role>roleList=new ArrayList<Role>();
-        Role role=new Role();
-        for(int i=0;i<userRoleList.size();i++){
-            role=new Role(userRoleList.get(i).getRole_id(),roleService.getRoleFromId(userRoleList.get(i).getRole_id()));
-            roleList.add(role);
+        tempUserRolesService.deleteTempUserRoleByUserId(user_id);
+        roleList=roleService.getRolesAndTempRolesByUser(user_id);
+
+
+        for(int i=0;i<roleService.getRolesFromUserId(user_id).size();i++){
+            temp=new TempUserRoles(roleService.getRolesFromUserId(user_id).get(i).getRole_id(),user_id);
+            tempUserRolesService.saveRole(temp);
         }
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+
+        Role role=new Role();
+
+        roleList=roleService.getRolesAndTempRolesByUser(user_id);
         List<Role>roleListNo=roleService.getRoleWhereUserIsNot(user_id);
         model.addAttribute("roleListNo",roleListNo);
         model.addAttribute("id",user_id);
@@ -603,7 +625,7 @@ public class FunctionsController {
 
     @PostMapping(params = "add",value="/home/settings/{user_id}")
     public String saveUser(RedirectAttributes redirectAttributes,Model model,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
-        UserRoles userrole=new UserRoles(role_id,user_id);
+       /* UserRoles userrole=new UserRoles(role_id,user_id);
         userRolesService.saveRole(userrole);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
         List<Role>roleList=new ArrayList<Role>();
@@ -622,12 +644,44 @@ public class FunctionsController {
         model.addAttribute("username", userService.getUserById(user_id).getUser_username());
         model.addAttribute("user", userService.getUserById(user_id));
         redirectAttributes.addAttribute("user_id", user_id);
-        redirectAttributes.addAttribute("id", user_id);
+        redirectAttributes.addAttribute("id", user_id);*/
+        UserRoles userrole=new UserRoles(role_id,user_id);
+        TempUserRoles tempUserRole=new TempUserRoles(role_id,user_id,"add");
+
+        tempUserRolesService.saveRole(tempUserRole);
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+
+        roleList=roleService.getRolesAndTempRolesByUser(user_id);
+
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(user_id);
+
+        model.addAttribute("roleListNo",roleListNo);
+    //    model.addAttribute("id",id);
+        model.addAttribute("roleList",roleList);
+
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        model.addAttribute("dropdown",true);
+      //  model.addAttribute("user_email",userService.getUserById(id).getUser_email());
+     //   redirectAttributes.addAttribute("user_id", user_id);
+       // model.addAttribute("roleListNo",roleListNo);
+      // model.addAttribute("id",user_id);
+   //     model.addAttribute("roleList",roleList);
+   //     model.addAttribute("user_id",user_id);
+        model.addAttribute("email",userService.getUserById(user_id).getUser_email());
+        model.addAttribute("names",userService.getUserById(user_id).getUser_names());
+        model.addAttribute("username", userService.getUserById(user_id).getUser_username());
+        model.addAttribute("user", userService.getUserById(user_id));
+    //    redirectAttributes.addAttribute("user_id", user_id);
+      //  redirectAttributes.addAttribute("id", user_id);
+     //   redirectAttributes.addAttribute("id", id);
         return "profile_settings";
     }
     @GetMapping(value="/home/settings/{user_id}/{role_id}")
     public String deleteGroupFromUserEdit(RedirectAttributes redirectAttributes,Model model, @PathVariable(required = false) int user_id,@PathVariable(required = false) int role_id) {
-        userRolesService.deleteUserRoleByUserIdAndRoleId(user_id,role_id);
+       /* userRolesService.deleteUserRoleByUserIdAndRoleId(user_id,role_id);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
@@ -645,7 +699,43 @@ public class FunctionsController {
         model.addAttribute("username", userService.getUserById(user_id).getUser_username());
         model.addAttribute("user", userService.getUserById(user_id));
         redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", user_id);*/
+
+        TempUserRoles toDelete=new TempUserRoles(role_id,user_id,"delete");
+        if(tempUserRolesService.getTempUserRolesByUserIdAndRoleId(user_id,role_id)==null ){
+            tempUserRolesService.saveRole(toDelete);
+        }
+        if(tempUserRolesService.getTempUserRolesByUserIdAndRoleId(user_id,role_id)!=null){
+            tempUserRolesService.updateAction(tempUserRolesService.getTempUserRolesByUserIdAndRoleId(user_id,role_id));
+        }
+
+
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+
+        roleList=roleService.getRolesAndTempRolesByUser(user_id);
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(user_id);
+        model.addAttribute("roleListNo",roleListNo);
+        model.addAttribute("id",user_id);
+        model.addAttribute("clicked","true");
+
+        model.addAttribute("roleList",roleList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+        redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", user_id);
+        model.addAttribute("dropdown",true);
+
+
+        redirectAttributes.addAttribute("user_id", user_id);
+        model.addAttribute("email",userService.getUserById(user_id).getUser_email());
+        model.addAttribute("names",userService.getUserById(user_id).getUser_names());
+        model.addAttribute("username", userService.getUserById(user_id).getUser_username());
+        redirectAttributes.addAttribute("user_id", user_id);
+        redirectAttributes.addAttribute("id", user_id);
+
+
         return "profile_settings";
 
     }
@@ -673,13 +763,40 @@ public class FunctionsController {
             }
         }
 
+        List<TempUserRoles>tempUserRoles=tempUserRolesService.getUserRolesByUserId(user_id);
+        for(TempUserRoles temp:tempUserRoles) {
+            if (temp.getAction() != null) {
+                if (temp.getAction().equals("add")) {
+
+                    userRolesService.saveRole(new UserRoles(temp.getRole_id(), user_id));
+                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(user_id, temp.getRole_id());
+                } else {
+
+                    userRolesService.deleteUserRoleByUserIdAndRoleId(user_id, temp.getRole_id());
+                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(user_id, temp.getRole_id());
+                }
+            }
+        }
+
+        List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
+        List<Role>roleList=new ArrayList<Role>();
+        Role role=new Role();
+        List<Role>roleListNo=roleService.getRoleWhereUserIsNot(user_id);
+        //model.addAttribute("roleListNo",roleListNo);
+      //  model.addAttribute("id",user_id);
+       // model.addAttribute("roleList",roleList);
+       // model.addAttribute("clicked","false");
+       // model.addAttribute("user_id",user_id);
+        model.addAttribute("user", userService.getUserById(user_id));
+      //  redirectAttributes.addAttribute("user_id", user_id);
+       // redirectAttributes.addAttribute("id", user_id);
         User newUser=new User(user_id,userService.getUserById(user_id).getUser_username(),user_email, pass.getBytes(),user_names);
         userService.saveUser(newUser);
-        List<Role> roleList=(List<Role>) roleService.getAllRoles();
-        model.addAttribute("roleList",roleList);
-        model.addAttribute("user_id",user_id);
-        model.addAttribute("user", userService.getUserById(user_id));
-        model.addAttribute("user_id", user_id);
+    //    List<Role> roleList=(List<Role>) roleService.getAllRoles();
+      //  model.addAttribute("roleList",roleList);
+      //  model.addAttribute("user_id",user_id);
+      //  model.addAttribute("user", userService.getUserById(user_id));
+       // model.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("user_id", user_id);
         if(userService.getUserById(user_id).getUser_username().equals("admin")){
             return "redirect:/admin";
