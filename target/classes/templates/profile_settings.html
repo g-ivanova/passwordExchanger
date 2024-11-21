@@ -7,532 +7,464 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" xmlns:th="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>PASSEX Edit profile</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="shortcut icon" href="favicon.ico">
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/animate.css">
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="stylesheet" href="/css/profile_settings.css">
-    </head>
-    <body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PASSEX Edit profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/profile_settings.css">
+</head>
+<body>
     <script type="text/javascript">
-        var emailValid=true;
- var nameValid=true;
- var currentPasswordValid=false;
- var newPasswordValid=false;
- var repNewPasswordValid=false;
-  var isAnyValueChanged = true;
-  var dropdown=$('#dropdown').val();
+        function saveProfile() {
+            Swal.fire({
+                title: 'Do you want to save the changes?',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                denyButtonText: 'No',
+                customClass: {
+                    actions: 'my-actions',
+                    cancelButton: 'order-1 right-gap btn swal-cancel',
+                    confirmButton: 'order-2 btn swal-primary',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Saved!',
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn swal-primary',
+                        },
+                    });
+                    $('#formSaveProfile').submit();
+                } else {
+                    Swal.fire({
+                        title: 'Changes are not saved!',
+                        icon: 'info',
+                        customClass: {
+                            confirmButton: 'btn swal-primary',
+                        },
+                    });
+                }
+            });
+        }
 
- function saveProfile() {
-   Swal.fire({
-       title: 'Do you want to save the changes?',
-       showCancelButton: true,
-       confirmButtonText: 'Yes',
-       denyButtonText: 'No',
-       customClass: {
-           actions: 'my-actions',
-           cancelButton: 'order-1 right-gap btn swal-cancel',
-           confirmButton: 'order-2 btn swal-primary',
-       },
-   }).then((result) => {
-       if (result.isConfirmed) {
-           Swal.fire({
-               title: 'Saved!',
-               icon: 'success',
-               customClass: {
-                   confirmButton: 'btn swal-primary',
-               },
-           });
-           $('#formSaveProfile').submit();
-       } else {
-           Swal.fire({
-               title: 'Changes are not saved!',
-               icon: 'info',
-               customClass: {
-                   confirmButton: 'btn swal-primary',
-               },
-           });
-       }
-   });
- }
+        $(document).ready(function () {
+            var emailValid = true;
+            var emailChanged = false;
 
+            var nameValid = true;
+            var nameChanged = false;
 
+            var currentPasswordValid = false;
 
- $(document).ready(function () {
- var emailValid=true;
- var nameValid=true;
- var currentPasswordValid=false;
- var newPasswordValid=false;
- var repNewPasswordValid=false;
-  var isAnyValueChanged = true;
-  var dropdown=$('#dropdown').val();
-         $('#saveButton').prop('disabled', true);
-getDropdown();
-function getDropdown(){
-  var dropdown=$('#dropdown').val();
+            var newPasswordValid = false;
 
-if(dropdown){
-toggleSubmitButton();
+            var repNewPasswordValid = false;
 
-}
+            var user_id = $('#user_id').val();
 
-}
+            var duration = 1000;
 
-function changeOnEmail(){
-   var user_email_before = $('#user_email_before').val();
-   var user_email = $('#email').val();
+            var dropdown = $('#dropdown').val();
 
-   if(user_email_before===user_email){
-   return false;
-   }
-   return true;
+            $('#saveButton').prop('disabled', true);
 
-}
-function changeOnNames(){
-   var user_names_before = $('#user_names_before').val();
-   var user_names = $('#name').val();
+            getDropdown();
 
-   if(user_names_before===user_names){
-   return false;
-   }
-   return true;
+            function getDropdown(){
+                if(dropdown){
+                    toggleSubmitButton();
+                }
+            }
 
-}
- function validateName() {
+            //On name input check if names are changed and valid
+            var name = $('#name');
+            name.on('input', onInputName);
+            function onInputName(){
+                clearTimeout(name._timer);
+                name._timer = setTimeout(()=>{
+                    validateName(this.value);
+                }, duration);
+            }
 
-   var names = $('#name').val();
-   var namesReg = /^[a-zA-Z\s]*$/;
+            function validateName() {
+                var names = $('#name').val();
+                var namesReg = /^[a-zA-Z\s]*$/;
+                var user_names_before = $('#user_names_before').val();
+                if (names === user_names_before){
+                    nameValid = true;
+                    nameChanged = false;
+                    toggleSubmitButton();
+                    $('#names_error').hide();
+                } else if (!namesReg.test(names) || names.length === 0) {
+                    $('#names_error').text("Names are incorrect. Should contain only letters.").show();
+                    nameValid = false;
+                    nameChanged = true;
+                    toggleSubmitButton();
+                } else {
+                    nameValid = true;
+                    nameChanged = true;
+                    toggleSubmitButton();
+                    $('#names_error').hide();
+                }
+            }
 
- if (!namesReg.test(names) || names.length === 0) {
-         $('#names_error').text("Names are incorrect. Should contain only letters.").show();
-          isFormValid = false;
-                       nameValid=false;
-                       toggleSubmitButton();
-       }
-       else{
-                        nameValid=true;
+            //On email input check if email is changed and valid
+            var emailF = $('#email');
+            emailF.on('input', onInputEmail);
+            function onInputEmail(){
+                clearTimeout(emailF._timer);
+                emailF._timer = setTimeout(()=>{
+                    validateEmail(this.value);
+                }, duration);
+            }
+
+            function validateEmail() {
+                var email = $('#email').val();
+                var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                var user_email_before = $('#user_email_before').val();
+                if(user_email_before === email){
+                    emailChanged = false;
+                    emailValid = true;
+                    toggleSubmitButton();
+                    $('#email_error').hide();
+                } else if (!emailReg.test(email) || email.length === 0) {
+                    $('#email_error').text("Please provide correct email.").show();
+                    emailValid = false;
+                    emailChanged = true;
+                    toggleSubmitButton();
+                } else {
+                    emailChanged = true;
+                    var data ={user_id:user_id ,password:email};
+                    $.ajax({
+                        type: "POST",
+                        url : "http://localhost:8080/validateEmailAndUsername",
+                        data: data,
+                        success: function (data) {
+                            if(data == "correct"){
+                                $('#email_error').hide();
+                                emailValid = true;
+                                toggleSubmitButton();
+                            }
+                            if(data=="incorrect"){
+                                $('#email_error').text("This email is already taken!").show();
+                                emailValid = false;
+                                toggleSubmitButton();
+                            }
+                        },
+                        error: function (data) {
+                            emailValid = false;
+                            toggleSubmitButton();
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while validating the email.',
+                                icon: 'error'
+                            });
+                        },
+                    });
+                }
+            }
+
+            // Initially hide the error messages when the page loads
+            $('.error-message').hide();
+
+            // Initially disable the new_password and rep_new_password fields
+            $("#new_password").prop("disabled", true);
+            $("#rep_new_password").prop("disabled", true);
+
+            // Validate current password
+            var currentPass = $("#current_password");
+            currentPass.on('input', onInput);
+            function onInput() {
+                clearTimeout(currentPass._timer);
+                currentPass._timer = setTimeout(() => {
+                    update(currentPass.val());
+                }, duration);
+            }
+
+            function update() {
+                var currentPassword = $("#current_password").val();
+                var user_id = $("#user_id").val();
+                var data = { user_id: user_id, password: currentPassword };
+                if (currentPassword === "") {
+                    $("#new_password").prop("disabled", true);
+                    $("#new_password").val('');
+                    $("#rep_new_password").prop("disabled", true);
+                    $("#rep_new_password").val('');
+                    $('#pass_error').text('');
+                    $('#rep_pass_error').text('');
+                    $('#current_pass_error').text('');
+                    currentPasswordValid = false;
+                    toggleSubmitButton();
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:8080/validatePassword",
+                        data: data,
+                        success: function(data) {
+                            if (data === "correct") {
+                                $("#new_password").prop("disabled", false);
+                                $("#rep_new_password").prop("disabled", false);
+                                $('#current_pass_error').text('');
+                                currentPasswordValid=true;
+                                toggleSubmitButton();
+                            }
+                            if (data === "incorrect") {
+                                $("#new_password").prop("disabled", true);
+                                $("#new_password").val('');
+                                $("#rep_new_password").prop("disabled", true);
+                                $("#rep_new_password").val('');
+                                $('#current_pass_error').text('Password is not correct!');
+                                $('#pass_error').text('');
+                                $('#rep_pass_error').text('');
+                                currentPasswordValid = false;
+                                toggleSubmitButton();
+                           }
+                        },
+                        error: function() {
+                            currentPasswordValid = false;
+                            toggleSubmitButton();
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while validating the password.',
+                                icon: 'error'
+                            });
+                        },
+                    });
+                }
+            }
+
+            var newPass = $("#new_password");
+            newPass.on('input', newPasswordOnInput);
+            function newPasswordOnInput() {
+                clearTimeout(newPass._timer);
+                newPass._timer = setTimeout(() => {
+                    isPasswordValid(newPass.val());
+                }, duration);
+            }
+
+            var repNewPass = $("#rep_new_password");
+            repNewPass.on('input', repNewPasswordOnInput);
+            function repNewPasswordOnInput() {
+                clearTimeout(repNewPass._timer);
+                repNewPass._timer = setTimeout(() => {
+                    doPasswordsMatch(repNewPass.val());
+                }, duration);
+            }
+
+            // Validate new password
+            function isPasswordValid() {
+                var newPassword = $("#new_password").val();
+                var currentPassword = $("#current_password").val();
+                var passReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+                if (newPassword !== currentPassword){
+                    if ((!passReg.test(newPassword) || !newPassword)) {
+                        $("#pass_error").text("Password should be between 6-16 characters. Should contain letters, numbers, and special character.").show();
+                        newPasswordValid = false;
                         toggleSubmitButton();
-       $('#names_error').hide();
-                          }
+                    } else {
+                        $("#pass_error").text("");
+                        newPasswordValid = true;
+                        toggleSubmitButton();
+                    }
+                } else {
+                    $("#pass_error").text("New password can't be the same as current password").show();
+                    newPasswordValid = false;
+                    toggleSubmitButton();
+                }
+            }
 
+            // Validate password match
+            function doPasswordsMatch() {
+                var repNewPassword = $("#rep_new_password").val();
+                var newPassword = $("#new_password").val();
+                if (newPassword !== repNewPassword) {
+                    $('#rep_pass_error').text('Passwords do not match!').show();
+                    repNewPasswordValid = false;
+                    toggleSubmitButton();
+                } else {
+                    $('#rep_pass_error').hide();
+                    repNewPasswordValid = true;
+                    toggleSubmitButton();
+                }
+            }
 
- }
-
-  function validateEmail() {
-   var email = $('#email').val();
-                     var user_id = $('#user_id').val();
-   var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-
-
-  if (!emailReg.test(email) || email.length === 0) {
-           $('#email_error').text("Please provide correct email.").show();
-            emailValid=false;
- toggleSubmitButton();
-       } else {
-           var data ={user_id:user_id ,password:email};
-           $.ajax({
-               type: "POST",
-               url : "http://localhost:8080/validateEmailAndUsername",
-               data: data,
-               success: function (data) {
-                   if(data=="correct"){
-
-                       $('#email_error').hide();
-
-                                                  emailValid=true;
-
-                                                   toggleSubmitButton();
-                                                 }
-
-                   if(data=="incorrect"){
-                       $('#email_error').text("This email is already taken!").show();
-                       emailValid=false;
-                       toggleSubmitButton();
-                   }
-               },
-               error: function (data) {
-                   emailValid=false;
-                   toggleSubmitButton();
-                  Swal.fire({
-                      title: 'Error!',
-                      text: 'An error occurred while validating the email.',
-                      icon: 'error'
-                  });
-               },
-           });
-       }
-   }
- var name=document.getElementById("name");
- name.addEventListener('input', onInputName);
- var email=document.getElementById("email");
- email.addEventListener('input', onInputEmail);
-
- var name=document.getElementById("name");
- var email=document.getElementById("email");
- function onInputName(){
- var duration = 1000;
- clearTimeout(name._timer);
- name._timer = setTimeout(()=>{
- validateName(this.value);
- }, duration);
- }
- function onInputEmail(){
- var duration = 1000;
- clearTimeout(name._timer);
- name._timer = setTimeout(()=>{
- validateEmail(this.value);
- }, duration);
-
-
- }
- // Initially hide the error messages when the page loads
- $('.error-message').hide();
-
- // Variable to track the form's overall validity
-
- // Initially disable the new_password and rep_new_password fields
- $("#new_password").prop("disabled", true);
- $("#rep_new_password").prop("disabled", true);
-
-
- // Validate current password
- var currentPassword = $("#current_password");
- currentPassword.on('input', onInput);
-
- function onInput() {
-   var duration = 1000;
-   clearTimeout(currentPassword._timer);
-   currentPassword._timer = setTimeout(() => {
-       update(currentPassword.val());
-   }, duration);
-
- }
-             function isAnythingChanged(){
-                 var password = $("#current_password").val();
-                 var email = $('#email').val();
-                 var names = $('#name').val();
-                 if (password === ""  && email === oldEmail && names === oldName) {
-                     isAnyValueChanged = false;
-                     isFormValid = false;
-                 }
-                 else {
-                     isAnyValueChanged = true;
-                 }
-             }
- function update() {
-   var user_id = $("#user_id").val();
-   var password = $("#current_password").val();
-   var data = { user_id: user_id, password: password };
-   if (isAnyValueChanged) {
-       if (password === "") {
-           $("#new_password").prop("disabled", true);
-           $("#rep_new_password").prop("disabled", true);
-           $('#current_pass_error').text('');
-           toggleSubmitButton();
-       } else {
-           $.ajax({
-               type: "POST",
-               url: "http://localhost:8080/validatePassword",
-               data: data,
-               success: function(data) {
-                   if (data === "correct") {
-                       $("#new_password").prop("disabled", false);
-                       $("#rep_new_password").prop("disabled", false);
-                       $('#current_pass_error').text('');
-                       currentPasswordValid=true;
-                       toggleSubmitButton();
-                   }
-                   if (data === "incorrect") {
-                       $("#new_password").prop("disabled", true);
-                       $("#rep_new_password").prop("disabled", true);
-                       $('#current_pass_error').text('Password is not correct!');
-                       $('#pass_error').text('');
-                       $('#rep_pass_error').text('');
-                      currentPasswordValid=false;
-                      toggleSubmitButton();
-                   }
-               },
-               error: function() {
-               currentPasswordValid=false;
-               toggleSubmitButton();
-                   Swal.fire({
-                       title: 'Error!',
-                       text: 'An error occurred while validating the password.',
-                       icon: 'error'
-                   });
-               },
-           });
-       }
-   } else {
-       currentPasswordValid=false;
-       $('#current_pass_error').text('');
-       $('#pass_error').text('');
-       $('#rep_pass_error').text('');
-       toggleSubmitButton();
-   }
- }
- var newPassword = $("#new_password");
- newPassword.on('input', newPasswordOnInput);
-
- function newPasswordOnInput() {
-   var duration = 1000;
-   clearTimeout(newPassword._timer);
-   newPassword._timer = setTimeout(() => {
-       isPasswordValid(newPassword.val());
-   }, duration);
-
- }
- var repNewPassword = $("#rep_new_password");
- repNewPassword.on('input', repNewPasswordOnInput);
- function repNewPasswordOnInput() {
-   var duration = 1000;
-   clearTimeout(repNewPassword._timer);
-   repNewPassword._timer = setTimeout(() => {
-       doPasswordsMatch(repNewPassword.val());
-   }, duration);
-
- }
- // Validate new password
- function isPasswordValid() {
-   var pass = $('#new_password').val();
-   var oldPass = $('#current_password').val();
-   var passReg = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-   if (pass !== oldPass){
-       if ((!passReg.test(pass) || !pass)) {
-            $("#pass_error").text("Password should be between 6-16 characters. Should contain letters, numbers, and special character.").show();
-            newPasswordValid=false;
-            toggleSubmitButton();
-       } else {
-           $("#pass_error").text("");
-                      newPasswordValid=true;
-                      toggleSubmitButton();
-
-       }
-   } else {
-       $("#pass_error").text("New password can't be the same as current password").show();
-                  newPasswordValid=false;
-                  toggleSubmitButton();
-
-   }
- }
-
- // Validate password match
- function doPasswordsMatch() {
-   const password = $('#new_password').val();
-   const confirm_password = $('#rep_new_password').val();
-   if (password !== confirm_password) {
-     $('#rep_pass_error').text('Passwords do not match!').show();
-     repNewPasswordValid=false;
-     toggleSubmitButton();
-   } else {
-     $('#rep_pass_error').hide();
-     repNewPasswordValid=true;
-     toggleSubmitButton();
-
-   }
- }
-
-
- function toggleSubmitButton() {
- var password = $('#current_password').val();
- var reppassword = $('#rep_new_password').val();
- var newpassword = $('#new_password').val();
-          var dropdown=$('#dropdown').val();
-
-
-   if ((emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && password==="" && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid  && currentPasswordValid && newPasswordValid && repNewPasswordValid && dropdown && password==="" && dropdown && (changeOnEmail() || changeOnNames()))) {
-       $('#saveButton').prop('disabled', false);
-   }
-     if ((emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="") || (emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid && password!=="" && reppassword!=="" && newpassword!=="" && dropdown)) {
-       $('#saveButton').prop('disabled', false);
-   }
-     else if (emailValid && nameValid && currentPasswordValid==false && password!=="" && newPasswordValid==false && repNewPasswordValid==false) {
-       $('#saveButton').prop('disabled', true);
-   }
-   else if ((emailValid && nameValid && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && (changeOnEmail() || changeOnNames())) || (emailValid && nameValid && dropdown && currentPasswordValid==false && password==="" && newPasswordValid==false && repNewPasswordValid==false && dropdown && (changeOnEmail() || changeOnNames()))) {
-       $('#saveButton').prop('disabled', false);
-   }
-     else if (emailValid && nameValid  && dropdown && currentPasswordValid==true && newPasswordValid==true && reppassword==="") {
-       $('#saveButton').prop('disabled', true);
-   }
-       else if ((emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="" && (changeOnEmail() || changeOnNames()))|| (emailValid && nameValid && dropdown && password==="" && reppassword==="" && newpassword==="" && dropdown && (changeOnEmail() || changeOnNames()))) {
-       $('#saveButton').prop('disabled', false);
-   }
-       else if (emailValid && nameValid && dropdown && password!=="" && reppassword==="" && newpassword==="") {
-       $('#saveButton').prop('disabled', true);
-   }
-   else {
-       $('#saveButton').prop('disabled', true);
-   }
- }
-         });
+            function toggleSubmitButton() {
+                var currentPassword = $("#current_password").val();
+                if (emailValid && nameValid && currentPassword === "" && (emailChanged || nameChanged || dropdown) ) {
+                    $('#saveButton').prop('disabled', false);
+                } else if (emailValid && nameValid && currentPasswordValid && newPasswordValid && repNewPasswordValid) {
+                    $('#saveButton').prop('disabled', false);
+                } else {
+                    $('#saveButton').prop('disabled', true);
+                }
+            }
+        });
     </script>
-        <div class="container">
-            <div class="row col-md-6" style="margin-left:25%">
-                <form th:action="@{/home/settings/{user_id}}"
-
-                      method="POST"
-                      class="fh5co-form animate-box"
-                      data-animate-effect="fadeIn"
-                      id="formSaveProfile"
-                >
-                    <h2>Public Profile</h2>
-                    <input class="form-control"
-                           type="hidden"
-                           th:value="${user_id}"
-                           id="user_id"
-                           name="user_id"
-                    />
-
-                    <input class="form-control"
-                           type="hidden"
-                           th:value="*{dropdown}"
-                           id="dropdown"
-                           name="dropdown"
-                    />
-                    <input class="form-control"
-                           type="hidden"
+    <div class="container">
+        <div class="row col-md-6" style="margin-left:25%">
+            <form th:action="@{/home/settings/{user_id}}"
+                  method="POST"
+                  class="fh5co-form animate-box"
+                  data-animate-effect="fadeIn"
+                  id="formSaveProfile"
+            >
+                <h2>Public Profile</h2>
+                <input class="form-control"
+                       type="hidden"
+                       th:value="${user_id}"
+                       id="user_id"
+                       name="user_id"
+                />
+                <input class="form-control"
+                       type="hidden"
+                       th:value="*{dropdown}"
+                       id="dropdown"
+                       name="dropdown"
+                />
+                <input class="form-control"
+                       type="hidden"
+                       th:value="${names}"
+                       id="user_names_before"
+                       name="user_names_before"
+                />
+                <input class="form-control"
+                       type="hidden"
+                       th:value="${email}"
+                       id="user_email_before"
+                       name="user_email_before"
+                />
+                <div class="form-group">
+                    <label for="name" class="sr-only">Names</label>
+                    <input type = "text"
+                           name = "user_names"
                            th:value="${names}"
-                           id="user_names_before"
-                           name="user_names_before"
+                           class = "form-control"
+                           placeholder="Names"
+                           id="name"
                     />
-                    <input class="form-control"
-                           type="hidden"
+                    <p id="names_error" class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="sr-only">Email</label>
+                    <input type = "text"
+                           name = "user_email"
                            th:value="${email}"
-                           id="user_email_before"
-                           name="user_email_before"
+                           class = "form-control"
+                           placeholder="Email"
+                           id="email"
                     />
-                    <div class="form-group">
-                        <label for="name" class="sr-only">Names</label>
-                        <input type = "text"
-                               name = "user_names"
-                               th:value="${names}"
-                               class = "form-control"
-                               placeholder="Names"
-                               id="name"
-                        />
-                        <p id="names_error" class="error-message"></p>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="sr-only">Email</label>
-                        <input type = "text"
-                               name = "user_email"
-                               th:value="${email}"
-                               class = "form-control"
-                               placeholder="Email"
-                               id="email"
-                        />
-                        <p id="email_error" class="error-message"></p>
-                    </div>
-                    <div class="form-group">
-                        <label for="username" class="sr-only">Username</label>
-                        <input type = "text"
-                               name= "user_username"
-                               th:value = "${username}"
-                               class = "form-control"
-                               placeholder="Username"
-                               id="username"
-                               disabled
-                        />
-                    </div>
-                    <h2>Change password</h2>
-                    <div class="form-group">
-                        <label for="current_password" class="sr-only">Current password</label>
-                        <input type = "password"
-                               name = "current_password"
-                               class = "form-control"
-                               placeholder="Current password"
-                               id="current_password"
-                        />
-                        <p id="current_pass_error" class="error_message"></p>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_password" class="sr-only">New password</label>
-                        <input type = "password"
-                               name = "new_password"
-                               class = "form-control"
-                               placeholder="New password"
-                               id="new_password"
-                        />
-                        <p id="pass_error" class="error-message"></p>
-                    </div>
-                    <div class="form-group">
-                        <label for="rep_new_password" class="sr-only">Repeat new password</label>
-                        <input type = "password"
-                               name = "rep_new_password"
-                               class = "form-control"
-                               placeholder="Repeat new password"
-                               id="rep_new_password"
-                        />
-                        <p id="rep_pass_error" class="error-message"></p>
-                    </div>
-                    <table class = "table table-striped" style="width:100%" id="table">
-                        <thead>
-                            <tr>
-                                <th colspan="5">
-                                    <h2>Groups</h2>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each = "role : ${roleList}">
-                                <td style="display:none;" th:text = "${role.role_id}" th:value="${role.role_id}" th:id="${role.role_id}" ></td>
-                                <td th:text = "${role.role_name}" ></td>
-                                <td>
-                                    <input class="form-control"
-                                           type="hidden"
-                                           th:value="${id}"
-                                           id="id2"
-                                           name="id"
-                                    />
-                                    <a class ="btn btn-danger" th:href = "@{/home/settings/{user_id}/{role_id}(role_id=${role.role_id},user_id=${user_id})}" >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                                        </svg>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
+                    <p id="email_error" class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="sr-only">Username</label>
+                    <input type = "text"
+                           name= "user_username"
+                           th:value = "${username}"
+                           class = "form-control"
+                           placeholder="Username"
+                           id="username"
+                           disabled
+                    />
+                </div>
+                <h2>Change password</h2>
+                <div class="form-group">
+                    <label for="current_password" class="sr-only">Current password</label>
+                    <input type = "password"
+                           name = "current_password"
+                           class = "form-control"
+                           placeholder="Current password"
+                           id="current_password"
+                    />
+                    <p id="current_pass_error" class="error_message"></p>
+                </div>
+                <div class="form-group">
+                    <label for="new_password" class="sr-only">New password</label>
+                    <input type = "password"
+                           name = "new_password"
+                           class = "form-control"
+                           placeholder="New password"
+                           id="new_password"
+                    />
+                    <p id="pass_error" class="error-message"></p>
+                </div>
+                <div class="form-group">
+                    <label for="rep_new_password" class="sr-only">Repeat new password</label>
+                    <input type = "password"
+                           name = "rep_new_password"
+                           class = "form-control"
+                           placeholder="Repeat new password"
+                           id="rep_new_password"
+                    />
+                    <p id="rep_pass_error" class="error-message"></p>
+                </div>
+                <table class = "table table-striped" style="width:100%" id="table">
+                    <thead>
+                        <tr>
+                            <th colspan="5">
+                                <h2>Groups</h2>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each = "role : ${roleList}">
+                            <td style="display:none;" th:text = "${role.role_id}" th:value="${role.role_id}" th:id="${role.role_id}" ></td>
+                            <td th:text = "${role.role_name}" ></td>
+                            <td>
+                                <input class="form-control"
+                                       type="hidden"
+                                       th:value="${id}"
+                                       id="id2"
+                                       name="id"
+                                />
+                                <a class ="btn btn-danger" th:href = "@{/home/settings/{user_id}/{role_id}(role_id=${role.role_id},user_id=${user_id})}" >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class ="form-group" id="select_group">
+                    <table>
+                        <tr>
+                            <td style="width:90%">
+                                <select class="form-control"  id="role_id" name="role_id">
+                                    <option value="Select group">Select Group</option>
+                                    <option th:each="role : ${roleListNo}"
+                                            th:value="${role.role_id}"
+                                            th:text="${role.role_name}">
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="submit" name="add" class="btn btn-success2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
                     </table>
-                    <div class ="form-group" id="select_group">
-                        <table>
-                            <tr>
-                                <td style="width:90%">
-                                    <select class="form-control"  id="role_id" name="role_id">
-                                        <option value="Select group">Select Group</option>
-                                        <option th:each="role : ${roleListNo}"
-                                                th:value="${role.role_id}"
-                                                th:text="${role.role_name}">
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <button type="submit" name="add" class="btn btn-success2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
-                                        </svg>
-                                    </button>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class ="form-group">
-                        <button type="button" id="saveButton" value="Save changes" class="btn btn-primary" th:attr="onclick=|saveProfile()|" disabled>Save</button>
-                        <input type="submit" value="Back" name="cancel" class="btn btn-cancel">
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class ="form-group">
+                    <button type="button" id="saveButton" value="Save changes" class="btn btn-primary" th:attr="onclick=|saveProfile()|" disabled>Save</button>
+                    <input type="submit" value="Back" name="cancel" class="btn btn-cancel">
+                </div>
+            </form>
         </div>
-    </body>
+    </div>
+</body>
 </html>
