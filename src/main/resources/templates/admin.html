@@ -1,552 +1,172 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="/js/admin.js"></script>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>PASSEX Admin</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="shortcut icon" href="favicon.ico">
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/css/animate.css">
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="stylesheet" href="/css/profile_settings.css">
-        <link rel="stylesheet" href="/css/admin.css">
-    </head>
-    <style>
-        .table td:nth-child(5) { display:hidden; }
-    </style>
-    <body>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script type="text/javascript">
-
-            function deleteUser(el){
-              var user_id=document.getElementById("user_id").value;
-              Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, delete it!",
-                customClass: {
-                    actions: 'my-actions',
-                    cancelButton: 'btn swal-cancel',
-                    confirmButton: 'btn swal-danger',
-                },
-            }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "The user has been deleted.",
-                            icon: "success",
-                            customClass: {
-                                confirmButton: 'btn swal-primary',
-                            },
-                                });
-                    $.ajax({
-                        type: "GET",
-                        url : "http://localhost:8080/admin/deleteUser/"+el+"/"+user_id,
-                        contentType: "application/json",
-                        success: function () {
-                            window.location.reload();
-
-                                            },
-                        error: function () {},
-                            });
-
-                                            }
-                                });
-            }
-
-            function deleteGroup(el){
-            var user_id=document.getElementById("user_id").value;
-            Swal.fire({
-              title: "Are you sure?",
-              text: "You won't be able to revert this!",
-              icon: "warning",
-              showCancelButton: true,
-              customClass: {
-                    actions: 'my-actions',
-                    cancelButton: 'btn swal-cancel',
-                    confirmButton: 'btn swal-danger',
-                },
-              confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-              if (result.isConfirmed) {
-                  Swal.fire({
-                  title: "Deleted!",
-                  text: "The group has been deleted.",
-                  customClass: {
-                                confirmButton: 'btn swal-primary',
-                            },
-                  icon: "success"
-                });
-              $.ajax({
-                   type: "GET",
-                   url : "http://localhost:8080/admin/deleteGroup/"+user_id+"/"+el,
-                   contentType: "application/json",
-                   success: function () {
-                  window.location.reload();
-
-                   },
-                   error: function () {},
-               });
-              }
-            });
-            }
-        </script>
-        <div class="dropdown">
-            <button class="btn dropbtn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" style="display: block; margin: auto;">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                </svg>
-            </button>
-            <div id="PersonalSettings" class="dropdown-content">
-                <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">Profile Settings</a>
-                <a href="index.html">Log out</a>
-            </div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PASSEX Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/profile_settings.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<style>
+    .table td:nth-child(5) { display:hidden; }
+</style>
+<body>
+    <div class="dropdown">
+        <button class="btn dropbtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" style="display: block; margin: auto;">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+            </svg>
+        </button>
+        <div id="PersonalSettings" class="dropdown-content">
+            <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">Profile Settings</a>
+            <a href="index.html">Log out</a>
         </div>
-        <div class ="container">
-            <form style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-                <table class = "table table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th style="width:20%">
-                                <h2>Users</h2>
-                            </th>
-                            <th style="width:60%">
-                                <input type="text"
-                                       id="filterUsers"
-                                       placeholder="Search for users"
-                                       class="headerInput filter"
-                                />
-                            </th>
-                            <th>
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-                <table class = "table table-striped" style="width:100%" id="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>User name</th>
-                            <th>Email</th>
-                            <th>Group</th>
-                            <th style="width:10%">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each = "user : ${usersList}">
-                            <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
-                            <td th:text = "${user.user_names}" ></td>
-                            <td th:text = "${user.user_username}"></td>
-                            <td th:text = "${user.user_email}"></td>
-                            <td th:text = "${user.user_roles}"></td>
-                            <input class="form-control"
-                                   type="hidden"
-                                   th:value="${user_id}"
-                                   id="user_id"
-                                   name="user_id"
+    </div>
+    <div class ="container">
+        <form style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <table class = "table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:20%">
+                            <h2>Users</h2>
+                        </th>
+                        <th style="width:60%">
+                            <input type="text"
+                                   id="filterUsers"
+                                   placeholder="Search for users"
+                                   class="headerInput filter"
                             />
-                            <td style="width:10%">
-                                <a class="btn btn-secondary" th:href = "@{/admin/editUser/{id}/{user_id}(id=${user.user_id},user_id=${user_id})}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                    </svg>
-                                </a>
-                                <button type="button" class="btn btn-danger confirm-delete"  th:attr="onclick=|deleteUser('${user.user_id}')|">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="pagination">
-                    <button type="button" id="prevPage" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
-                    <span id="pageNumbers"></span>
-                    <button type="button" id="nextPage" class="btn btn-secondary">Next</button>
-                    <label>Rows per Page:</label>
-                    <select id="rowsPerPage" class="selectPage">
-                    </select>
-                </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const table = document.getElementById('table');  // Users table
-                        const tbody = table.querySelector('tbody');
-                        const prevPageBtn = document.getElementById('prevPage');
-                        const nextPageBtn = document.getElementById('nextPage');
-                        const pageNumbersSpan = document.getElementById('pageNumbers');
-                        const rowsPerPageSelect = document.getElementById('rowsPerPage');
-                        const searchInput = document.getElementById('filterUsers');
-
-                        // Get all table rows (this will include all Thymeleaf-rendered rows)
-                        let rows = Array.from(tbody.querySelectorAll('tr'));
-                        let filteredRows = [...rows]; // Initialize filtered rows to be all rows initially
-
-                        // Default settings
-                        let currentPage = 1;
-                        let rowsPerPage = 5;  // Set default rows per page to 5
-
-                        // Function to render the table rows based on pagination
-                        function renderTable() {
-                            const start = (currentPage - 1) * rowsPerPage;
-                            const end = start + rowsPerPage;
-                            const rowsToDisplay = filteredRows.slice(start, end);
-
-                            // Clear the table body and re-render rows
-                            tbody.innerHTML = '';
-                            rowsToDisplay.forEach(row => tbody.appendChild(row));
-
-                            // Update pagination controls
-                            updatePaginationControls();
-                        }
-
-                        // Function to update pagination controls (prev, next, page numbers)
-                        function updatePaginationControls() {
-                            const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
-
-                            // Disable previous button if on the first page
-                            prevPageBtn.disabled = currentPage === 1;
-                            prevPageBtn.classList.toggle('disabled', currentPage === 1);
-
-                            // Disable next button if on the last page
-                            nextPageBtn.disabled = currentPage === totalPages;
-                            nextPageBtn.classList.toggle('disabled', currentPage === totalPages);
-
-                            // Generate page numbers
-                            pageNumbersSpan.innerHTML = ''; // Clear current page numbers
-                            for (let i = 1; i <= totalPages; i++) {
-                                const pageLink = document.createElement('a');
-                                pageLink.href = '#';
-                                pageLink.textContent = i;
-                                pageLink.classList.add('page-number', 'btn', 'btn-link');
-
-                                // Add active class to the current page
-                                if (i === currentPage) {
-                                    pageLink.classList.add('current-page');
-                                }
-
-                                // Add event listener to change pages
-                                pageLink.addEventListener('click', (event) => {
-                                    event.preventDefault();
-                                    currentPage = i;
-                                    renderTable();
-                                });
-
-                                pageNumbersSpan.appendChild(pageLink);
-                            }
-                        }
-
-                        // Function to filter rows based on the search query
-                        function filterRows() {
-                            const filter = searchInput.value.toUpperCase();
-                            filteredRows = rows.filter(row => {
-                                const rowText = Array.from(row.querySelectorAll('td'))
-                                    .map(cell => cell.textContent.toUpperCase())
-                                    .join(' ');
-
-                                return rowText.indexOf(filter) > -1;
-                            });
-
-                            currentPage = 1; // Reset to the first page whenever a new search is performed
-                            renderTable();
-                        }
-
-                        // Event listener for search input
-                        searchInput.addEventListener('keyup', filterRows, false);
-
-                        // Event listener for previous page
-                        prevPageBtn.addEventListener('click', () => {
-                            if (currentPage > 1) {
-                                currentPage--;
-                                renderTable();
-                            }
-                        });
-
-                        // Event listener for next page
-                        nextPageBtn.addEventListener('click', () => {
-                            const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
-                            if (currentPage < totalPages) {
-                                currentPage++;
-                                renderTable();
-                            }
-                        });
-
-                        // Event listener for changing rows per page
-                        rowsPerPageSelect.addEventListener('change', (event) => {
-                            rowsPerPage = parseInt(event.target.value, 10);
-                            currentPage = 1; // Reset to first page when changing rows per page
-                            renderTable();
-                        });
-
-                        // Function to dynamically generate rows per page options based on filtered rows length
-                        function updateRowsPerPageOptions() {
-                            const totalRows = filteredRows.length;
-                            let options = [];
-
-                            // Start with 5, then dynamically generate options in increments of 5
-                            for (let i = 5; i <= totalRows; i += 5) {
-                                options.push(i);
-                            }
-
-                            // If the total number of rows is less than 5, fallback to just 5 as the only option
-                            if (totalRows < 5) {
-                                options = [5];
-                            }
-
-                            // If options is empty or does not have the 5 option, make sure to add 5 as the first option
-                            if (options.length === 0 || options[0] !== 5) {
-                                options.unshift(5);
-                            }
-
-                            // If the last option is still below the total rows, add the next higher multiple
-                            let lastOption = options[options.length - 1];
-                            if (lastOption < totalRows) {
-                                options.push(Math.ceil(totalRows / 5) * 5);  // Add the next multiple of 5 greater than totalRows
-                            }
-
-                            // Clear current options in the select dropdown
-                            rowsPerPageSelect.innerHTML = '';
-
-                            // Add options dynamically
-                            options.forEach(option => {
-                                const optionElement = document.createElement('option');
-                                optionElement.value = option;
-                                optionElement.textContent = option;
-                                rowsPerPageSelect.appendChild(optionElement);
-                            });
-
-                            // Default select value is the current rowsPerPage (which is now 5)
-                            rowsPerPageSelect.value = rowsPerPage;
-                        }
-
-                        // Initialize table rendering and rows per page options
-                        updateRowsPerPageOptions();
-                        renderTable();
-                    });
-                </script>
-            </form>
-        </div>
-        <div class ="container">
-            <form th:action="@{/admin/addNewGroup/form}" th:object = "${user}" method="post" style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-                <input class="form-control"
-                       type="hidden"
-                       th:value="${user_id}"
-                       id="user_idd"
-                       name="user_id"
-                />
-                <table class="table table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th style="width:20%">
-                                <h2>Groups</h2>
-                            </th>
-                            <th style="width:60%">
-                                <input type="text"
-                                       id="filterGroups"
-                                       placeholder="Search for groups"
-                                       class="headerInput filter"
-                                />
-                            </th>
-                            <th style="text-align:right; width:20%">
-                                <input type="submit" class="btn btn-primary headerInput" value="Add new group">
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-                <table class="table table-striped" style="width:100%" id="tableGroups">
-                    <thead>
-                        <tr>
-                            <th>Groups</th>
-                            <th>All users in the group</th>
-                            <th style="width:10%">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each = "userroles : ${rolesList}">
-                            <td style="display:none;" th:text = "${userroles.role_id}" th:value="${userroles.role_id}" th:id="${userroles.role_id}" ></td>
-                            <td th:text = "${userroles.role_name}"></td>
-                            <td th:text = "${userroles.users}"></td>
-                            <td>
-                                <a class ="btn btn-secondary" th:href = "@{/admin/{user_id}/{role_id}(user_id=${user_id},role_id=${userroles.role_id})}" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                    </svg>
-                                </a>
-                                <a class ="btn btn-danger" th:attr="onclick=|deleteGroup('${userroles.role_id}')|" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                                    </svg>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="pagination">
-                    <button type="button" id="prevPageGroups" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
-                    <span id="pageNumbersGroups"></span>
-                    <button type="button" id="nextPageGroups" class="btn btn-secondary">Next</button>
-                    <label>Rows per Page:</label>
-                    <select id="rowsPerPageGroups" class="selectPage"></select>
-                </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const tableGroup = document.getElementById('tableGroups');
-                        const tbodyGroup = tableGroup.querySelector('tbody');
-                        const prevPageBtnGroup = document.getElementById('prevPageGroups');
-                        const nextPageBtnGroup = document.getElementById('nextPageGroups');
-                        const pageNumbersSpanGroup = document.getElementById('pageNumbersGroups');
-                        const rowsPerPageSelectGroup = document.getElementById('rowsPerPageGroups');
-                        const searchInputGroup = document.getElementById('filterGroups');
-
-                        // Get all table rows for Groups (this will include all Thymeleaf-rendered rows)
-                        let rowsGroup = Array.from(tbodyGroup.querySelectorAll('tr'));
-                        let filteredRowsGroup = [...rowsGroup]; // Initialize filtered rows to be all rows initially
-
-                        // Default settings
-                        let currentPageGroup = 1;
-                        let rowsPerPageGroup = 5;
-
-                        // Function to dynamically generate the options for rowsPerPage
-                        function generateRowsPerPageOptions() {
-                            const totalRows = filteredRowsGroup.length;
-                            const selectElement = rowsPerPageSelectGroup;
-
-                            // Clear existing options
-                            selectElement.innerHTML = '';
-
-                            // Start adding options from 5 upwards, incrementing by 5 each time
-                            let optionValue = 5;
-                            while (optionValue <= totalRows) {
-                                const option = document.createElement('option');
-                                option.value = optionValue;
-                                option.textContent = optionValue;
-                                selectElement.appendChild(option);
-                                optionValue += 5;
-                            }
-
-                            // Ensure the next higher multiple of 5 is added if needed (even if not exactly matching totalRows)
-                            let nextOption = Math.ceil(totalRows / 5) * 5;  // Find next multiple of 5
-                            if (nextOption > totalRows) {
-                                const option = document.createElement('option');
-                                option.value = nextOption;
-                                option.textContent = nextOption;
-                                selectElement.appendChild(option);
-                            }
-                        }
-
-                        // Function to render table rows based on pagination for Groups
-                        function renderTableGroup() {
-                            const start = (currentPageGroup - 1) * rowsPerPageGroup;
-                            const end = start + rowsPerPageGroup;
-                            const rowsToDisplayGroup = filteredRowsGroup.slice(start, end);
-
-                            // Clear the table body and re-render rows
-                            tbodyGroup.innerHTML = '';
-                            rowsToDisplayGroup.forEach(row => tbodyGroup.appendChild(row));
-
-                            // Update pagination controls
-                            updatePaginationControlsGroup();
-                        }
-
-                        // Function to update pagination controls (prev, next, page numbers) for Groups
-                        function updatePaginationControlsGroup() {
-                            const totalPagesGroup = Math.ceil(filteredRowsGroup.length / rowsPerPageGroup);
-
-                            // Disable previous button if on first page
-                            prevPageBtnGroup.disabled = currentPageGroup === 1;
-                            prevPageBtnGroup.classList.toggle('disabled', currentPageGroup === 1);
-
-                            // Disable next button if on last page
-                            nextPageBtnGroup.disabled = currentPageGroup === totalPagesGroup;
-                            nextPageBtnGroup.classList.toggle('disabled', currentPageGroup === totalPagesGroup);
-
-                            // Generate page numbers
-                            pageNumbersSpanGroup.innerHTML = ''; // Clear current page numbers
-                            for (let i = 1; i <= totalPagesGroup; i++) {
-                                const pageLinkGroup = document.createElement('a');
-                                pageLinkGroup.href = '#';
-                                pageLinkGroup.textContent = i;
-                                pageLinkGroup.classList.add('page-number');
-                                pageLinkGroup.classList.add('btn');
-                                pageLinkGroup.classList.add('btn-link');
-
-                                // Add active class to the current page
-                                if (i === currentPageGroup) {
-                                    pageLinkGroup.classList.add('current-page');
-                                }
-
-                                // Add event listener to change pages
-                                pageLinkGroup.addEventListener('click', (event) => {
-                                    event.preventDefault(); // Prevent the default anchor click behavior
-                                    currentPageGroup = i;
-                                    renderTableGroup();
-                                });
-
-                                pageNumbersSpanGroup.appendChild(pageLinkGroup);
-                            }
-                        }
-
-                        // Function to filter rows based on the search query for Groups
-                        function filterRowsGroup() {
-                            const filterGroup = searchInputGroup.value.toUpperCase();
-                            filteredRowsGroup = rowsGroup.filter(row => {
-                                // Get all text content from each row's cells
-                                const rowTextGroup = Array.from(row.querySelectorAll('td'))
-                                    .map(cell => cell.textContent.toUpperCase())
-                                    .join(' ');
-
-                                return rowTextGroup.indexOf(filterGroup) > -1;
-                            });
-
-                            currentPageGroup = 1; // Reset to first page whenever a new search is performed
-                            generateRowsPerPageOptions(); // Regenerate the rowsPerPage options based on the filtered data
-                            renderTableGroup();
-                        }
-
-                        // Event listener for search input
-                        searchInputGroup.addEventListener('keyup', filterRowsGroup, false);
-
-                        // Event listener for previous page
-                        prevPageBtnGroup.addEventListener('click', () => {
-                            if (currentPageGroup > 1) {
-                                currentPageGroup--;
-                                renderTableGroup();
-                            }
-                        });
-
-                        // Event listener for next page
-                        nextPageBtnGroup.addEventListener('click', () => {
-                            const totalPagesGroup = Math.ceil(filteredRowsGroup.length / rowsPerPageGroup);
-                            if (currentPageGroup < totalPagesGroup) {
-                                currentPageGroup++;
-                                renderTableGroup();
-                            }
-                        });
-
-                        // Event listener for changing rows per page
-                        rowsPerPageSelectGroup.addEventListener('change', (event) => {
-                            rowsPerPageGroup = parseInt(event.target.value, 10);
-                            currentPageGroup = 1; // Reset to first page when changing rows per page
-                            renderTableGroup();
-                        });
-
-                        // Initialize the table and generate rowsPerPage options
-                        generateRowsPerPageOptions();
-                        renderTableGroup();
-                    });
-                </script>
-            </form>
-        </div>
-    </body>
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class = "table table-striped" style="width:100%" id="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>User name</th>
+                        <th>Email</th>
+                        <th>Group</th>
+                        <th style="width:10%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "user : ${usersList}">
+                        <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
+                        <td th:text = "${user.user_names}" ></td>
+                        <td th:text = "${user.user_username}"></td>
+                        <td th:text = "${user.user_email}"></td>
+                        <td th:text = "${user.user_roles}"></td>
+                        <input class="form-control"
+                               type="hidden"
+                               th:value="${user_id}"
+                               id="user_id"
+                               name="user_id"
+                        />
+                        <td style="width:10%">
+                            <a class="btn btn-secondary" th:href = "@{/admin/editUser/{id}/{user_id}(id=${user.user_id},user_id=${user_id})}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                            </a>
+                            <button type="button" class="btn btn-danger confirm-delete"  th:attr="onclick=|deleteUser('${user.user_id}')|">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button type="button" id="prevPage" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbers"></span>
+                <button type="button" id="nextPage" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPage" class="selectPage">
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class ="container">
+        <form th:action="@{/admin/addNewGroup/form}" th:object = "${user}" method="post" style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <input class="form-control"
+                   type="hidden"
+                   th:value="${user_id}"
+                   id="user_idd"
+                   name="user_id"
+            />
+            <table class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:20%">
+                            <h2>Groups</h2>
+                        </th>
+                        <th style="width:60%">
+                            <input type="text"
+                                   id="filterGroups"
+                                   placeholder="Search for groups"
+                                   class="headerInput filter"
+                            />
+                        </th>
+                        <th style="text-align:right; width:20%">
+                            <input type="submit" class="btn btn-primary headerInput" value="Add new group">
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class="table table-striped" style="width:100%" id="tableGroups">
+                <thead>
+                    <tr>
+                        <th>Groups</th>
+                        <th>All users in the group</th>
+                        <th style="width:10%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "userroles : ${rolesList}">
+                        <td style="display:none;" th:text = "${userroles.role_id}" th:value="${userroles.role_id}" th:id="${userroles.role_id}" ></td>
+                        <td th:text = "${userroles.role_name}"></td>
+                        <td th:text = "${userroles.users}"></td>
+                        <td>
+                            <a class ="btn btn-secondary" th:href = "@{/admin/{user_id}/{role_id}(user_id=${user_id},role_id=${userroles.role_id})}" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                            </a>
+                            <a class ="btn btn-danger" th:attr="onclick=|deleteGroup('${userroles.role_id}')|" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button type="button" id="prevPageGroups" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbersGroups"></span>
+                <button type="button" id="nextPageGroups" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPageGroups" class="selectPage"></select>
+            </div>
+        </form>
+    </div>
+</body>
 </html>
