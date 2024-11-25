@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     function filterReceivedPass(event) {
         var input = $("#filterReceivedPass");
         var filter = input.val().toUpperCase();
@@ -14,7 +13,6 @@ $(document).ready(function() {
         });
     }
     $("#filterReceivedPass").on('keyup', filterReceivedPass);
-
     function filterSentPass(event) {
         var input = $("#filterSentPass");
         var filter = input.val().toUpperCase();
@@ -28,7 +26,6 @@ $(document).ready(function() {
             }
         });
     }
-
     $("#filterSentPass").on('keyup', filterSentPass);
 });
 function CopyText(id){
@@ -41,7 +38,7 @@ function SeeText(id){
     let slashedEye = $("#" + id + "slashedEye");
     if (div.html() == "******") {
         div.css('visibility', 'visible');
-        div.html($("#" + id + "sendpass").text());
+        div.text($("#" + id + "sendpass").text());
         eye.hide();
         slashedEye.show();
     } else {
@@ -66,7 +63,6 @@ function CopyTextAndDelete(id){
         },
     });
 }
-
 function SeeTextAndDelete(id){
     $.ajax({
         type: "GET",
@@ -79,7 +75,7 @@ function SeeTextAndDelete(id){
             let slashedEye = $("#" + id + "slashedEye");
             if (div.html() == "******") {
                 div.css('visibility', 'visible');
-                div.html(pass.text());
+                div.text(pass.text());
                 eye.hide();
                 slashedEye.show();
             } else {
