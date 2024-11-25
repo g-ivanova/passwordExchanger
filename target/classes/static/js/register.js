@@ -1,8 +1,6 @@
 $(document).ready(function () {
-
     // Initially hide all error messages when the page loads
     $('.error-message').hide();
-
     // Variables to track the fields' validity
     var areNamesValid = false;
     var isUsernameValid = false;
@@ -10,7 +8,6 @@ $(document).ready(function () {
     var isPasswordValid = false;
     var doPasswordsMatch = false;
     var isGroupSelected = false;
-
     // Validate names
     function NamesCheck() {
         var names = $('#user_names').val();
@@ -23,7 +20,6 @@ $(document).ready(function () {
             areNamesValid = true;
         }
     }
-
     // Check if username is empty
     function UsernameCheck() {
         var user_username = $('#user_name').val();
@@ -57,7 +53,6 @@ $(document).ready(function () {
             });
         }
     }
-
     // Validate email
     function EmailCheck() {
         var email = $('#user_email').val();
@@ -92,7 +87,6 @@ $(document).ready(function () {
             });
         }
     }
-
     // Validate password
     function PasswordCheck() {
         var pass = $('#user_password').val();
@@ -105,7 +99,6 @@ $(document).ready(function () {
             isPasswordValid = true;
         }
     }
-
     // Validate password match
     function PasswordMatchCheck() {
         var password = $('#user_password').val();
@@ -118,7 +111,6 @@ $(document).ready(function () {
             doPasswordsMatch = true;
         }
     }
-
     // Check if select field is empty
     function SelectCheck() {
         var roleSelect = $('[name="role_id"]');
@@ -130,7 +122,6 @@ $(document).ready(function () {
             isGroupSelected = true;
         }
     }
-
     // Function to enable or disable the SignUp button
     function toggleSubmitButton() {
         // Check if the form is valid by testing all the fields
@@ -140,39 +131,62 @@ $(document).ready(function () {
             $('#SignUp').prop('disabled', true); // Disable the button
         }
     }
-
     // Focusout event listeners for inputs
     $('#user_names').focusout(function () {
         NamesCheck();
         toggleSubmitButton();
     });
-
     $('#user_name').focusout(function () {
         UsernameCheck();
         toggleSubmitButton();
     });
-
     $('#user_email').focusout(function () {
         EmailCheck();
         toggleSubmitButton();
     });
-
     $('#user_password').focusout(function () {
         PasswordCheck();
         toggleSubmitButton();
     });
-
     $('#user_rep_password').focusout(function () {
         PasswordMatchCheck();
         toggleSubmitButton();
     });
-
     // On change for select fields
     $('[name="role_id"]').on('change', function () {
         SelectCheck();
         toggleSubmitButton();
     });
-
     // Initial button state check
     toggleSubmitButton();
 });
+function register(){
+    var email = $("#user_email").val();
+    var username = $("#user_name").val();
+    var data = { user_id: email, password: username };
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/register/validateUsernameAndEmail",
+        data: data,
+        success: function (data) {
+            if(data=="correct"){
+                Swal.fire({
+                    title: 'Success!',
+                    text: "You were successfully registered!",
+                    icon: "success",
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn swal-primary',
+                    }
+                })
+                $('#registerForm').submit();
+            }
+            if(data=="incorrect"){
+                $('#error_existing').text('There is already a user with the same username or email!');
+            }
+        },
+        error: function (data) {
+            Swal.fire('Unexpected server error', '', 'error');
+        },
+    });
+}
