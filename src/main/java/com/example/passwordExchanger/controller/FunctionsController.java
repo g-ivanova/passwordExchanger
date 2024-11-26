@@ -197,18 +197,12 @@ public class FunctionsController {
     public String getUsersFromRole(@RequestParam String roleId) {
         String json = null;
         JSONArray userlist=new JSONArray();
-        List<UserRoles> userRoles=userRolesService.getUserRolesByRoleId(Integer.parseInt(roleId));
-        int user_id;
-        String username;
-        String email;
-        for(UserRoles userRole:userRoles){
-            user_id=userService.getUserById(userRole.getUser_id()).getUser_id();
-            username=userService.getUserById(userRole.getUser_id()).getUser_names();
-            email=userService.getUserById(userRole.getUser_id()).getUser_email();
+        List<User> userRoles=userService.getUsersFromSelectedRole(Integer.parseInt(roleId));
+        for(User userRole:userRoles){
             JSONObject users=new JSONObject();
-            users.put("user_id",String.valueOf(user_id).toString().trim());
-            users.put("user_name",String.valueOf(username).toString().trim());
-            users.put("user_email",String.valueOf(email).toString().trim());
+            users.put("user_id",String.valueOf(userRole.getUser_id()).trim());
+            users.put("user_name",userRole.getUser_names().trim());
+            users.put("user_email",userRole.getUser_email().trim());
             userlist.add(users);
         }
         return (userlist.toString());

@@ -99,4 +99,9 @@ public class UserServiceImpl implements UserService {
     public void updateNames(String names, int user_id) {
         userRepository.updateNames(names, user_id);
     }
+
+    @Override
+    public List<User> getUsersFromSelectedRole(int role_id) {
+        return userRepository.getUsersFromSelectedRole(role_id);
+    }
 }

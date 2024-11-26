@@ -41,4 +41,5 @@ public interface UserService {
 
     void updateNames(String names,int user_id);
 
+    List<User> getUsersFromSelectedRole(int role_id);
 }
