@@ -195,7 +195,27 @@ public class FunctionsController {
     @ResponseBody
     @CrossOrigin
     public String getUsersFromRole(@RequestParam String roleId) {
+        System.out.println(roleId);
+        String[] mystr= roleId.split("[,]", 0);
         String json = null;
+        JSONArray userlist=new JSONArray();
+        for(String myStr: mystr) {
+            System.out.println(myStr);
+            List<User> userRoles=userService.getUsersFromSelectedRole(Integer.parseInt(myStr));
+            for(User userRole:userRoles){
+                JSONObject users=new JSONObject();
+                users.put("user_id",String.valueOf(userRole.getUser_id()).trim());
+                users.put("user_name",userRole.getUser_names().trim());
+                users.put("user_email",userRole.getUser_email().trim());
+                users.put("roleID",myStr);
+                userlist.add(users);
+            }
+        }
+        for (int i = 0; i < userlist.size(); i++) {
+            JSONObject innerObj = (JSONObject) userlist.get(i);
+            System.out.println(innerObj);
+        }
+        /*String json = null;
         JSONArray userlist=new JSONArray();
         List<User> userRoles=userService.getUsersFromSelectedRole(Integer.parseInt(roleId));
         for(User userRole:userRoles){
@@ -204,7 +224,7 @@ public class FunctionsController {
             users.put("user_name",userRole.getUser_names().trim());
             users.put("user_email",userRole.getUser_email().trim());
             userlist.add(users);
-        }
+        }*/
         return (userlist.toString());
     }
     @GetMapping(value="/sendpass")
