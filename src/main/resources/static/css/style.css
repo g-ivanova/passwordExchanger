@@ -430,3 +430,9 @@ input, textarea {
 .error-message{
     display: none;
 }
+.multiselect-selected-text{
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+    white-space: normal;
+}
