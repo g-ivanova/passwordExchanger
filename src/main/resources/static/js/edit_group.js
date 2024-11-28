@@ -47,10 +47,16 @@ function deleteUser(el,names){
 }
 function AddToGroup(){
     var role = $("#role_name").val();
-    var nameAndEmail = $("#user option:selected").text();
-    const name = nameAndEmail.substring(0, nameAndEmail.indexOf("-"));
+    var names = $(".multiselect-selected-text").text();
+    // Check if more than one name is selected
+    var nameArray = names.split(','); // Split the names by commas into an array
+    if (nameArray.length > 1) {
+    // If there are multiple names, replace the last comma with " and "
+    names = nameArray.slice(0, -1).join(', ') + ' and ' + nameArray[nameArray.length - 1];
+    }
+    var userLabel = nameArray.length > 1 ? "sers " : "ser ";
     Swal.fire({
-        title: "Are you sure you want to add user "+name+" to group "+role+"?",
+        title: "Are you sure you want to add u"+userLabel+names+" to group "+role+"?",
         showCancelButton: true,
         confirmButtonText: 'Yes',
         denyButtonText: 'No',
@@ -64,7 +70,7 @@ function AddToGroup(){
         if (result.isConfirmed) {
             Swal.fire({
                 title: "Success!",
-                text: "User "+name+" successfully added to group "+role+"?",
+                text: "U"+userLabel+names+" successfully added to group "+role+"?",
                 customClass: {
                     confirmButton: 'btn swal-primary',
                 },
@@ -73,7 +79,7 @@ function AddToGroup(){
             $('#formAddToGroup').submit();
         } else {
             Swal.fire({
-                title: "User is not added to group",
+                title: "U"+userLabel+names+" not added to group",
                 customClass: {
                     confirmButton: 'btn swal-primary',
                 },
@@ -87,5 +93,27 @@ $(document).ready(function() {
         includeSelectAllOption: true,
         nonSelectedText:"Select user",
         numberDisplayed: 10,
+        buttonText: function (options, select){
+            if (options.length === 0) {
+                return 'Select user';
+            } else {
+                var selectedNames = [];
+                options.each(function() {
+                    var optionText = $(this).text(); // Get the full text (name + email)
+                    var nameOnly = optionText.split(" - ")[0]; // Get the name part (before the " -")
+                    selectedNames.push(nameOnly); // Add the name to the array
+                });
+                var selectedNamesText = selectedNames.join(', ');
+                return selectedNamesText;
+            }
+        }
+    });
+    $('#addToGroup').prop('disabled', true);
+    $("#user").change(function() {
+        if ($('#user').val().length !== 0){
+            $('#addToGroup').prop('disabled', false);
+        } else {
+            $('#addToGroup').prop('disabled', true);
+        }
     });
 });
