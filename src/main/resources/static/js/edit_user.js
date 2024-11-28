@@ -32,8 +32,17 @@ function saveChanges(){
         }
     });
 }
-
 $(document).ready(function () {
+   $('#addButton').prop('disabled', true);
+   $("#role_id").change(function() {
+    console.log($('#role_id').val());
+        if ($('#role_id').val().length !== 0){
+            $('#addButton').prop('disabled', false);
+        } else {
+            $('#addButton').prop('disabled', true);
+        }
+    });
+
     var clicked = $('#clicked').val();
     if (clicked == 'true') {
         $('#saveButton').removeAttr('disabled');
