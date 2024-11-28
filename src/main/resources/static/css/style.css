@@ -432,7 +432,104 @@ input, textarea {
 }
 .multiselect-selected-text{
     display: inline-block;
-    max-width: 100%;
+    max-width: 97%;
     word-break: break-all;
     white-space: normal;
+    float: left;
+}
+.caret{
+    position: absolute;
+    top: 50%;
+    left: 98%;
+    -ms-transform: translate(-50%, -98%);
+    transform: translate(-50%, -98%);
+}
+
+.multiselect-container{
+    position:absolute;
+    list-style-type:none;
+    margin:0;
+    padding:0;
+
+}
+.multiselect-container .input-group{
+    margin:5px
+}
+.multiselect-container>li{
+    padding:0
+}
+.multiselect-container>li.multiselect-group label{
+    margin:0;
+    padding:3px 20px 3px 20px;
+    height:100%;
+}
+.multiselect-container>li.multiselect-group-clickable label{
+    cursor:pointer
+}
+.multiselect-container>li>a{
+    padding:0
+}
+.multiselect-container>li>a>label{
+    margin:0;
+    height:100%;
+    cursor:pointer;
+    padding:3px 20px 3px 40px
+}
+.multiselect-container>li>a>label.radio,.multiselect-container>li>a>label.checkbox{
+    margin:0
+}
+.multiselect-container>li>a>label>input[type=checkbox]{
+    margin-bottom:5px
+}
+.form-inline .multiselect-container label.checkbox,.form-inline .multiselect-container label.radio{
+    padding:3px 20px 3px 40px
+}
+.form-inline .multiselect-container li a label.checkbox input[type=checkbox],.form-inline .multiselect-container li a label.radio input[type=radio]{
+    margin-left:-20px;
+    margin-right:0
+}
+.fh5co-form .btn-group{
+    width:100%
+}
+.fh5co-form .btn-group>.btn:first-child {
+  font-size: 16px;
+  font-weight: 300;
+  display: block;
+  width: 100%;
+  padding: 6px 6px;
+  height: 50px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  border-radius: 0px;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.fh5co-form .btn-group>.btn:first-child::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.fh5co-form .btn-group>.btn:first-child::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.fh5co-form .btn-group>.btn:first-child:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.fh5co-form .btn-group>.btn:first-child:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.fh5co-form .btn-group>.btn:first-child:focus, .fh5co-form .btn-group>.btn:first-child:active {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 }
