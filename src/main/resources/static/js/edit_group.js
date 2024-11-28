@@ -82,3 +82,10 @@ function AddToGroup(){
         }
     });
 }
+$(document).ready(function() {
+    $('#user').multiselect({
+        includeSelectAllOption: true,
+        nonSelectedText:"Select user",
+        numberDisplayed: 10,
+    });
+});

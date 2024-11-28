@@ -40,4 +40,9 @@ $(document).ready(function () {
     } else {
         $('#saveButton').attr('disabled', 'disabled');
     }
+    $('#role_id').multiselect({
+        includeSelectAllOption: true,
+        nonSelectedText:"Select group",
+        numberDisplayed: 5
+    });
 });
