@@ -259,4 +259,18 @@ $(document).ready(function () {
             $('#saveButton').prop('disabled', true);
         }
     }
+    $('#role_id').multiselect({
+        includeSelectAllOption: true,
+        nonSelectedText:"Select group",
+        numberDisplayed: 10
+    });
+    $('#addButton').prop('disabled', true);
+    $("#role_id").change(function() {
+        console.log($('#role_id').val());
+        if ($('#role_id').val().length !== 0){
+            $('#addButton').prop('disabled', false);
+        } else {
+            $('#addButton').prop('disabled', true);
+        }
+    });
 });
