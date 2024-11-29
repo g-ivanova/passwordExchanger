@@ -159,6 +159,33 @@ $(document).ready(function () {
     });
     // Initial button state check
     toggleSubmitButton();
+    var roleSelect  = $('[name="role_id"]');
+    $('[name="role_id"]').multiselect({
+        onChange: function(option, checked) {
+            // Get selected options.
+            var selectedOptions = $('[name="role_id"] option:selected');
+            if (selectedOptions.length >= 3) {
+                // Disable all other checkboxes.
+                var nonSelectedOptions = $('[name="role_id"] option').filter(function() {
+                    return !$(this).is(':selected');
+                });
+                nonSelectedOptions.each(function() {
+                    var input = $('input[value="' + $(this).val() + '"]');
+                    input.prop('disabled', true);
+                    input.parent('.multiselect-option').addClass('disabled');
+                });
+            }
+            else {
+                // Enable all checkboxes.
+                $('[name="role_id"] option').each(function() {
+                    var input = $('input[value="' + $(this).val() + '"]');
+                    input.prop('disabled', false);
+                    input.parent('.multiselect-option').addClass('disabled');
+                });
+            }
+        },
+        nonSelectedText:"Select group",
+    });
 });
 function register(){
     var email = $("#user_email").val();

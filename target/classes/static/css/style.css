@@ -466,6 +466,14 @@ input, textarea {
 .multiselect-container>li.multiselect-group-clickable label{
     cursor:pointer
 }
+.multiselect-container>li.multiselect-group-clickable label:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.multiselect-container>li.multiselect-group-clickable label.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 .multiselect-container>li>a{
     padding:0
 }
@@ -474,6 +482,14 @@ input, textarea {
     height:100%;
     cursor:pointer;
     padding:3px 20px 3px 40px
+}
+.multiselect-container > li > a > label:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.multiselect-container > li > a > label.disabled {
+    cursor: not-allowed;
+    opacity: 0.5; /* Optional: visually indicate it is disabled */
 }
 .multiselect-container>li>a>label.radio,.multiselect-container>li>a>label.checkbox{
     margin:0
@@ -533,3 +549,14 @@ input, textarea {
 .fh5co-form .btn-group>.btn:first-child:focus, .fh5co-form .btn-group>.btn:first-child:active {
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 }
+/* Style for labels when their associated input is disabled */
+.multiselect-container li a label input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;  /* Change cursor to indicate disabled state */
+}
+
+.multiselect-container li a label input[disabled]:after{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+

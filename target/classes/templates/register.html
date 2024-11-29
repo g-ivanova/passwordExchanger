@@ -1,5 +1,7 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js" integrity="sha384-fGduTGnpIAfmSvekMfUwV4HIhaWmmroK8uP9emIM0D9Z0CG+Tc2XdM+V9z0CoGnq" crossorigin = "anonymous"></script>
 <script  type="text/javascript" src="/js/register.js"></script>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -87,8 +89,7 @@
                     </div>
                     <div class="form-group">
                         <label for="${roleList}" class="sr-only"><b>Select role</b></label>
-                        <select class="form-control" id="${roleList}"  name = "role_id" >
-                            <option value="0">Select Group</option>
+                        <select class="form-control" id="${roleList}"  name = "role_id" multiple>
                             <option th:each="role_id : ${roleList}"
                                     th:value="${role_id.role_id}"
                                     th:text="${role_id.role_name}"
