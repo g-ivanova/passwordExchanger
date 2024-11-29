@@ -185,7 +185,7 @@ $(document).ready(function () {
                 });
             }
         },
-        nonSelectedText:"Select group",
+        nonSelectedText:"Select group (max 3 groups)",
     });
 });
 function register(){
