@@ -173,6 +173,7 @@ $(document).ready(function () {
                     var input = $('input[value="' + $(this).val() + '"]');
                     input.prop('disabled', true);
                     input.parent('.multiselect-option').addClass('disabled');
+                    $(input).parent().attr('style', 'opacity: 0.5; cursor: not-allowed;');
                 });
             }
             else {
