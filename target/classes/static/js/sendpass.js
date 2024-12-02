@@ -2,6 +2,7 @@ $(document).ready(function() {
     $('#user').multiselect({
         includeSelectAllOption: true,
         nonSelectedText:"Select user/s",
+          enableClickableOptGroups: true,
         onChange: function(option, checked) {
             const userIDSplit=$('#user').val().toString().split(',');
             var ary=$("#user option").map(function(){ return this.value }).get();
@@ -35,13 +36,20 @@ $(document).ready(function() {
                 let obj = $.parseJSON(data);
                 var group;
 				var optgroup = "	<optgroup label='Info'>";
+				var checkbox="checkbox";
 				for(var i=0;i<roleIDSplit.length;i++){
 					optgroup=$('<optgroup label="' + roleIDSplit[i] +'" />' );
 		            $.each(obj, function (key, value) {
 						if(value.roleName===roleIDSplit[i]){
 		                    $('<option>').val(value.user_id).text(value.user_name+" - "+value.user_email).appendTo(optgroup);
+
+
+
 						}
 						optgroup.appendTo('#user');
+
+					           //  $("#user").append(optgroup);
+
 					});
 				}
 				$('#user').multiselect({

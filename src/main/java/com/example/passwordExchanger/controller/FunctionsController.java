@@ -673,7 +673,7 @@ public class FunctionsController {
     }
 
     @PostMapping(params = "add",value="/home/settings/{user_id}")
-    public String saveUser(RedirectAttributes redirectAttributes,Model model,@RequestParam(required = false) int user_id,@RequestParam(required = false) int role_id) {
+    public String saveUser(RedirectAttributes redirectAttributes,Model model,@RequestParam(required = false) int user_id,@RequestParam(required = false) String[] role_id) {
        /* UserRoles userrole=new UserRoles(role_id,user_id);
         userRolesService.saveRole(userrole);
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
@@ -694,10 +694,12 @@ public class FunctionsController {
         model.addAttribute("user", userService.getUserById(user_id));
         redirectAttributes.addAttribute("user_id", user_id);
         redirectAttributes.addAttribute("id", user_id);*/
-        UserRoles userrole=new UserRoles(role_id,user_id);
-        TempUserRoles tempUserRole=new TempUserRoles(role_id,user_id,"add");
+        for(int i=0;i<role_id.length;i++) {
+            UserRoles userrole = new UserRoles(Integer.parseInt(role_id[i]), user_id);
+            TempUserRoles tempUserRole = new TempUserRoles(Integer.parseInt(role_id[i]), user_id, "add");
 
-        tempUserRolesService.saveRole(tempUserRole);
+            tempUserRolesService.saveRole(tempUserRole);
+        }
         List<UserRoles> userRoleList=userRolesService.getUserRolesByUserId(user_id);
         List<Role>roleList=new ArrayList<Role>();
         Role role=new Role();
