@@ -2,8 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script  type="text/javascript" src="/js/sendpass.js"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js" integrity="sha384-fGduTGnpIAfmSvekMfUwV4HIhaWmmroK8uP9emIM0D9Z0CG+Tc2XdM+V9z0CoGnq" crossorigin = "anonymous"></script>
 
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -31,57 +30,7 @@
     white-space: normal;
 }</style>
 <script type="text/javascript">
-    function setDropdownValue ()
-{
-var sendTo = $("#user option:selected").text();
-        var sendToNames=sendTo.substring(0, sendTo.indexOf(" - "));
-x = document.getElementById("user");
-x.options[x.selectedIndex].text = sendToNames;
 
-}
-
-    function sendPass(){
-        var sendTo = $("#user option:selected").text();
-        var sendToNames=sendTo.substring(0, sendTo.indexOf(" - "));
-        var user_id=document.getElementById("user_id").value;
-        var user=document.getElementById("user").value;
-        var description=document.getElementById("description").value;
-        var password=document.getElementById("password").value;
-
-        Swal.fire({
-            title: 'Do you want to send the password?',
-            text: "The password will be available for 24 hours or until "+sendTo+" sees or copies it.",
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            denyButtonText: 'No',
-            customClass: {
-                actions: 'my-actions',
-                cancelButton: 'order-1 right-gap btn swal-cancel',
-                confirmButton: 'order-2 btn swal-primary',
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Success!",
-                    text: "Password successfully sent to "+sendTo+".",
-                    customClass: {
-                        confirmButton: 'btn swal-primary',
-                    },
-                icon: "success"
-                });
-                document.getElementById('formSendPass').submit();
-            }else{
-                Swal.fire({
-                    title: "Password is not sent",
-                    text: "Password is not sent.",
-                    customClass: {
-                        confirmButton: 'btn swal-primary',
-                    },
-                icon: "info"
-                });
-            }
-        });
-    }
 </script>
 <div class="container">
     <div class="row">
