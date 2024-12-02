@@ -143,6 +143,7 @@ $(document).ready(function () {
     currentPass.on('input', onInput);
     function onInput() {
         clearTimeout(currentPass._timer);
+        clearTimeout(currentPass._timer);
         currentPass._timer = setTimeout(() => {
             update(currentPass.val());
         }, duration);

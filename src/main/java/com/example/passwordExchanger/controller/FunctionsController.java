@@ -195,25 +195,58 @@ public class FunctionsController {
     @ResponseBody
     @CrossOrigin
     public String getUsersFromRole(@RequestParam String roleId) {
-        System.out.println(roleId);
+
         String[] mystr= roleId.split("[,]", 0);
         String json = null;
         JSONArray userlist=new JSONArray();
+        int num=1;
         for(String myStr: mystr) {
-            System.out.println(myStr);
-            List<User> userRoles=userService.getUsersFromSelectedRole(Integer.parseInt(myStr));
+
+            List<User> userRoles=userService.getUsersFromSelectedRole(roleService.getRoleFromName(myStr));
+            int number=0;
+            for(int i =0; i < userRoles.size(); i++){
+                for(int j=0; j<userRoles.size(); j++){
+                    // compare for equality if it is not the same element
+
+                        if(userRoles.get(i).getUser_id()==(userRoles.get(j).getUser_id())){
+                           number++;
+                            // than we know there is a duplicate at index
+                            userRoles.get(i).setUser_names(userRoles.get(j).getUser_names()+"-"+String.valueOf(number));
+
+                    }
+                }
+            }
+
             for(User userRole:userRoles){
+                num++;
                 JSONObject users=new JSONObject();
-                users.put("user_id",String.valueOf(userRole.getUser_id()).trim());
+                System.out.println(num);
+
+                if(userRole.getUser_names().contains("-")){
+
+                    String[] split = userRole.getUser_names().split("-");
+                    userRole.setUser_names(split[0]);
+
+
+                users.put("user_id",String.valueOf(userRole.getUser_id()+"-"+num).trim());
                 users.put("user_name",userRole.getUser_names().trim());
                 users.put("user_email",userRole.getUser_email().trim());
                 users.put("roleID",myStr);
+                users.put("roleName",myStr);
                 userlist.add(users);
+
+                }
+                else{
+                    users.put("user_id",String.valueOf(userRole.getUser_id()).trim());
+                    users.put("user_name",userRole.getUser_names().trim());
+                    users.put("user_email",userRole.getUser_email().trim());
+                    users.put("roleID",myStr);
+                    users.put("roleName",myStr);
+                }
             }
         }
         for (int i = 0; i < userlist.size(); i++) {
             JSONObject innerObj = (JSONObject) userlist.get(i);
-            System.out.println(innerObj);
         }
         /*String json = null;
         JSONArray userlist=new JSONArray();
@@ -238,29 +271,36 @@ public class FunctionsController {
         return "sendpass";
     }
     @PostMapping(value="/sendpass")
-    public String sendPass(RedirectAttributes redirectAttributes,Model model, @ModelAttribute("password")Password password, @RequestParam(required = false) int user, @RequestParam(required = false) int user_id) throws Exception{
+    public String sendPass(RedirectAttributes redirectAttributes,Model model, @RequestParam(required = false) String[] user, @RequestParam(required = false) int user_id,@ModelAttribute("password")Password password) throws Exception{
+
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         model.addAttribute("user_id",user_id);
-        model.addAttribute("password",password);
+        //model.addAttribute("password",password);
 
-        LocalDate currentDate = LocalDate.now();
-        String today = currentDate.toString();
-        //  password.setPassword_validity(today);
-        password.setPassword_from(user_id);
-        password.setPassword_to(user);
-        passwordService.savePassword(password);
-        model.addAttribute("user", userService.getUserById(user_id));
-        model.addAttribute("user_id", user_id);
-        redirectAttributes.addAttribute("user_id", user_id);
+        for(int i=0;i<user.length;i++) {
+            Password pass=new Password();
+           int id=Integer.parseInt(user[i].split("-")[0]);
+            System.out.println("user_id= "+user[i].split("-")[0]);
+            LocalDate currentDate = LocalDate.now();
+            String today = currentDate.toString();
+            //  password.setPassword_validity(today);
+            pass.setPassword_from(user_id);
+            pass.setPassword_to(id);
+            pass.setPassword_desc(password.getPassword_desc());
+            pass.setPass(password.getPass());
+            passwordService.savePassword(pass);
+            //model.addAttribute("user", userService.getUserById(user_id));
+            model.addAttribute("user_id", user_id);
+            redirectAttributes.addAttribute("user_id", user_id);
 
-        Mail mail = new Mail();
-        mail.setMailFrom("pass.exchanger.project@gmail.com");
-        mail.setMailTo(userService.getUserById(user).getUser_email());
-        mail.setMailSubject(userService.getUserById(user_id).getUser_names()+" shared new password with you!");
-        mail.setMailContent("Hello, "+userService.getUserById(user).getUser_names()+". "+userService.getUserById(user_id).getUser_names()+" has shared a new password with you! The password will be available for 24 hours or until you see or copy it. Login to your account to check it securely.");
-        mailService.sendEmail(mail);
-
+            Mail mail = new Mail();
+            mail.setMailFrom("pass.exchanger.project@gmail.com");
+            mail.setMailTo(userService.getUserById(id).getUser_email());
+            mail.setMailSubject(userService.getUserById(user_id).getUser_names() + " shared new password with you!");
+            mail.setMailContent("Hello, " + userService.getUserById(id).getUser_names() + ". " + userService.getUserById(user_id).getUser_names() + " has shared a new password with you! The password will be available for 24 hours or until you see or copy it. Login to your account to check it securely.");
+            mailService.sendEmail(mail);
+        }
         return "redirect:/home";
 
     }
