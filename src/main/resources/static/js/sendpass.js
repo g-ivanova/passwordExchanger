@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    var currentUserID = $('#user_id').val();
     $('#user').multiselect({
         includeSelectAllOption: true,
         nonSelectedText:"Select user/s",
@@ -37,7 +38,10 @@ $(document).ready(function() {
 				for(var i = 0; i < roleIDSplit.length; i++) {
 					optgroup = $('<optgroup />').attr('label', roleIDSplit[i]);
 		            $.each(obj, function (key, value) {
-						if(value.roleName === roleIDSplit[i]){
+		                var userId = value.user_id.split('-')[0];
+						if(value.roleName === roleIDSplit[i] && userId !== currentUserID){
+						    console.log(userId);
+						    console.log(currentUserID);
 		                    $('<option>').val(value.user_id).text(value.user_name + " - " + value.user_email).appendTo(optgroup);
 						}
 					});
