@@ -178,7 +178,7 @@ public class FunctionsController {
         return "correct";
     }
     @PostMapping(value="/register")
-    public String saveUser(Model model,@ModelAttribute("user")User user,@RequestParam(required = false)  int role_id) throws Exception{
+    public String saveUser(Model model,@ModelAttribute("user")User user,@RequestParam(required = false) String[] role_id) throws Exception{
         List<Role> roleList=(List<Role>) roleService.getAllRoles();
         model.addAttribute("roleList",roleList);
         //  if(userService.getUserByUsernameOrEmail(user.getUser_username(),user.getUser_email())!=null){
@@ -188,7 +188,10 @@ public class FunctionsController {
         //    return "register_error";
         //}
         userService.saveUser(user);
-        userRolesService.saveRole(new UserRoles(role_id,user.getUser_id()));
+
+        for(int i=0;i<role_id.length;i++){
+        userRolesService.saveRole(new UserRoles(Integer.parseInt(role_id[i]),user.getUser_id()));
+        }
         return "index";
     }
     @RequestMapping(value = "/getUsersFromRole", method = RequestMethod.GET)
