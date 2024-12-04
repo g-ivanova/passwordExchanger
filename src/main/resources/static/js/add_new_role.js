@@ -77,4 +77,9 @@ $(document).ready(function () {
     var name = $("#name");
     $("#name").on('input', onInput);
     $('.error-message').hide();
+    $('#name').on('input', function() {
+        var currentLength = $(this).val().length;
+        var maxLength = $(this).attr('maxlength');
+        $('#role_name_char-count').text(currentLength + '/' + maxLength);
+    });
 });
