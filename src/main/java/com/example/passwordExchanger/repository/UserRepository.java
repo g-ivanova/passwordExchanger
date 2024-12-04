@@ -94,4 +94,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
                     "where role_id=?1;")
     List<User> getUsersFromSelectedRole(int role_id);
 
+    @Query(
+            nativeQuery = true,
+            value
+                    = "select users.* from users\n" +
+                    "join user_roles on user_roles.user_id=users.user_id\n" +
+                    "where user_roles.role_id=?1;")
+    List<User> getUsersNameAndEmailFromSelectedRole(int role_id);
+
 }
