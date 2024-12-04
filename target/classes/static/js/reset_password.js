@@ -163,6 +163,23 @@ $(document).ready(function() {
         }
     });
     toggleSubmitButton();
+    $('input[maxlength]').each(function() {
+        var currentLength = $(this).val().length;
+        var maxLength = $(this).attr('maxlength');
+
+        // Get the corresponding character count display element
+        var countId = '#' + $(this).attr('id') + '_char-count';
+        $(countId).text(currentLength + '/' + maxLength);
+    });
+    $('input[maxlength]').on('input', function() {
+        var currentLength = $(this).val().length;
+        var maxLength = $(this).attr('maxlength');
+
+        // Get the corresponding character count display element (assumes the display element has the same ID as the field with '_char-count' appended)
+        var countId = '#' + $(this).attr('id') + '_char-count';
+
+        $(countId).text(currentLength + '/' + maxLength);
+    });
 });
 function resetPassword(){
     var email = $('#email').val();

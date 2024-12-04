@@ -181,7 +181,8 @@ $(document).ready(function () {
                 $('[name="role_id"] option').each(function() {
                     var input = $('input[value="' + $(this).val() + '"]');
                     input.prop('disabled', false);
-                    input.parent('.multiselect-option').addClass('disabled');
+                    input.parent('.multiselect-option').removeClass('disabled');
+                    $(input).parent().attr('style', '');
                 });
             }
         },
