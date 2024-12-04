@@ -91,8 +91,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
             value
                     = "Select users.user_id,users.user_username,users.user_email,users.user_password,users.user_names from users \n" +
                     "right join user_roles on user_roles.user_id=users.user_id\n" +
-                    "where role_id=?1;")
-    List<User> getUsersFromSelectedRole(int role_id);
+                    "where role_id=?1 and users.user_id!=?2;")
+    List<User> getUsersFromSelectedRole(int role_id,int user_id);
 
     @Query(
             nativeQuery = true,

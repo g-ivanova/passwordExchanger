@@ -101,8 +101,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersFromSelectedRole(int role_id) {
-        return userRepository.getUsersFromSelectedRole(role_id);
+    public List<User> getUsersFromSelectedRole(int role_id,int user_id) {
+        return userRepository.getUsersFromSelectedRole(role_id,user_id);
     }
 
     @Override

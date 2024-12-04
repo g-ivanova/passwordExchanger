@@ -197,7 +197,7 @@ public class FunctionsController {
     @RequestMapping(value = "/getUsersFromRole", method = RequestMethod.GET)
     @ResponseBody
     @CrossOrigin
-    public String getUsersFromRole(@RequestParam String roleId) {
+    public String getUsersFromRole(@RequestParam String roleId,@RequestParam int user_id) {
 
         String[] mystr= roleId.split("[,]", 0);
         String json = null;
@@ -205,7 +205,7 @@ public class FunctionsController {
         int num=1;
         for(String myStr: mystr) {
 
-            List<User> userRoles=userService.getUsersFromSelectedRole(roleService.getRoleFromName(myStr));
+            List<User> userRoles=userService.getUsersFromSelectedRole(roleService.getRoleFromName(myStr),user_id);
             int number=0;
             for(int i =0; i < userRoles.size(); i++){
                 for(int j=0; j<userRoles.size(); j++){

@@ -24,10 +24,11 @@ $(document).ready(function() {
         var inputValObj = {};
         inputValObj.Discode = roleId;
         var inputVal = JSON.stringify(inputValObj);
+        var user_id=$('#user_id').val();
         var text = $('#role option:selected').toArray().map(item => item.text).join();
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/getUsersFromRole?roleId=" + roleId,
+            url: "http://localhost:8080/getUsersFromRole?roleId=" + roleId+"&user_id="+user_id,
             contentType: "application/json",
             success: function (data) {
                 $('#user').empty();

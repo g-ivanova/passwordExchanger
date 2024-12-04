@@ -41,7 +41,7 @@ public interface UserService {
 
     void updateNames(String names,int user_id);
 
-    List<User> getUsersFromSelectedRole(int role_id);
+    List<User> getUsersFromSelectedRole(int role_id, int user_id);
 
     List<User> getUsersNameAndEmailFromSelectedRole(int role_id);
 }
