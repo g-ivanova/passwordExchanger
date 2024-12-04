@@ -64,8 +64,10 @@
                            class = "form-control"
                            placeholder="Names"
                            id="name"
+                           maxlength="254"
                     />
                     <p id="names_error" class="error-message"></p>
+                    <small id="name_char-count" class="form-text text-muted char-count">0/254</small>
                 </div>
                 <div class="form-group">
                     <label for="email" class="sr-only">Email</label>
@@ -75,8 +77,10 @@
                            class = "form-control"
                            placeholder="Email"
                            id="email"
+                           maxlength="254"
                     />
                     <p id="email_error" class="error-message"></p>
+                    <small id="email_char-count" class="form-text text-muted char-count">0/254</small>
                 </div>
                 <div class="form-group">
                     <label for="username" class="sr-only">Username</label>
@@ -97,6 +101,7 @@
                            class = "form-control"
                            placeholder="Current password"
                            id="current_password"
+                           maxlength="254"
                     />
                     <p id="current_pass_error" class="error_message"></p>
                 </div>
@@ -107,8 +112,10 @@
                            class = "form-control"
                            placeholder="New password"
                            id="new_password"
+                           maxlength="16"
                     />
                     <p id="pass_error" class="error-message"></p>
+                    <small id="new_password_char-count" class="form-text text-muted char-count">0/16</small>
                 </div>
                 <div class="form-group">
                     <label for="rep_new_password" class="sr-only">Repeat new password</label>
@@ -117,8 +124,10 @@
                            class = "form-control"
                            placeholder="Repeat new password"
                            id="rep_new_password"
+                           maxlength="16"
                     />
                     <p id="rep_pass_error" class="error-message"></p>
+                    <small id="rep_new_password_char-count" class="form-text text-muted char-count">0/16</small>
                 </div>
                 <table class = "table table-striped" style="width:100%" id="table">
                     <thead>

@@ -24,11 +24,11 @@ $(document).ready(function() {
         var inputValObj = {};
         inputValObj.Discode = roleId;
         var inputVal = JSON.stringify(inputValObj);
-        var user_id=$('#user_id').val();
+        var user_id = $('#user_id').val();
         var text = $('#role option:selected').toArray().map(item => item.text).join();
         $.ajax({
             type: "GET",
-            url: "http://localhost:8080/getUsersFromRole?roleId=" + roleId+"&user_id="+user_id,
+            url: "http://localhost:8080/getUsersFromRole?roleId=" + roleId+"&user_id=" + user_id,
             contentType: "application/json",
             success: function (data) {
                 $('#user').empty();
@@ -121,6 +121,18 @@ $(document).ready(function() {
     });
     // Initial button state check
     toggleSubmitButton();
+
+    $('#description').on('input', function() {
+        var currentLength = $(this).val().length;
+        var maxLength = $(this).attr('maxlength');
+        $('#pass_desc_char-count').text(currentLength + '/' + maxLength);
+    });
+
+    $('#password').on('input', function() {
+        var currentLength = $(this).val().length;
+        var maxLength = $(this).attr('maxlength');
+        $('#pass_char-count').text(currentLength + '/' + maxLength);
+    });
 });
 function setDropdownValue () {
     var sendTo = $("#user option:selected").text();
@@ -140,6 +152,8 @@ function sendPass(){
     });
     if (selectedNames.length > 1) {
         var names = selectedNames.slice(0, -1).join(', ') + ' and ' + selectedNames[selectedNames.length - 1];
+    } else {
+        names = selectedNames;
     }
     var seeLabel = nameArray.length > 1 ? " see or copy " : " sees or copies ";
     var user_id = $("#user_id").val();

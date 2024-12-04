@@ -37,8 +37,10 @@
                                class = "form-control"
                                placeholder="Name and Surname"
                                required
+                               maxlength="254"
                         />
                         <p id="names_error" class="error-message"></p>
+                        <small id="user_names_char-count" class="form-text text-muted char-count">0/254</small>
                     </div>
                     <div class ="form-group">
                         <label for="user_name" class="sr-only">Username</label>
@@ -49,8 +51,10 @@
                                id="user_name"
                                placeholder="Username"
                                required
+                               maxlength="254"
                         />
                         <p id="username_error" class="error-message"></p>
+                        <small id="user_name_char-count" class="form-text text-muted char-count">0/254</small>
                     </div>
                     <div class ="form-group">
                         <label for="user_email" class="sr-only">Email</label>
@@ -61,8 +65,10 @@
                                class = "form-control"
                                placeholder="Email"
                                required
+                               maxlength="254"
                         />
                         <p id="email_error" class="error-message"></p>
+                        <small id="user_email_char-count" class="form-text text-muted char-count">0/254</small>
                     </div>
                     <div class ="form-group">
                         <label for="user_password" class="sr-only" ><b>Password</b></label>
@@ -73,8 +79,10 @@
                                class = "form-control"
                                placeholder="Password"
                                required
+                               maxlength="16"
                         />
                         <p id="pass_error" class="error-message"></p>
+                        <small id="user_password_char-count" class="form-text text-muted char-count">0/16</small>
                     </div>
                     <div class ="form-group">
                         <label for="user_rep_password" class="sr-only" ><b>Repeat Password</b></label>
@@ -84,8 +92,10 @@
                                class = "form-control"
                                placeholder="Repeat Password"
                                required
+                               maxlength="16"
                         />
                         <p id="rep_pass_error" class="error-message"></p>
+                        <small id="user_rep_password_char-count" class="form-text text-muted char-count">0/16</small>
                     </div>
                     <div class="form-group">
                         <label for="${roleList}" class="sr-only"><b>Select role</b></label>
