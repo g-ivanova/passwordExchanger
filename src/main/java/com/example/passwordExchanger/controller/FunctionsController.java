@@ -884,6 +884,11 @@ public class FunctionsController {
     @ResponseBody
     @CrossOrigin
     public String validateCode(UserIDAndPass userIDAndPass) throws Exception{
+
+        System.out.println(userIDAndPass.getUser_id());
+        if(userService.getUserByEmail(userIDAndPass.getUser_id())==null){
+            return "incorrect";
+        }
         if(userIDAndPass.getPassword().equals(codeService.getCodeByUserId(userService.getUserByEmail(userIDAndPass.getUser_id()).getUser_id()).getCode())){
             return "correct";
         }
