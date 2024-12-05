@@ -78,6 +78,7 @@ $(document).ready(function() {
 								var input = $('input[value="' + array_value[i] + '"]');
 		                        input.prop('disabled', true);
 		                        input.parent('.multiselect-option').addClass('disabled');
+		                        $(input).parent().attr('style', 'opacity: 0.5; cursor: not-allowed;');
 							}
 		                    if(array_text[i] === option.text() && array_value[i] !== option.val() && !checked){
 		                        var input = $('input[value="' + array_value[i] + '"]');
