@@ -44,6 +44,8 @@ public interface UserService {
     List<User> getUsersFromSelectedRole(int role_id, int user_id);
 
     List<User> getUsersNameAndEmailFromSelectedRole(int role_id);
+
+    List<UsersAndRoles> getUserList();
 }
 
 

@@ -609,50 +609,13 @@ public class FunctionsController {
         redirectAttributes.addAttribute("user_id", user_id);
         return "redirect:/admin";
     }
-    @PostMapping(value="/admin/searchUser")
-    public String findUser(Model model, @RequestParam(required = false) int user_id, @RequestParam(required = false) String searchText){
-        List<UsersAndRoles> usersList=jdbcTemplate.query("Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ',') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id where LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_names, '%')) or LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_username, '%')) or LOWER('"+searchText+"') LIKE LOWER(CONCAT('%', users.user_email, '%')) group by users.user_id,users.user_names,users.user_username,users.user_email;",
-                (rs,rowNum)->new UsersAndRoles(rs.getInt("user_id"),rs.getString("user_names"),rs.getString("user_username"),rs.getString("user_email"),rs.getString("user_roles")));
 
-        List<RoleAndAllUsers>roleAndAllUsers=jdbcTemplate.query("Select roles.role_id,roles.role_name, group_concat(users.user_names separator ',') as users from users right join user_roles on users.user_id=user_roles.user_id right join roles on roles.role_id=user_roles.role_id group by roles.role_id",
-                (rs,rowNum)->new RoleAndAllUsers(rs.getInt("role_id"),rs.getString("role_name"),rs.getString("users")));
-        model.addAttribute("user",userService.getUserById(user_id));
-        model.addAttribute("user_id",user_id);
-        model.addAttribute("rolesList",roleAndAllUsers);
-        model.addAttribute("usersList",usersList);
-        return "admin";
-    }
-    @PostMapping(value="/admin/searchGroup")
-    public String findGroup(Model model, @RequestParam( required = false) int user_id, @RequestParam(required = false) String searchText){
-        List<UsersAndRoles> usersList=jdbcTemplate.query("Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ',') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id group by users.user_id,users.user_names,users.user_username,users.user_email",
-                (rs,rowNum)->new UsersAndRoles(rs.getInt("user_id"),rs.getString("user_names"),rs.getString("user_username"),rs.getString("user_email"),rs.getString("user_roles")));
-
-        List<RoleAndAllUsers>roleAndAllUsers=jdbcTemplate.query("Select roles.role_id,roles.role_name, group_concat(users.user_names separator ',') as users from users right join user_roles on users.user_id=user_roles.user_id right join roles on roles.role_id=user_roles.role_id where LOWER('"+searchText+"') LIKE LOWER(CONCAT('%',roles.role_name,'%')) group by roles.role_id",
-                (rs,rowNum)->new RoleAndAllUsers(rs.getInt("role_id"),rs.getString("role_name"),rs.getString("users")));
-        model.addAttribute("user",userService.getUserById(user_id));
-        model.addAttribute("user_id",user_id);
-        model.addAttribute("rolesList",roleAndAllUsers);
-        model.addAttribute("usersList",usersList);
-        return "admin";
-    }
 
     @GetMapping(value="/home/settings/{user_id}")
     public String settings(RedirectAttributes redirectAttributes,Model model,@PathVariable(required = false) int user_id){
         List<TempUserRoles>tempUserRoles=tempUserRolesService.getUserRolesByUserId(user_id);
         TempUserRoles temp=new TempUserRoles();
- /*       for(TempUserRoles tempp:tempUserRoles) {
-            if (tempp.getAction() != null) {
-                if (tempp.getAction().equals("add")) {
 
-                    userRolesService.saveRole(new UserRoles(tempp.getRole_id(), user_id));
-                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(user_id, tempp.getRole_id());
-                } else {
-
-                    userRolesService.deleteUserRoleByUserIdAndRoleId(user_id, tempp.getRole_id());
-                    tempUserRolesService.deleteTempUserRoleByUserIdAndRoleId(user_id, tempp.getRole_id());
-                }
-            }
-        }*/
         List<Role>roleList=new ArrayList<Role>();
         tempUserRolesService.deleteTempUserRoleByUserId(user_id);
         roleList=roleService.getRolesAndTempRolesByUser(user_id);

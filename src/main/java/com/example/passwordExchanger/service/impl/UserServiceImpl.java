@@ -109,4 +109,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersNameAndEmailFromSelectedRole(int role_id) {
         return userRepository.getUsersNameAndEmailFromSelectedRole(role_id);
     }
+
+    @Override
+    public List<UsersAndRoles> getUserList() {
+        return userRepository.getUserList();
+    }
 }

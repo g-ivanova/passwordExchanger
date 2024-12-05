@@ -44,8 +44,6 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .passwordParameter("user_password")
                 )
                 .logout((logout) -> logout.permitAll());
-        http
-            .csrf().disable();
         return http.build();
     }
 

@@ -102,4 +102,11 @@ public interface UserRepository extends JpaRepository<User,Long> {
                     "where user_roles.role_id=?1;")
     List<User> getUsersNameAndEmailFromSelectedRole(int role_id);
 
+
+    @Query(
+            nativeQuery = true,
+            value
+                    = "Select users.user_id,users.user_names,users.user_username,users.user_email, group_concat(roles.role_name separator ',') as user_roles from users left join user_roles on user_roles.user_id=users.user_id left join roles on roles.role_id=user_roles.role_id group by users.user_id,users.user_names,users.user_username,users.user_email")
+    List<UsersAndRoles> getUserList();
+
 }
