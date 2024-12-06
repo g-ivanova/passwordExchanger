@@ -290,5 +290,11 @@ $(document).ready(function () {
 
         $(countId).text(currentLength + '/' + maxLength);
     });
-
+    $('.admin_settings').hide();
+    var username = $("#username").val();
+    if (username == "admin") {
+        $('.admin_settings').show(); // Show the link if the user is admin
+    } else {
+        $('.admin_settings').hide(); // Hide the link if the user is not admin
+    }
 });

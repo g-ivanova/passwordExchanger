@@ -572,3 +572,6 @@ input, textarea {
     float: right;
     padding: 2px;
 }
+.admin_settings {
+    display: none;
+}
