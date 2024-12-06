@@ -23,6 +23,19 @@
     <link rel="stylesheet" href="/css/profile_settings.css">
 </head>
 <body>
+    <div class="dropdown">
+        <button class="btn dropbtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="display: block; margin: auto;">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
+        </button>
+        <div id="PersonalSettings" class="dropdown-content">
+            <a th:href="@{/home/{user_id}(user_id=${user_id})}">Home</a>
+            <a th:href="@{/admin/{user_id}(user_id=${user_id})}" id="admin_settings">Groups and Users Settings</a>
+            <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">Profile Settings</a>
+            <a href="index.html">Log out</a>
+        </div>
+    </div>
     <div class="container">
         <div class="row col-md-6" style="margin-left:25%">
             <form th:action="@{/home/settings/{user_id}}"
