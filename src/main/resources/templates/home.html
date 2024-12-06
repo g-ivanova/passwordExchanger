@@ -28,12 +28,10 @@
             </svg>
         </button>
         <div id="PersonalSettings" class="dropdown-content">
-            <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">
-                Profile Settings
-            </a>
-            <a href="index.html">
-                Log out
-            </a>
+            <a th:href="@{/home/{user_id}(user_id=${user_id})}">Home</a>
+            <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">Profile Settings</a>
+            <a href="index.html">Log out</a>
+        </div>
         </div>
     </div>
     <div class ="container">
