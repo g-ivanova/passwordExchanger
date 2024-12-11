@@ -83,7 +83,8 @@ $(document).ready(function() {
 		                    if(array_text[i] === option.text() && array_value[i] !== option.val() && !checked){
 		                        var input = $('input[value="' + array_value[i] + '"]');
 		                        input.prop('disabled', false);
-		                        input.parent('.multiselect-option').removeClass('disabled');;
+		                        input.parent('.multiselect-option').removeClass('disabled');
+		                        $(input).parent().removeAttr('style');
 							}
 						}
 				    }
