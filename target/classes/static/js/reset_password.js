@@ -1,11 +1,12 @@
 $(document).ready(function() {
     const button = $('#emailButton');
     const buttonExpirationDataKey = 'button-disabled-expiration';
+    button.prop('disabled', true);
     var i = 0;
-    let startButtonStateCheck = () => {
+    function startButtonStateCheck () {
         button.data('interval', setInterval(updateButtonState, 1000));
     }
-    let updateButtonState = () => {
+    function updateButtonState() {
         let expirationDate = new Date(button.data('enabledAt'));
         if (expirationDate < new Date()) {
             $('#email_error').text('');
@@ -16,16 +17,27 @@ $(document).ready(function() {
             button.prop('disabled', true);
         }
     }
-    let buttonDisableExpiration = localStorage.getItem(buttonExpirationDataKey);
-    if (!buttonDisableExpiration) {
-        // no button state in localStorage, enable button
-        button.prop('disabled', false);
-    } else {
-        // button state held in localStorage, check every 1s for expiration to enable the button again
-        button.data('enabledAt', buttonDisableExpiration);
-        updateButtonState();
-        startButtonStateCheck();
-    }
+    // Validate email
+    $('#email').focusout(function(){
+        var email = $('#email').val();
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!emailReg.test(email) || email.length === 0) {
+            $('#reset_email_error').text("Please provide correct email.").show();
+            button.prop('disabled', true);
+        } else {
+            $('#reset_email_error').hide();
+            let buttonDisableExpiration = localStorage.getItem(buttonExpirationDataKey);
+            if (!buttonDisableExpiration) {
+                // no button state in localStorage, enable button
+                button.prop('disabled', false);
+            } else {
+                // button state held in localStorage, check every 1s for expiration to enable the button again
+                button.data('enabledAt', buttonDisableExpiration);
+                updateButtonState();
+                startButtonStateCheck();
+            }
+        }
+    });
     var isFormValid = true;
     function toggleSubmitButton() {
         // Check if the form is valid by testing all the fields
