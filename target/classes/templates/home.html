@@ -21,7 +21,6 @@
     <link rel="stylesheet" href="/css/profile_settings.css">
 </head>
 <body>
-    <input type = "text" name= "user_username" th:value = "${username}" id="username" hidden />
     <div class="dropdown">
         <button class="btn dropbtn">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="display: block; margin: auto;">
@@ -109,6 +108,12 @@
                    th:value="${user_id}"
                    id="user_id"
                    name="user_id"
+            />
+            <input class="form-control"
+                   type = "hidden"
+                   th:value = "${user.user_username}"
+                   id="username"
+                   name= "user_username"
             />
             <table class = "table table-striped" style="width:100%;">
                 <thead>

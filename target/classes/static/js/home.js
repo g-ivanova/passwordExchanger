@@ -34,6 +34,8 @@ $(document).ready(function() {
     } else {
         $('.admin_settings').hide(); // Hide the link if the user is not admin
     }
+    console.log(username);
+
 });
 function CopyText(id){
     let text = $("#" + id + "sendpass").text();
