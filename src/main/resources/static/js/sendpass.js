@@ -36,16 +36,25 @@ $(document).ready(function() {
                 let obj = $.parseJSON(data);
                 var group;
 				var optgroup = $("<optgroup />").attr('label', 'Info');
+				var seenUsers = new Set(); // Set to track unique users by text (name + email)
 				for(var i = 0; i < roleIDSplit.length; i++) {
 					optgroup = $('<optgroup />').attr('label', roleIDSplit[i]);
 		            $.each(obj, function (key, value) {
 		                var userId = value.user_id.split('-')[0];
 						if(value.roleName === roleIDSplit[i] && userId !== currentUserID){
-						    console.log(userId);
-						    console.log(currentUserID);
-		                    $('<option>').val(value.user_id).text(value.user_name + " - " + value.user_email).appendTo(optgroup);
-						}
-					});
+						    var optionText = value.user_name + " - " + value.user_email;
+
+                            // Check if the user is a duplicate based on the text (name + email)
+                            if (seenUsers.has(optionText)) {
+                                // Disable duplicate option
+                                $('<option>').val(value.user_id).text(optionText).prop('disabled', true).appendTo(optgroup); // Disable the option directly
+                            } else {
+                                // Mark this user as seen and add to the options
+                                seenUsers.add(optionText);
+                                $('<option>').val(value.user_id).text(optionText).appendTo(optgroup);
+                            }
+                        }
+                    });
 					optgroup.appendTo('#user');
 				}
 				$('#user').multiselect({
@@ -67,27 +76,7 @@ $(document).ready(function() {
                         } else {
                             return options.length + ' options selected';
                         }
-                    },
-		            onChange: function(option, checked) {
-						var input = $('input[value="' + option.val() + '"]');
-		                var notSelected = $("#user").find('option').not(':selected');
-		                var array_text = notSelected.map(function () {return this.text;}).get();
-		                var array_value = notSelected.map(function () {return this.value;}).get();
-		                for (var i = 0; i < array_text.length; i++){
-		                    if(array_text[i] === option.text() && array_value[i] !== option.val() && checked){
-								var input = $('input[value="' + array_value[i] + '"]');
-		                        input.prop('disabled', true);
-		                        input.parent('.multiselect-option').addClass('disabled');
-		                        $(input).parent().attr('style', 'opacity: 0.5; cursor: not-allowed;');
-							}
-		                    if(array_text[i] === option.text() && array_value[i] !== option.val() && !checked){
-		                        var input = $('input[value="' + array_value[i] + '"]');
-		                        input.prop('disabled', false);
-		                        input.parent('.multiselect-option').removeClass('disabled');
-		                        $(input).parent().removeAttr('style');
-							}
-						}
-				    }
+                    }
 				});
 			},
 		    error: function (data) {
