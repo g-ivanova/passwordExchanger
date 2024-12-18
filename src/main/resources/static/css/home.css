@@ -1,0 +1,168 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.pagination button {
+    padding: 8px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+.pagination button.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.pagination .current-page {
+    font-weight: bold;
+}
+.pagination select {
+    padding: 5px;
+    margin-left: 10px;
+}
+.pagination a {
+    padding: 8px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #33cccc;
+    background: #ffffff;
+    cursor: pointer;
+}
+.pagination label {
+    padding: 8px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    background: #ffffff;
+}
+.pagination a.current-page {
+  font-weight: bold;
+  background: #33cccc;
+  color: #ffffff;
+  border-radius: 3px;
+}
+
+.pagination a:hover {
+  background-color: #f0f0f0;
+  color: #33cccc;
+}
+.selectPage {
+  padding: 8px 10px;
+  margin: 0 5px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  border-radius: 0px;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.selectPage::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage::-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage:focus, .selectPage:active {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+.pagination button {
+    padding: 8px 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+.pagination button.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.pagination .current-page {
+    font-weight: bold;
+}
+.pagination select {
+    padding: 5px;
+    margin-left: 10px;
+}
+.pagination a {
+    padding: 8px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #33cccc;
+    background: #ffffff;
+    cursor: pointer;
+}
+.pagination label {
+    padding: 8px 10px;
+    margin: 0 5px;
+    text-decoration: none;
+    background: #ffffff;
+}
+.pagination a.current-page {
+  font-weight: bold;
+  background: #33cccc;
+  color: #ffffff;
+  border-radius: 3px;
+}
+
+.pagination a:hover {
+  background-color: #f0f0f0;
+  color: #33cccc;
+}
+.selectPage {
+  padding: 8px 10px;
+  margin: 0 5px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  border-radius: 0px;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.selectPage::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage::-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+.selectPage:focus, .selectPage:active {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
