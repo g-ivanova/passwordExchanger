@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/css/animate.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/profile_settings.css">
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 <body>
     <div class="dropdown">
@@ -32,7 +33,6 @@
             <a th:href="@{/admin?(user_id=${user_id})}" class="admin_settings">Groups and Users Settings</a>
             <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">Profile Settings</a>
             <a th:href="@{/index}">Log out</a>
-        </div>
         </div>
     </div>
     <div class ="container">
@@ -99,6 +99,14 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="pagination">
+                <button type="button" id="prevPageReceived" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbersReceived"></span>
+                <button type="button" id="nextPageReceived" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPageReceived" class="selectPage">
+                </select>
+            </div>
         </form>
     </div>
     <div class ="container">
@@ -176,6 +184,14 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="pagination">
+                <button type="button" id="prevPageSent" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbersSent"></span>
+                <button type="button" id="nextPageSent" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPageSent" class="selectPage">
+                </select>
+            </div>
         </form>
     </div>
 </body>
