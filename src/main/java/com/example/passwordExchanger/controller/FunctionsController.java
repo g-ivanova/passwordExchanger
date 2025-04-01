@@ -1,5 +1,6 @@
 package com.example.passwordExchanger.controller;
 
+import com.example.passwordExchanger.config.BCryptGenerator;
 import com.example.passwordExchanger.entity.*;
 import com.example.passwordExchanger.service.*;
 import jakarta.persistence.EntityManager;
@@ -22,6 +23,10 @@ import java.util.stream.Collectors;
 @Controller
 @SessionAttributes("user")
 public class FunctionsController {
+
+    @Autowired
+    BCryptGenerator bcryptGenerator;
+
     @Autowired
     private MailService mailService;
     @Autowired
@@ -59,8 +64,10 @@ public class FunctionsController {
             model.addAttribute("username",loggingUser.getUser_username());
             model.addAttribute("user",loggingUser);
             redirectAttributes.addAttribute("user_id",loggingUser.getUser_id());
-            String password=userService.getPasswordByUsername(loggingUser.getUser_username(),"admin");
-            if ((userService.getPasswordByUsername(user.getUser_username(),"admin")).equals(user_password)) {
+            String password=userService.getPasswordByUsername(user.getUser_username());
+            System.out.println(password);
+            System.out.println(user_password);
+            if (bcryptGenerator.passwordDecoder(user_password,password)) {
                 if
                 (loggingUser.getUser_username().equals("admin")) {
                     return "redirect:/admin";
@@ -162,6 +169,8 @@ public class FunctionsController {
         if(user.getUser_username().isEmpty() || user.getUser_email().isEmpty() || user.getUser_password()==null || role_id==0){
             return "register_error";
         }
+        String password = bcryptGenerator.passwordEncoder(user.getUser_password());
+        user.setUser_password(password);
         userService.saveUser(user);
         userRolesService.saveRole(new UserRoles(role_id,user.getUser_id()));
         return "index";

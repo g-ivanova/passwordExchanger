@@ -55,8 +55,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getPasswordByUsername(String username,String key) {
-        return userRepository.getPassword(username,key);
+    public String getPasswordByUsername(String username) {
+        return userRepository.getPassword(username);
     }
 
     @Override

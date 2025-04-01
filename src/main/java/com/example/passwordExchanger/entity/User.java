@@ -15,13 +15,13 @@ public class User {
     @Column(name="user_email")
     private String user_email;
     @Column(name="user_password")
-    private byte[] user_password;
+    private String user_password;
     @Column(name="user_names")
     private String user_names;
 
     public User(){}
 
-    public User(int user_id, String user_username, String user_email, byte[] user_password, String user_names) {
+    public User(int user_id, String user_username, String user_email, String user_password, String user_names) {
         this.user_id = user_id;
         this.user_username = user_username;
         this.user_email = user_email;
@@ -54,11 +54,11 @@ public class User {
         this.user_email = user_email;
     }
 
-    public byte[] getUser_password() {
+    public String getUser_password() {
         return user_password;
     }
 
-    public void setUser_password(byte[] user_password) {
+    public void setUser_password(String user_password) {
         this.user_password = user_password;
     }
 

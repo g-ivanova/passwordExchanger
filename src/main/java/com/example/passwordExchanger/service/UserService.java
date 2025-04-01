@@ -21,7 +21,7 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
-    String getPasswordByUsername(String username, String key);
+    String getPasswordByUsername(String username);
 
     User getUserByUsernameOrEmail(String username, String email);
 

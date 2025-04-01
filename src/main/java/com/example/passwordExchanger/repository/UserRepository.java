@@ -36,8 +36,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(
             nativeQuery = true,
             value
-                    = "SELECT CAST(aes_decrypt(user_password,?2) AS CHAR(50)) FROM users u where u.user_username =?1")
-    String getPassword(String username, String key);
+                    = "SELECT user_password FROM users u where u.user_username =?1")
+    String getPassword(String username);
 
 
     @Query(
