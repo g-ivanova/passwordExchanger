@@ -30,7 +30,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
 
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/index", "/home","/sendpass","/getUsersFromRole","/home/{user_id}/{id}","/admin","/admin/{user_id}/{role_id}","/edit_group","/admin/**","/admin/addNewGroup","add_new_role","/admin/addUserToGroup","/admin/deleteGroup/{user_id}/{id}","/admin/deleteUser/{id}/{user_id}","/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}").permitAll()
+                        .requestMatchers("/index", "/home","/sendpass","/getUsersFromRole","/home/{user_id}/{id}","/admin","/admin/{user_id}/{role_id}","/edit_group","/admin/**","/admin/addNewGroup","add_new_role","/admin/addUserToGroup","/admin/deleteGroup/{user_id}/{id}","/admin/deleteUser/{id}/{user_id}","/admin/deleteUserFromGroup/{id}/{user_id}/{role_id}","/admin/searchUser","/admin/searchUser/{user_id}/{searchText}","/admin/searchGroup","/admin/searchGroup/**","/admin/editUser/{id}/{user_id}","/home/settings","/home/settings/{user_id}/{role_id}","/resetpassword","/passwordValidity","/home/resetPassword","/home/resetPassword/{email}","/home/resetPassword/**","/sendEmail","/sendpass/{user}/{user_id}","/sendpass/**","/validatePassword","/validateCode","/validateEmailAndUsername","/admin/{role_id}/{user_id}/{id}","/validateGroupName","/register/validateUsernameAndEmail").permitAll()
                         .requestMatchers("/register","/js/**","/resources/**", "/static/**", "/css/**", "/js/**", "/images/**", "/error", "/dist/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE).permitAll()
                         .anyRequest().authenticated()
@@ -44,8 +44,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .passwordParameter("user_password")
                 )
                 .logout((logout) -> logout.permitAll());
-        http
-            .csrf().disable();
+        http.cors().and().csrf().disable();
         return http.build();
     }
 

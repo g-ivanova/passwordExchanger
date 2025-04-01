@@ -1,0 +1,125 @@
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js" integrity="sha384-fGduTGnpIAfmSvekMfUwV4HIhaWmmroK8uP9emIM0D9Z0CG+Tc2XdM+V9z0CoGnq" crossorigin = "anonymous"></script>
+<script  type="text/javascript" src="/js/register.js"></script>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" xmlns:th="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> PASSEX Sign Up </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class = "container">
+        <div class = "row">
+            <div class="col-md-4 col-md-offset-4">
+                <!-- Start Sign In Form -->
+                <form th:action="@{/register}" th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn" id="registerForm">
+                    <h2>Register</h2>
+                    <div class ="form-group">
+                        <label for="user_name" class="sr-only">>Name and Surname</label>
+                        <input id="user_names"
+                               type = "text"
+                               name = "user_names"
+                               th:field = "*{user_names}"
+                               class = "form-control"
+                               placeholder="Name and Surname"
+                               required
+                               maxlength="254"
+                        />
+                        <p id="names_error" class="error-message"></p>
+                        <small id="user_names_char-count" class="form-text text-muted char-count">0/254</small>
+                    </div>
+                    <div class ="form-group">
+                        <label for="user_name" class="sr-only">Username</label>
+                        <input type = "text"
+                               name = "user_username"
+                               th:field = "*{user_username}"
+                               class = "form-control"
+                               id="user_name"
+                               placeholder="Username"
+                               required
+                               maxlength="254"
+                        />
+                        <p id="username_error" class="error-message"></p>
+                        <small id="user_name_char-count" class="form-text text-muted char-count">0/254</small>
+                    </div>
+                    <div class ="form-group">
+                        <label for="user_email" class="sr-only">Email</label>
+                        <input id="user_email"
+                               type = "text"
+                               name= "user_email"
+                               th:field = "*{user_email}"
+                               class = "form-control"
+                               placeholder="Email"
+                               required
+                               maxlength="254"
+                        />
+                        <p id="email_error" class="error-message"></p>
+                        <small id="user_email_char-count" class="form-text text-muted char-count">0/254</small>
+                    </div>
+                    <div class ="form-group">
+                        <label for="user_password" class="sr-only" ><b>Password</b></label>
+                        <input id="user_password"
+                               type = "password"
+                               name = "user_password"
+                               th:field = "*{user_password}"
+                               class = "form-control"
+                               placeholder="Password"
+                               required
+                               maxlength="16"
+                        />
+                        <p id="pass_error" class="error-message"></p>
+                        <small id="user_password_char-count" class="form-text text-muted char-count">0/16</small>
+                    </div>
+                    <div class ="form-group">
+                        <label for="user_rep_password" class="sr-only" ><b>Repeat Password</b></label>
+                        <input id="user_rep_password"
+                               type = "password"
+                               name = "user_rep_password"
+                               class = "form-control"
+                               placeholder="Repeat Password"
+                               required
+                               maxlength="16"
+                        />
+                        <p id="rep_pass_error" class="error-message"></p>
+                        <small id="user_rep_password_char-count" class="form-text text-muted char-count">0/16</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="${roleList}" class="sr-only"><b>Select role</b></label>
+                        <select class="form-control" id="${roleList}"  name = "role_id" multiple>
+                            <option th:each="role_id : ${roleList}"
+                                    th:value="${role_id.role_id}"
+                                    th:text="${role_id.role_name}"
+                            >
+                            </option>
+                        </select>
+                        <p id="select_error" class="error-message">
+                    </div>
+                    <p id="error_existing"></p>
+                    <div class="form-group">
+                        <p>Already registered?
+                            <a href="index.html">Sign In</a>
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" value="Sign Up" id="SignUp" class="btn btn-primary" th:attr="onclick=|register()|" disabled>Sign up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

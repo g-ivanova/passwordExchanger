@@ -1,0 +1,198 @@
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script  type="text/javascript" src="/js/home.js"></script>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" xmlns:th="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> PASSEX </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/profile_settings.css">
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <div class="dropdown">
+        <button class="btn dropbtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="display: block; margin: auto;">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
+        </button>
+        <div id="PersonalSettings" class="dropdown-content">
+            <a th:href="@{/home?(user_id=${user_id})}">Home</a>
+            <a th:href="@{/admin?(user_id=${user_id})}" class="admin_settings">Groups and Users Settings</a>
+            <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">Profile Settings</a>
+            <a th:href="@{/index}">Log out</a>
+        </div>
+    </div>
+    <div class ="container">
+        <form  style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <table class = "table table-striped" style="width:100%; table-layout: fixed">
+                <thead>
+                    <tr>
+                        <th style="width:30%">
+                            <h2>Received Passwords</h2>
+                        </th>
+                        <th style="width:50%">
+                            <input type="text"
+                                   id="filterReceivedPass"
+                                   placeholder="Search for password"
+                                   class="headerInput filter"
+                            />
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class = "table table-striped" style="width:100%" id="table">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Description</th>
+                        <th style="width:20%">From</th>
+                        <th style="width:20%">Valid till</th>
+                        <th style="width:20%">Password</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "password : ${passwordsList}">
+                        <td th:text = "${password.password_desc}" ></td>
+                        <td th:text = "${password.password_from_name}"></td>
+                        <td th:text = "${password.password_date}" ></td>
+                        <td style="visibility:visible;" th:id="${password.id_password}" >******</td>
+                        <td style="display: none !important;" th:text = "${password.password}" th:value="${password.password}" th:id="${password.id_password}+'pass'" ></td>
+                        <td>
+                            <button class="btn btn-info" type="button" th:attr="onclick=|CopyTextAndDelete('${password.id_password}')|" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                                </svg>
+                            </button>
+                            <button class="btn btn-secondary" type="button"th:attr="onclick=|SeeTextAndDelete('${password.id_password}')|" th:id="${password.id_password}+'eye'">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                </svg>
+                            </button>
+                            <button class="btn btn-secondary" type="button" th:attr="onclick=|SeeTextAndDelete('${password.id_password}')|" th:id="${password.id_password}+'slashedEye'" style="display:none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                                    <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
+                                    <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
+                                </svg>
+                            </button>
+                            <button type="button" class="btn btn-danger confirm-delete"  th:attr="onclick=|deletePassword('${password.id_password}')|">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button type="button" id="prevPageReceived" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbersReceived"></span>
+                <button type="button" id="nextPageReceived" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPageReceived" class="selectPage">
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class ="container">
+        <form th:action="@{/home}" th:object = "${user}" method="POST" style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <input class="form-control"
+                   type="hidden"
+                   th:value="${user_id}"
+                   id="user_id"
+                   name="user_id"
+            />
+            <input class="form-control"
+                   type = "hidden"
+                   th:value = "${user.user_username}"
+                   id="username"
+                   name= "user_username"
+            />
+            <table class = "table table-striped" style="width:100%;">
+                <thead>
+                <tr>
+                    <th style="width:30%">
+                        <h2>Sent Passwords</h2>
+                    </th>
+                    <th style="width:50%">
+                        <input type="text"
+                               id="filterSentPass"
+                               placeholder="Search for password"
+                               class="headerInput filter"
+                        />
+                    </th>
+                    <th style="text-align:right">
+                        <input type="submit" class="btn btn-primary" style="margin-bottom: 20px;" value="Send new password">
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            <table class = "table table-striped" style="width:100%" id="sentPass">
+                <thead>
+                    <tr>
+                        <th style="width:25%">Description</th>
+                        <th style="width:20%">To</th>
+                        <th style="width:20%">Valid till</th>
+                        <th style="width:20%">Password</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "sendpassword : ${sendPasswordsList}">
+                        <td th:text = "${sendpassword.password_desc}" ></td>
+                        <td th:text = "${sendpassword.password_to_name}" ></td>
+                        <td th:text = "${sendpassword.password_date}" ></td>
+                        <td style="visibility:visible;" th:id="${sendpassword.id_password}" >******</td>
+                        <td style="display: none !important;" th:text = "${sendpassword.password}" th:value="${sendpassword.password}" th:id="${sendpassword.id_password}+'sendpass'" ></td>
+                        <td>
+                            <button class="btn btn-info" type="button"th:attr="onclick=|CopyText('${sendpassword.id_password}')|">                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                                </svg>
+                            </button>
+                            <button class="btn btn-secondary" type="button"th:attr="onclick=|SeeText('${sendpassword.id_password}')|" th:id="${sendpassword.id_password}+'eye'">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                </svg>
+                            </button>
+                            <button class="btn btn-secondary" type="button" th:attr="onclick=|SeeText('${sendpassword.id_password}')|" th:id="${sendpassword.id_password}+'slashedEye'" style="display:none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                                    <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
+                                    <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
+                                </svg>
+                            </button>
+                            <button type="button" class="btn btn-danger confirm-delete"  th:attr="onclick=|deletePassword('${sendpassword.id_password}')|">                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button type="button" id="prevPageSent" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbersSent"></span>
+                <button type="button" id="nextPageSent" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPageSent" class="selectPage">
+                </select>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

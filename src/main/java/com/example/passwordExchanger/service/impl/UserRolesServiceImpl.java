@@ -69,4 +69,6 @@ public class UserRolesServiceImpl implements UserRolesService {
     public void deleteUserRoleByRoleId(int role_id) {
         userRolesRepository.deleteUserRoleByRoleId(role_id);
     }
+
+
 }

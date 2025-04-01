@@ -1,0 +1,85 @@
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script  type="text/javascript" src="/js/sendpass.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js" integrity="sha384-fGduTGnpIAfmSvekMfUwV4HIhaWmmroK8uP9emIM0D9Z0CG+Tc2XdM+V9z0CoGnq" crossorigin = "anonymous"></script>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" xmlns:th="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PASSEX Send Password</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="row col-md-6" style="margin-left:25%">
+        <form th:action="@{/sendpass}" th:object = "${password}" id="formSendPass" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">                        <h2>Send password</h2>
+            <input class="form-control"
+                   type="hidden"
+                   th:value="${user_id}"
+                   id="user_id"
+                   name="user_id"
+            />
+            <div class="form-group">
+                <label for="description" class="sr-only">Description</label>
+                <input
+                        type = "text"
+                        name = "password_desc"
+                        th:field = "*{password_desc}"
+                        class = "form-control"
+                        placeholder="Description"
+                        id="description"
+                        maxlength="254"
+                        required
+                />
+                <small id="pass_desc_char-count" class="form-text text-muted char-count">0/254</small>
+            </div>
+            <div class ="form-group">
+                <label for="password" class="sr-only">Password</label>
+                <input
+                        type = "password"
+                        name = "pass"
+                        th:field = "*{pass}"
+                        class = "form-control"
+                        placeholder = "Enter password"
+                        id = "password"
+                        maxlength = "64"
+                        required
+                />
+                <small id="pass_char-count" class="form-text text-muted char-count">0/64</small>
+            </div>
+            <div class ="form-group">
+                <label for="role" class="sr-only">Select group</label>
+                <select class="form-control"  id="role" name="role" multiple required>
+                    <option th:each="role : ${roleList}"
+                            th:value="${role.role_name}"
+                            th:text="${role.role_name}">
+                    </option>
+                </select>
+            </div>
+            <div class ="form-group" >
+                <label for="user" class="sr-only">Select user</label><!--onchange="setDropdownValue(this)"-->
+                <select class="form-control" id= "user" name = "user"  multiple required>
+                </select>
+            </div>
+            <div class ="form-group">
+                <button type="button" value="Send password" id="SendPass" class="btn btn-primary" th:attr="onclick=|sendPass()|" disabled>Send</button>
+                <input type="button" value="Back" class="btn btn-cancel" onclick="window.history.back();">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+

@@ -9,6 +9,7 @@ import java.sql.Date;
 public class Password {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int password_id;
     @Column(name="password_desc")
     private String password_desc;

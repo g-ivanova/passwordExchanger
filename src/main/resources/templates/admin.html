@@ -1,109 +1,173 @@
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="/js/admin.js"></script>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>PASSEX Admin</title>
+    <title> PASSEX Admin </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <link rel="shortcut icon" href="favicon.ico">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/profile_settings.css">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <style>
     .table td:nth-child(5) { display:hidden; }
 </style>
 <body>
-<div class ="container">
-    <form style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-        <table class = "table table-striped" style="width:100%" id="table">
-            <thead>
-            <tr>
-                <th colspan="5">
-                    <h2>Users</h2>
-                </th>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <th>User name</th>
-                <th>Email</th>
-                <th>Group</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each = "user : ${usersList}">
-                <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
-                <td th:text = "${user.user_names}" ></td>
-                <td th:text = "${user.user_username}"></td>
-                <td th:text = "${user.user_email}"></td>
-                <td th:text = "${user.user_roles}"></td>
-                <input class="form-control"
-                       type="hidden"
-                       th:value="${user_id}" id="user_id" name="user_id" />
-                <td>
-                    <a class="btn btn-secondary" th:href = "@{/admin/editUser/{id}/{user_id}(id=${user.user_id},user_id=${user_id})}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                        </svg>
-                    </a>
-                    <a class ="btn btn-danger" th:href = "@{/admin/deleteUser/{id}/{user_id}(id=${user.user_id},user_id=${user_id})}" >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                        </svg>
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </form>
-</div>
-<div class ="container">
-    <form th:action="@{/admin/addNewGroup/{user_id}(user_id=${user_id})}" th:object = "${user}" method="get" style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-        <input class="form-control"
-               type="hidden"
-               th:value="${user_id}" id="user_idd" name="user_id" />
-        <td>
-        <table class = "table table-striped" style="width:100%">
-            <thead>
-            <tr>
-                <th colspan="5"><h2>Groups</h2></th>
-            </tr>
-            <tr>
-                <th>Groups</th>
-                <th>All users in the group</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr th:each = "userroles : ${rolesList}">
-                <td style="display:none;" th:text = "${userroles.role_id}" th:value="${userroles.role_id}" th:id="${userroles.role_id}" ></td>
-                <td th:text = "${userroles.role_name}" ></td>
-                <td style="width:75%" th:text = "${userroles.users}" ></td>
-                <td>
-                    <a class ="btn btn-secondary" th:href = "@{/admin/{user_id}/{role_id}(user_id=${user_id},role_id=${userroles.role_id})}" >
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                        </svg>
-                    </a>
-                    <a class ="btn btn-danger" th:href = "@{/admin/deleteGroup/{user_id}/{id}(user_id=${user_id},id=${userroles.role_id})}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
-                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                        </svg>
-                    </a>
-
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-            <input type="submit" class="btn btn-primary" value="Add new group">
-    </form>
-</div>
+    <div class="dropdown">
+        <button class="btn dropbtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16" style="display: block; margin: auto;">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
+        </button>
+        <div id="PersonalSettings" class="dropdown-content">
+            <a th:href="@{/home?(user_id=${user_id})}">Home</a>
+            <a th:href="@{/admin?(user_id=${user_id})}" class="admin_settings">Groups and Users Settings</a>
+            <a th:href="@{/home/settings/{user_id}(user_id=${user_id})}">Profile Settings</a>
+            <a th:href="@{/index}">Log out</a>
+        </div>
+    </div>
+    <div class ="container">
+        <form style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <table class = "table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:20%">
+                            <h2>Users</h2>
+                        </th>
+                        <th style="width:60%">
+                            <input type="text"
+                                   id="filterUsers"
+                                   placeholder="Search for users"
+                                   class="headerInput filter"
+                            />
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class = "table table-striped" style="width:100%" id="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>User name</th>
+                        <th>Email</th>
+                        <th>Group</th>
+                        <th style="width:10%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "user : ${usersList}">
+                        <td style="display:none;" th:text = "${user.user_id}" th:value="${user.user_id}" th:id="${user.user_id}" ></td>
+                        <td th:text = "${user.user_names}" ></td>
+                        <td th:text = "${user.user_username}"></td>
+                        <td th:text = "${user.user_email}"></td>
+                        <td th:text = "${user.user_roles}"></td>
+                        <input class="form-control"
+                               type="hidden"
+                               th:value="${user_id}"
+                               id="user_id"
+                               name="user_id"
+                        />
+                        <td style="width:10%">
+                            <a class="btn btn-secondary" th:href = "@{/admin/editUser/{id}/{user_id}(id=${user.user_id},user_id=${user_id})}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                            </a>
+                            <button type="button" class="btn btn-danger confirm-delete"  th:attr="onclick=|deleteUser('${user.user_id}')|">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button type="button" id="prevPage" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbers"></span>
+                <button type="button" id="nextPage" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPage" class="selectPage">
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class ="container">
+        <form th:action="@{/admin/addNewGroup/form}" th:object = "${user}" method="post" style="width:100%" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <input class="form-control"
+                   type="hidden"
+                   th:value="${user_id}"
+                   id="user_idd"
+                   name="user_id"
+            />
+            <table class="table table-striped" style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width:20%">
+                            <h2>Groups</h2>
+                        </th>
+                        <th style="width:60%">
+                            <input type="text"
+                                   id="filterGroups"
+                                   placeholder="Search for groups"
+                                   class="headerInput filter"
+                            />
+                        </th>
+                        <th style="text-align:right; width:20%">
+                            <input type="submit" class="btn btn-primary headerInput" value="Add new group">
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class="table table-striped" style="width:100%" id="tableGroups">
+                <thead>
+                    <tr>
+                        <th>Groups</th>
+                        <th>All users in the group</th>
+                        <th style="width:10%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "userroles : ${rolesList}">
+                        <td style="display:none;" th:text = "${userroles.role_id}" th:value="${userroles.role_id}" th:id="${userroles.role_id}" ></td>
+                        <td th:text = "${userroles.role_name}"></td>
+                        <td th:text = "${userroles.users}"></td>
+                        <td>
+                            <a class ="btn btn-secondary" th:href = "@{/admin/{user_id}/{role_id}(user_id=${user_id},role_id=${userroles.role_id})}" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                            </a>
+                            <a class ="btn btn-danger" th:attr="onclick=|deleteGroup('${userroles.role_id}')|" >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                </svg>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <button type="button" id="prevPageGroups" class="disabled btn btn-secondary" aria-disabled="true">Previous</button>
+                <span id="pageNumbersGroups"></span>
+                <button type="button" id="nextPageGroups" class="btn btn-secondary">Next</button>
+                <label>Rows per Page:</label>
+                <select id="rowsPerPageGroups" class="selectPage"></select>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

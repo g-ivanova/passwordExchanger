@@ -1,51 +1,60 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script  type="text/javascript" src="/js/sendpass.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+        src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="/js/add_new_role.js"></script>
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" xmlns:th="http://www.w3.org/1999/xhtml"> <!--<![endif]-->
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>PASSEX Add new group</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title> PASSEX Add new group </title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="shortcut icon" href="favicon.ico">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/animate.css">
-    <link rel="stylesheet" href="/css/style.css">
-  </head>
-  <body>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
     <div class="container">
-      <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-          <form th:action="@{/admin/addNewGroup/{user_id}}"  th:object = "${user}" method="POST" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-            <h2>Create new group</h2>
-            <input class="form-control"
-                   type="hidden"
-                   th:value="${user_id}"
-                   id="user_id"
-                   name="user_id"/>
-            <div class="form-group">
-              <label for="name" class="sr-only">Group name</label>
-              <input
-                      type = "text"
-                      name = "name"
-                      class = "form-control"
-                      placeholder="Group name"
-                      id="name"
-              />
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <form class="fh5co-form animate-box" data-animate-effect="fadeIn" id="formAddGroup" method="POST" th:action="@{/admin/addNewGroup}">
+                    <h2>Create new group</h2>
+                    <input class="form-control"
+                           id="user_id"
+                           name="user_id"
+                           th:value="${user_id}"
+                           type="hidden"/>
+                    <div class="form-group">
+                        <label class="sr-only" for="name">Group name</label>
+                        <input class="form-control"
+                               id="name"
+                               name="name"
+                               placeholder="Group name"
+                               required
+                               type="text"
+                               maxlength="254"
+                        />
+                        <small id="role_name_char-count" class="form-text text-muted char-count">0/254</small>
+                        <p class="error-message" id="name_error">
+                        </p>
+                        <br/>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" disabled id="AddGroup" th:attr="onclick=|createRole()|" type="button">
+                            Add
+                        </button>
+                        <input class="btn btn-cancel" onclick="window.history.back();" type="button" value="Back">
+                    </div>
+                </form>
             </div>
-            <div class ="form-group">
-              <input type="submit" value="Create group" class="btn btn-primary">
-              <input type="button" value="Cancel" class="btn btn-cancel" onclick="window.history.back();">
-            </div>
-          </form>
         </div>
-      </div>
-  </div>
-  </body>
+    </div>
+</body>
 </html>

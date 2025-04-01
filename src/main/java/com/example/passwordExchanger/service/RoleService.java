@@ -21,4 +21,13 @@ public interface RoleService {
 
     List<Role> getRoleWhereUserIsNot(int id);
 
+    List<Role> getRolesAndTempRolesByUser(int user_id);
+    List<Role> getRolesFromUserId(int user_id);
+
+    Role getRoleIdFromId(int id);
+
+    int getRoleFromName(String role_name);
+
+
+
 }
